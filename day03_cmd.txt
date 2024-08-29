@@ -1,0 +1,2402 @@
+Microsoft Windows [Version 10.0.19045.4529]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\EZENIC-142>mysql -umysqlUser -pmysql
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 13
+Server version: 8.0.39 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use testdb
+Database changed
+mysql> select * from test2;
++-----+------+------+------+---------+---------------+
+| num | name | age  | dep  | addr    | tel           |
++-----+------+------+------+---------+---------------+
+| 111 | hong |   20 | 국문 | seoul   | 010-1234-4567 |
+| 222 | lee  |   22 | 영문 | suwon   | 010-4321-4567 |
+| 333 | choi |   21 | 수학 | incheon | 010-5678-4567 |
+| 444 | lee  |   22 | 정보 | seoul   | 010-6364-4567 |
+| 555 | pack |   21 | 국문 | busan   | 010-5276-4567 |
++-----+------+------+------+---------+---------------+
+5 rows in set (0.01 sec)
+
+mysql> alter table test2 add score int dafualt 0;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'dafualt 0' at line 1
+mysql> alter table test2 add score int dafault 0;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'dafault 0' at line 1
+mysql> alter table test2 add score int default 20;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table test2 add score int default 0;
+ERROR 1060 (42S21): Duplicate column name 'score'
+mysql> select * from test2;
++-----+------+------+------+---------+---------------+-------+
+| num | name | age  | dep  | addr    | tel           | score |
++-----+------+------+------+---------+---------------+-------+
+| 111 | hong |   20 | 국문 | seoul   | 010-1234-4567 |    20 |
+| 222 | lee  |   22 | 영문 | suwon   | 010-4321-4567 |    20 |
+| 333 | choi |   21 | 수학 | incheon | 010-5678-4567 |    20 |
+| 444 | lee  |   22 | 정보 | seoul   | 010-6364-4567 |    20 |
+| 555 | pack |   21 | 국문 | busan   | 010-5276-4567 |    20 |
++-----+------+------+------+---------+---------------+-------+
+5 rows in set (0.00 sec)
+
+mysql> updata test2
+    -> set score = 0;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'updata test2
+set score = 0' at line 1
+mysql> update test2
+    -> set score = 0;
+Query OK, 5 rows affected (0.01 sec)
+Rows matched: 5  Changed: 5  Warnings: 0
+
+mysql> select * from test2
+    -> ;
++-----+------+------+------+---------+---------------+-------+
+| num | name | age  | dep  | addr    | tel           | score |
++-----+------+------+------+---------+---------------+-------+
+| 111 | hong |   20 | 국문 | seoul   | 010-1234-4567 |     0 |
+| 222 | lee  |   22 | 영문 | suwon   | 010-4321-4567 |     0 |
+| 333 | choi |   21 | 수학 | incheon | 010-5678-4567 |     0 |
+| 444 | lee  |   22 | 정보 | seoul   | 010-6364-4567 |     0 |
+| 555 | pack |   21 | 국문 | busan   | 010-5276-4567 |     0 |
++-----+------+------+------+---------+---------------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from test2
+    -> where dep = '국문';
++-----+------+------+------+-------+---------------+-------+
+| num | name | age  | dep  | addr  | tel           | score |
++-----+------+------+------+-------+---------------+-------+
+| 111 | hong |   20 | 국문 | seoul | 010-1234-4567 |     0 |
+| 555 | pack |   21 | 국문 | busan | 010-5276-4567 |     0 |
++-----+------+------+------+-------+---------------+-------+
+2 rows in set (0.00 sec)
+
+mysql> update test2 set dep = '컴퓨터'
+    -> where  dep = '정보';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from test2;
++-----+------+------+--------+---------+---------------+-------+
+| num | name | age  | dep    | addr    | tel           | score |
++-----+------+------+--------+---------+---------------+-------+
+| 111 | hong |   20 | 국문   | seoul   | 010-1234-4567 |     0 |
+| 222 | lee  |   22 | 영문   | suwon   | 010-4321-4567 |     0 |
+| 333 | choi |   21 | 수학   | incheon | 010-5678-4567 |     0 |
+| 444 | lee  |   22 | 컴퓨터 | seoul   | 010-6364-4567 |     0 |
+| 555 | pack |   21 | 국문   | busan   | 010-5276-4567 |     0 |
++-----+------+------+--------+---------+---------------+-------+
+5 rows in set (0.00 sec)
+
+mysql> update test2 set score =
+    -> case
+    -> when name=111 then 65
+    -> when name=222 then 87
+    -> when name=333 then 96
+    -> when name=444 then 74
+    -> when name=55 then 81
+    -> end;
+ERROR 1292 (22007): Truncated incorrect DOUBLE value: 'hong'
+mysql> update test2 set score =
+    -> case
+    -> when num=111 then 65
+    -> when num=222 then 87
+    -> when num=333 then 96
+    -> when num=444 then 74
+    -> when num=55 then 81
+    -> end;
+Query OK, 5 rows affected (0.01 sec)
+Rows matched: 5  Changed: 5  Warnings: 0
+
+mysql> select * from test2;
++-----+------+------+--------+---------+---------------+-------+
+| num | name | age  | dep    | addr    | tel           | score |
++-----+------+------+--------+---------+---------------+-------+
+| 111 | hong |   20 | 국문   | seoul   | 010-1234-4567 |    65 |
+| 222 | lee  |   22 | 영문   | suwon   | 010-4321-4567 |    87 |
+| 333 | choi |   21 | 수학   | incheon | 010-5678-4567 |    96 |
+| 444 | lee  |   22 | 컴퓨터 | seoul   | 010-6364-4567 |    74 |
+| 555 | pack |   21 | 국문   | busan   | 010-5276-4567 |  NULL |
++-----+------+------+--------+---------+---------------+-------+
+5 rows in set (0.00 sec)
+
+mysql> update test2 set score =
+    -> case
+    -> when num=111 then 65
+    -> when num=222 then 87
+    -> when num=333 then 96
+    -> when num=444 then 74
+    -> when num=555 then 81
+    -> end;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 5  Changed: 1  Warnings: 0
+
+mysql> select * from test2;
++-----+------+------+--------+---------+---------------+-------+
+| num | name | age  | dep    | addr    | tel           | score |
++-----+------+------+--------+---------+---------------+-------+
+| 111 | hong |   20 | 국문   | seoul   | 010-1234-4567 |    65 |
+| 222 | lee  |   22 | 영문   | suwon   | 010-4321-4567 |    87 |
+| 333 | choi |   21 | 수학   | incheon | 010-5678-4567 |    96 |
+| 444 | lee  |   22 | 컴퓨터 | seoul   | 010-6364-4567 |    74 |
+| 555 | pack |   21 | 국문   | busan   | 010-5276-4567 |    81 |
++-----+------+------+--------+---------+---------------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from test2 where score >=80;
++-----+------+------+------+---------+---------------+-------+
+| num | name | age  | dep  | addr    | tel           | score |
++-----+------+------+------+---------+---------------+-------+
+| 222 | lee  |   22 | 영문 | suwon   | 010-4321-4567 |    87 |
+| 333 | choi |   21 | 수학 | incheon | 010-5678-4567 |    96 |
+| 555 | pack |   21 | 국문 | busan   | 010-5276-4567 |    81 |
++-----+------+------+------+---------+---------------+-------+
+3 rows in set (0.00 sec)
+
+mysql> select dep, count(dep) from test2;
+ERROR 1140 (42000): In aggregated query without GROUP BY, expression #1 of SELECT list contains nonaggregated column 'testdb.test2.dep'; this is incompatible with sql_mode=only_full_group_by
+mysql> select dep, count(dep) from test2
+    -> group by dep;
++--------+------------+
+| dep    | count(dep) |
++--------+------------+
+| 국문   |          2 |
+| 영문   |          1 |
+| 수학   |          1 |
+| 컴퓨터 |          1 |
++--------+------------+
+4 rows in set (0.01 sec)
+
+mysql> select dep, count(dep) from test2 order by dep
+    -> group by dep;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'group by dep' at line 2
+mysql> select dep, round(avg(dep),2) from test2
+    -> group by dep;
++--------+-------------------+
+| dep    | round(avg(dep),2) |
++--------+-------------------+
+| 국문   |                 0 |
+| 영문   |                 0 |
+| 수학   |                 0 |
+| 컴퓨터 |                 0 |
++--------+-------------------+
+4 rows in set, 5 warnings (0.01 sec)
+
+mysql> select dep, round(avg(score),2) as '학과평균' from test2
+    -> group by dep;
++--------+----------+
+| dep    | 학과평균 |
++--------+----------+
+| 국문   |    73.00 |
+| 영문   |    87.00 |
+| 수학   |    96.00 |
+| 컴퓨터 |    74.00 |
++--------+----------+
+4 rows in set (0.00 sec)
+
+mysql> select addr, count(addr) from test2
+    -> group by dep;
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'testdb.test2.addr' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> select dep, count(dep) from test2
+    -> group by dep
+    -> order by dep;
++--------+------------+
+| dep    | count(dep) |
++--------+------------+
+| 국문   |          2 |
+| 수학   |          1 |
+| 영문   |          1 |
+| 컴퓨터 |          1 |
++--------+------------+
+4 rows in set (0.00 sec)
+
+mysql> select addr, count(addr) from test2
+    -> group by addr
+    -> order by addr;
++---------+-------------+
+| addr    | count(addr) |
++---------+-------------+
+| busan   |           1 |
+| incheon |           1 |
+| seoul   |           2 |
+| suwon   |           1 |
++---------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> select dep, sum(score) from test2
+    -> where dep = '국문'
+    -> group by dep;
++------+------------+
+| dep  | sum(score) |
++------+------------+
+| 국문 |        146 |
++------+------------+
+1 row in set (0.00 sec)
+
+mysql> select num, name, dep, score from test2
+    -> where score >= 70;
++-----+------+--------+-------+
+| num | name | dep    | score |
++-----+------+--------+-------+
+| 222 | lee  | 영문   |    87 |
+| 333 | choi | 수학   |    96 |
+| 444 | lee  | 컴퓨터 |    74 |
+| 555 | pack | 국문   |    81 |
++-----+------+--------+-------+
+4 rows in set (0.00 sec)
+
+mysql> create table product(
+    -> num int auto_increment,
+    -> type_a varchar(50) not null,
+    -> type_b varchar(50) not null,
+    -> name varchar(100) not null,
+    -> price int default 0,
+    -> amount int default 100,
+    -> sale_amount int default 0,
+    -> register_date datetime,
+    -> primary key (num));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> insert into product(type_a, type_b, name, price, amount, sale_amount, register_date) values
+    -> ('티셔츠','긴소매','폴라 티셔츠',15000,34,100,'2023-10-15'),
+    -> ('티셔츠','긴소매','크롭 티셔츠',10000,50,100,'2023-10-15'),
+    -> ('티셔츠','반소매','순면라운드 반팔티',15900,10,153,'2023-09-15'),
+    -> ('티셔츠','민소매','에이 나시',9000,33,33,'2023-09-10'),
+    -> ('패션운동복','트레이닝상의','피트니스상의',30000,34,55,'2023-12-05'),
+    -> ('패션운동복','트레이닝하의','피트니스하의',50000,55,34,'2023-12-06'),
+    -> ('패션운동복','트레이닝세트','피트니스상하의',90000,70,34,'2023-12-07'),
+    -> ('아우터','재킷','양면 롱 후리스 자켓',23300,100,42,'2023-11-05'),
+    -> ('아우터','코트','양털 겨울 코트',50000,50,30,'2023-10-31'),
+    -> ('아우터','코트','트렌치 코트',40000,50,30,'2023-10-31'),
+    -> ('아우터','패딩','롱 패팅 점퍼',47400,10,45,'2023-11-01');
+Query OK, 11 rows affected (0.01 sec)
+Records: 11  Duplicates: 0  Warnings: 0
+
+mysql> select * from product;
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+| num | type_a     | type_b       | name                | price | amount | sale_amount | register_date       |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+|   1 | 티셔츠     | 긴소매       | 폴라 티셔츠         | 15000 |     34 |         100 | 2023-10-15 00:00:00 |
+|   2 | 티셔츠     | 긴소매       | 크롭 티셔츠         | 10000 |     50 |         100 | 2023-10-15 00:00:00 |
+|   3 | 티셔츠     | 반소매       | 순면라운드 반팔티   | 15900 |     10 |         153 | 2023-09-15 00:00:00 |
+|   4 | 티셔츠     | 민소매       | 에이 나시           |  9000 |     33 |          33 | 2023-09-10 00:00:00 |
+|   5 | 패션운동복 | 트레이닝상의 | 피트니스상의        | 30000 |     34 |          55 | 2023-12-05 00:00:00 |
+|   6 | 패션운동복 | 트레이닝하의 | 피트니스하의        | 50000 |     55 |          34 | 2023-12-06 00:00:00 |
+|   7 | 패션운동복 | 트레이닝세트 | 피트니스상하의      | 90000 |     70 |          34 | 2023-12-07 00:00:00 |
+|   8 | 아우터     | 재킷         | 양면 롱 후리스 자켓 | 23300 |    100 |          42 | 2023-11-05 00:00:00 |
+|   9 | 아우터     | 코트         | 양털 겨울 코트      | 50000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  10 | 아우터     | 코트         | 트렌치 코트         | 40000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  11 | 아우터     | 패딩         | 롱 패팅 점퍼        | 47400 |     10 |          45 | 2023-11-01 00:00:00 |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+11 rows in set (0.00 sec)
+
+mysql> select dep, sum(score) from test2
+    -> group by dep
+    -> having dep = '국문';
++------+------------+
+| dep  | sum(score) |
++------+------------+
+| 국문 |        146 |
++------+------------+
+1 row in set (0.00 sec)
+
+mysql> create table buy(
+    -> num int auto_increment,
+    -> customer varchar(20),
+    -> product_name varchar(100),
+    -> price int default 0,
+    -> amount int default 0,
+    -> buy_date datetime default now(),
+    -> primary key(num));
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> desc from buy;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from buy' at line 1
+mysql> desc buy;
++--------------+--------------+------+-----+-------------------+-------------------+
+| Field        | Type         | Null | Key | Default           | Extra             |
++--------------+--------------+------+-----+-------------------+-------------------+
+| num          | int          | NO   | PRI | NULL              | auto_increment    |
+| customer     | varchar(20)  | YES  |     | NULL              |                   |
+| product_name | varchar(100) | YES  |     | NULL              |                   |
+| price        | int          | YES  |     | 0                 |                   |
+| amount       | int          | YES  |     | 0                 |                   |
+| buy_date     | datetime     | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
++--------------+--------------+------+-----+-------------------+-------------------+
+6 rows in set (0.00 sec)
+
+mysql> insert into buy(customer, product_name, price, amount)
+    -> values
+    -> ('홍길동','폴라 티셔츠',15000,5);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from buy;
++-----+----------+--------------+-------+--------+---------------------+
+| num | customer | product_name | price | amount | buy_date            |
++-----+----------+--------------+-------+--------+---------------------+
+|   1 | 홍길동   | 폴라 티셔츠  | 15000 |      5 | 2024-08-29 10:58:58 |
++-----+----------+--------------+-------+--------+---------------------+
+1 row in set (0.00 sec)
+
+mysql> insert into buy(customer, product_name, price, amount)
+    -> select '홍길순', name, pirce, 3 from product
+    -> where num = 2;
+ERROR 1054 (42S22): Unknown column 'pirce' in 'field list'
+mysql> insert into buy(customer, product_name, price, amount)
+    -> select '홍길순', name, price, 3 from product
+    -> where num = 2;
+Query OK, 1 row affected (0.01 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> select * from buy;
++-----+----------+--------------+-------+--------+---------------------+
+| num | customer | product_name | price | amount | buy_date            |
++-----+----------+--------------+-------+--------+---------------------+
+|   1 | 홍길동   | 폴라 티셔츠  | 15000 |      5 | 2024-08-29 10:58:58 |
+|   2 | 홍길순   | 크롭 티셔츠  | 10000 |      3 | 2024-08-29 10:59:26 |
++-----+----------+--------------+-------+--------+---------------------+
+2 rows in set (0.00 sec)
+
+mysql> insert into buy(customer, product_name, price, amount)
+    -> select '김순이', name, price, 2 from product
+    -> where num = 7;
+Query OK, 1 row affected (0.01 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> insert into buy(customer, product_name, price, amount)
+    -> select '강감찬', name, price, 5 from product
+    -> where num = 10;
+Query OK, 1 row affected (0.00 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> insert into buy(customer, product_name, price, amount)
+    -> select '김철수', name, price, 4 from product
+    -> where num = 6;
+Query OK, 1 row affected (0.00 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> insert into buy(customer, product_name, price, amount)
+    -> select '김영이', name, price, 2 from product
+    -> where num = 5;
+Query OK, 1 row affected (0.00 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> insert into buy(customer, product_name, price, amount)
+    -> select '박진주', name, price, 4 from product
+    -> where num = 3;
+Query OK, 1 row affected (0.01 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql> select * from buy;
++-----+----------+-------------------+-------+--------+---------------------+
+| num | customer | product_name      | price | amount | buy_date            |
++-----+----------+-------------------+-------+--------+---------------------+
+|   1 | 홍길동   | 폴라 티셔츠       | 15000 |      5 | 2024-08-29 10:58:58 |
+|   2 | 홍길순   | 크롭 티셔츠       | 10000 |      3 | 2024-08-29 10:59:26 |
+|   3 | 김순이   | 피트니스상하의    | 90000 |      2 | 2024-08-29 11:03:40 |
+|   4 | 강감찬   | 트렌치 코트       | 40000 |      5 | 2024-08-29 11:03:40 |
+|   5 | 김철수   | 피트니스하의      | 50000 |      4 | 2024-08-29 11:03:40 |
+|   6 | 김영이   | 피트니스상의      | 30000 |      2 | 2024-08-29 11:03:40 |
+|   7 | 박진주   | 순면라운드 반팔티 | 15900 |      4 | 2024-08-29 11:03:42 |
++-----+----------+-------------------+-------+--------+---------------------+
+7 rows in set (0.00 sec)
+
+mysql> insert into buy(customer, product_name, price, amount)
+    -> select '박진주', name, price, 4 from product
+    -> where num = 5;
+Query OK, 1 row affected (0.01 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql> select * from buy;
++-----+----------+-------------------+-------+--------+---------------------+
+| num | customer | product_name      | price | amount | buy_date            |
++-----+----------+-------------------+-------+--------+---------------------+
+|   1 | 홍길동   | 폴라 티셔츠       | 15000 |      5 | 2024-08-29 10:58:58 |
+|   2 | 홍길순   | 크롭 티셔츠       | 10000 |      3 | 2024-08-29 10:59:26 |
+|   3 | 김순이   | 피트니스상하의    | 90000 |      2 | 2024-08-29 11:03:40 |
+|   4 | 강감찬   | 트렌치 코트       | 40000 |      5 | 2024-08-29 11:03:40 |
+|   5 | 김철수   | 피트니스하의      | 50000 |      4 | 2024-08-29 11:03:40 |
+|   6 | 김영이   | 피트니스상의      | 30000 |      2 | 2024-08-29 11:03:40 |
+|   7 | 박진주   | 순면라운드 반팔티 | 15900 |      4 | 2024-08-29 11:03:42 |
+|   8 | 박진주   | 피트니스상의      | 30000 |      4 | 2024-08-29 11:05:08 |
++-----+----------+-------------------+-------+--------+---------------------+
+8 rows in set (0.00 sec)
+
+mysql> select * from buy;
++-----+----------+-------------------+-------+--------+---------------------+
+| num | customer | product_name      | price | amount | buy_date            |
++-----+----------+-------------------+-------+--------+---------------------+
+|   1 | 홍길동   | 폴라 티셔츠       | 15000 |      5 | 2024-08-29 10:58:58 |
+|   2 | 홍길순   | 크롭 티셔츠       | 10000 |      3 | 2024-08-29 10:59:26 |
+|   3 | 김순이   | 피트니스상하의    | 90000 |      2 | 2024-08-29 11:03:40 |
+|   4 | 강감찬   | 트렌치 코트       | 40000 |      5 | 2024-08-29 11:03:40 |
+|   5 | 김철수   | 피트니스하의      | 50000 |      4 | 2024-08-29 11:03:40 |
+|   6 | 김영이   | 피트니스상의      | 30000 |      2 | 2024-08-29 11:03:40 |
+|   7 | 박진주   | 순면라운드 반팔티 | 15900 |      4 | 2024-08-29 11:03:42 |
+|   8 | 박진주   | 피트니스상의      | 30000 |      4 | 2024-08-29 11:05:08 |
++-----+----------+-------------------+-------+--------+---------------------+
+8 rows in set (0.00 sec)
+
+mysql> DELETE FROM members WHERE num=8;
+ERROR 1146 (42S02): Table 'testdb.members' doesn't exist
+mysql> DELETE FROM buy where num=8;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from buy;
++-----+----------+-------------------+-------+--------+---------------------+
+| num | customer | product_name      | price | amount | buy_date            |
++-----+----------+-------------------+-------+--------+---------------------+
+|   1 | 홍길동   | 폴라 티셔츠       | 15000 |      5 | 2024-08-29 10:58:58 |
+|   2 | 홍길순   | 크롭 티셔츠       | 10000 |      3 | 2024-08-29 10:59:26 |
+|   3 | 김순이   | 피트니스상하의    | 90000 |      2 | 2024-08-29 11:03:40 |
+|   4 | 강감찬   | 트렌치 코트       | 40000 |      5 | 2024-08-29 11:03:40 |
+|   5 | 김철수   | 피트니스하의      | 50000 |      4 | 2024-08-29 11:03:40 |
+|   6 | 김영이   | 피트니스상의      | 30000 |      2 | 2024-08-29 11:03:40 |
+|   7 | 박진주   | 순면라운드 반팔티 | 15900 |      4 | 2024-08-29 11:03:42 |
++-----+----------+-------------------+-------+--------+---------------------+
+7 rows in set (0.00 sec)
+
+mysql> select product_name, sum(amount) from buy
+    -> group by product_name;
++-------------------+-------------+
+| product_name      | sum(amount) |
++-------------------+-------------+
+| 폴라 티셔츠       |           5 |
+| 크롭 티셔츠       |           3 |
+| 피트니스상하의    |           2 |
+| 트렌치 코트       |           5 |
+| 피트니스하의      |           4 |
+| 피트니스상의      |           2 |
+| 순면라운드 반팔티 |           4 |
++-------------------+-------------+
+7 rows in set (0.00 sec)
+
+mysql> select product_name, sum(price) from buy
+    -> group by product_name;
++-------------------+------------+
+| product_name      | sum(price) |
++-------------------+------------+
+| 폴라 티셔츠       |      15000 |
+| 크롭 티셔츠       |      10000 |
+| 피트니스상하의    |      90000 |
+| 트렌치 코트       |      40000 |
+| 피트니스하의      |      50000 |
+| 피트니스상의      |      30000 |
+| 순면라운드 반팔티 |      15900 |
++-------------------+------------+
+7 rows in set (0.00 sec)
+
+mysql> alter table buy add total int;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> update buy
+    -> set total = price * amount;
+Query OK, 7 rows affected (0.01 sec)
+Rows matched: 7  Changed: 7  Warnings: 0
+
+mysql> select * from buy;
++-----+----------+-------------------+-------+--------+---------------------+--------+
+| num | customer | product_name      | price | amount | buy_date            | total  |
++-----+----------+-------------------+-------+--------+---------------------+--------+
+|   1 | 홍길동   | 폴라 티셔츠       | 15000 |      5 | 2024-08-29 10:58:58 |  75000 |
+|   2 | 홍길순   | 크롭 티셔츠       | 10000 |      3 | 2024-08-29 10:59:26 |  30000 |
+|   3 | 김순이   | 피트니스상하의    | 90000 |      2 | 2024-08-29 11:03:40 | 180000 |
+|   4 | 강감찬   | 트렌치 코트       | 40000 |      5 | 2024-08-29 11:03:40 | 200000 |
+|   5 | 김철수   | 피트니스하의      | 50000 |      4 | 2024-08-29 11:03:40 | 200000 |
+|   6 | 김영이   | 피트니스상의      | 30000 |      2 | 2024-08-29 11:03:40 |  60000 |
+|   7 | 박진주   | 순면라운드 반팔티 | 15900 |      4 | 2024-08-29 11:03:42 |  63600 |
++-----+----------+-------------------+-------+--------+---------------------+--------+
+7 rows in set (0.00 sec)
+
+mysql> update buy
+    -> set product_name = '피트니스상하의'
+    -> where customer = '김철수';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update buy
+    -> set price = 90000
+    -> where customer = '김철수';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update buy
+    -> set amount = 1
+    -> where customer = '김철수';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from buy;
++-----+----------+-------------------+-------+--------+---------------------+--------+
+| num | customer | product_name      | price | amount | buy_date            | total  |
++-----+----------+-------------------+-------+--------+---------------------+--------+
+|   1 | 홍길동   | 폴라 티셔츠       | 15000 |      5 | 2024-08-29 10:58:58 |  75000 |
+|   2 | 홍길순   | 크롭 티셔츠       | 10000 |      3 | 2024-08-29 10:59:26 |  30000 |
+|   3 | 김순이   | 피트니스상하의    | 90000 |      2 | 2024-08-29 11:03:40 | 180000 |
+|   4 | 강감찬   | 트렌치 코트       | 40000 |      5 | 2024-08-29 11:03:40 | 200000 |
+|   5 | 김철수   | 피트니스상하의    | 90000 |      1 | 2024-08-29 11:03:40 | 200000 |
+|   6 | 김영이   | 피트니스상의      | 30000 |      2 | 2024-08-29 11:03:40 |  60000 |
+|   7 | 박진주   | 순면라운드 반팔티 | 15900 |      4 | 2024-08-29 11:03:42 |  63600 |
++-----+----------+-------------------+-------+--------+---------------------+--------+
+7 rows in set (0.00 sec)
+
+mysql> select product_name, sum(amount) from buy
+    -> group by product_name;
++-------------------+-------------+
+| product_name      | sum(amount) |
++-------------------+-------------+
+| 폴라 티셔츠       |           5 |
+| 크롭 티셔츠       |           3 |
+| 피트니스상하의    |           3 |
+| 트렌치 코트       |           5 |
+| 피트니스상의      |           2 |
+| 순면라운드 반팔티 |           4 |
++-------------------+-------------+
+6 rows in set (0.00 sec)
+
+mysql> select product_name, sum(price) from buy
+    -> group by product_name;
++-------------------+------------+
+| product_name      | sum(price) |
++-------------------+------------+
+| 폴라 티셔츠       |      15000 |
+| 크롭 티셔츠       |      10000 |
+| 피트니스상하의    |     180000 |
+| 트렌치 코트       |      40000 |
+| 피트니스상의      |      30000 |
+| 순면라운드 반팔티 |      15900 |
++-------------------+------------+
+6 rows in set (0.00 sec)
+
+mysql> alter table buy add total int;
+ERROR 1060 (42S21): Duplicate column name 'total'
+mysql> update buy
+    -> set total = price * amount;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 7  Changed: 1  Warnings: 0
+
+mysql> select * from buy;
++-----+----------+-------------------+-------+--------+---------------------+--------+
+| num | customer | product_name      | price | amount | buy_date            | total  |
++-----+----------+-------------------+-------+--------+---------------------+--------+
+|   1 | 홍길동   | 폴라 티셔츠       | 15000 |      5 | 2024-08-29 10:58:58 |  75000 |
+|   2 | 홍길순   | 크롭 티셔츠       | 10000 |      3 | 2024-08-29 10:59:26 |  30000 |
+|   3 | 김순이   | 피트니스상하의    | 90000 |      2 | 2024-08-29 11:03:40 | 180000 |
+|   4 | 강감찬   | 트렌치 코트       | 40000 |      5 | 2024-08-29 11:03:40 | 200000 |
+|   5 | 김철수   | 피트니스상하의    | 90000 |      1 | 2024-08-29 11:03:40 |  90000 |
+|   6 | 김영이   | 피트니스상의      | 30000 |      2 | 2024-08-29 11:03:40 |  60000 |
+|   7 | 박진주   | 순면라운드 반팔티 | 15900 |      4 | 2024-08-29 11:03:42 |  63600 |
++-----+----------+-------------------+-------+--------+---------------------+--------+
+7 rows in set (0.00 sec)
+
+mysql> alter table buy add total int after amount;
+ERROR 1060 (42S21): Duplicate column name 'total'
+mysql> alter table buy drop total;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from buy;
++-----+----------+-------------------+-------+--------+---------------------+
+| num | customer | product_name      | price | amount | buy_date            |
++-----+----------+-------------------+-------+--------+---------------------+
+|   1 | 홍길동   | 폴라 티셔츠       | 15000 |      5 | 2024-08-29 10:58:58 |
+|   2 | 홍길순   | 크롭 티셔츠       | 10000 |      3 | 2024-08-29 10:59:26 |
+|   3 | 김순이   | 피트니스상하의    | 90000 |      2 | 2024-08-29 11:03:40 |
+|   4 | 강감찬   | 트렌치 코트       | 40000 |      5 | 2024-08-29 11:03:40 |
+|   5 | 김철수   | 피트니스상하의    | 90000 |      1 | 2024-08-29 11:03:40 |
+|   6 | 김영이   | 피트니스상의      | 30000 |      2 | 2024-08-29 11:03:40 |
+|   7 | 박진주   | 순면라운드 반팔티 | 15900 |      4 | 2024-08-29 11:03:42 |
++-----+----------+-------------------+-------+--------+---------------------+
+7 rows in set (0.00 sec)
+
+mysql> alter table buy add total int generated always as
+    -> (price * amount) stored after amount;
+Query OK, 7 rows affected (0.08 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> insert into buy(customer, product_name, price, amount)
+    -> select '강감찬', name, price, 5 from product
+    -> where num = 10;
+Query OK, 1 row affected (0.01 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> insert into buy(customer, product_name, price, amount)
+    -> select '김철수', name, price, 1 from product
+    -> where num = 7;
+Query OK, 1 row affected (0.00 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> insert into buy(customer, product_name, price, amount)
+    -> select '김영이', name, price, 7 from product
+    -> where num = 3;
+Query OK, 1 row affected (0.00 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> insert into buy(customer, product_name, price, amount)
+    -> select '박진주', name, price, 4 from product
+    -> where num = 5;
+Query OK, 1 row affected (0.01 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql> selet * from buy;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'selet * from buy' at line 1
+mysql> select * from buy;
++-----+----------+-------------------+-------+--------+--------+---------------------+
+| num | customer | product_name      | price | amount | total  | buy_date            |
++-----+----------+-------------------+-------+--------+--------+---------------------+
+|   1 | 홍길동   | 폴라 티셔츠       | 15000 |      5 |  75000 | 2024-08-29 10:58:58 |
+|   2 | 홍길순   | 크롭 티셔츠       | 10000 |      3 |  30000 | 2024-08-29 10:59:26 |
+|   3 | 김순이   | 피트니스상하의    | 90000 |      2 | 180000 | 2024-08-29 11:03:40 |
+|   4 | 강감찬   | 트렌치 코트       | 40000 |      5 | 200000 | 2024-08-29 11:03:40 |
+|   5 | 김철수   | 피트니스상하의    | 90000 |      1 |  90000 | 2024-08-29 11:03:40 |
+|   6 | 김영이   | 피트니스상의      | 30000 |      2 |  60000 | 2024-08-29 11:03:40 |
+|   7 | 박진주   | 순면라운드 반팔티 | 15900 |      4 |  63600 | 2024-08-29 11:03:42 |
+|   9 | 강감찬   | 트렌치 코트       | 40000 |      5 | 200000 | 2024-08-29 11:42:21 |
+|  10 | 김철수   | 피트니스상하의    | 90000 |      1 |  90000 | 2024-08-29 11:42:21 |
+|  11 | 김영이   | 순면라운드 반팔티 | 15900 |      7 | 111300 | 2024-08-29 11:42:21 |
+|  12 | 박진주   | 피트니스상의      | 30000 |      4 | 120000 | 2024-08-29 11:42:25 |
++-----+----------+-------------------+-------+--------+--------+---------------------+
+11 rows in set (0.00 sec)
+
+mysql> select sum(amount) as '총 판매수량',sum(total) as '총 매출액' from buy
+    -> group by amount and total;
++-------------+-----------+
+| 총 판매수량 | 총 매출액 |
++-------------+-----------+
+|          39 |   1219900 |
++-------------+-----------+
+1 row in set (0.00 sec)
+
+mysql> select * from product;
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+| num | type_a     | type_b       | name                | price | amount | sale_amount | register_date       |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+|   1 | 티셔츠     | 긴소매       | 폴라 티셔츠         | 15000 |     34 |         100 | 2023-10-15 00:00:00 |
+|   2 | 티셔츠     | 긴소매       | 크롭 티셔츠         | 10000 |     50 |         100 | 2023-10-15 00:00:00 |
+|   3 | 티셔츠     | 반소매       | 순면라운드 반팔티   | 15900 |     10 |         153 | 2023-09-15 00:00:00 |
+|   4 | 티셔츠     | 민소매       | 에이 나시           |  9000 |     33 |          33 | 2023-09-10 00:00:00 |
+|   5 | 패션운동복 | 트레이닝상의 | 피트니스상의        | 30000 |     34 |          55 | 2023-12-05 00:00:00 |
+|   6 | 패션운동복 | 트레이닝하의 | 피트니스하의        | 50000 |     55 |          34 | 2023-12-06 00:00:00 |
+|   7 | 패션운동복 | 트레이닝세트 | 피트니스상하의      | 90000 |     70 |          34 | 2023-12-07 00:00:00 |
+|   8 | 아우터     | 재킷         | 양면 롱 후리스 자켓 | 23300 |    100 |          42 | 2023-11-05 00:00:00 |
+|   9 | 아우터     | 코트         | 양털 겨울 코트      | 50000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  10 | 아우터     | 코트         | 트렌치 코트         | 40000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  11 | 아우터     | 패딩         | 롱 패팅 점퍼        | 47400 |     10 |          45 | 2023-11-01 00:00:00 |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+11 rows in set (0.00 sec)
+
+mysql> select * from product
+    -> order by register_date;
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+| num | type_a     | type_b       | name                | price | amount | sale_amount | register_date       |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+|   4 | 티셔츠     | 민소매       | 에이 나시           |  9000 |     33 |          33 | 2023-09-10 00:00:00 |
+|   3 | 티셔츠     | 반소매       | 순면라운드 반팔티   | 15900 |     10 |         153 | 2023-09-15 00:00:00 |
+|   1 | 티셔츠     | 긴소매       | 폴라 티셔츠         | 15000 |     34 |         100 | 2023-10-15 00:00:00 |
+|   2 | 티셔츠     | 긴소매       | 크롭 티셔츠         | 10000 |     50 |         100 | 2023-10-15 00:00:00 |
+|   9 | 아우터     | 코트         | 양털 겨울 코트      | 50000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  10 | 아우터     | 코트         | 트렌치 코트         | 40000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  11 | 아우터     | 패딩         | 롱 패팅 점퍼        | 47400 |     10 |          45 | 2023-11-01 00:00:00 |
+|   8 | 아우터     | 재킷         | 양면 롱 후리스 자켓 | 23300 |    100 |          42 | 2023-11-05 00:00:00 |
+|   5 | 패션운동복 | 트레이닝상의 | 피트니스상의        | 30000 |     34 |          55 | 2023-12-05 00:00:00 |
+|   6 | 패션운동복 | 트레이닝하의 | 피트니스하의        | 50000 |     55 |          34 | 2023-12-06 00:00:00 |
+|   7 | 패션운동복 | 트레이닝세트 | 피트니스상하의      | 90000 |     70 |          34 | 2023-12-07 00:00:00 |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+11 rows in set (0.00 sec)
+
+mysql> select * from product
+    -> datetime by register_date;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'by register_date' at line 2
+mysql> select * from product
+    -> datetime desc register_date;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'desc register_date' at line 2
+mysql> select * from product
+    -> order by register_date desc;
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+| num | type_a     | type_b       | name                | price | amount | sale_amount | register_date       |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+|   7 | 패션운동복 | 트레이닝세트 | 피트니스상하의      | 90000 |     70 |          34 | 2023-12-07 00:00:00 |
+|   6 | 패션운동복 | 트레이닝하의 | 피트니스하의        | 50000 |     55 |          34 | 2023-12-06 00:00:00 |
+|   5 | 패션운동복 | 트레이닝상의 | 피트니스상의        | 30000 |     34 |          55 | 2023-12-05 00:00:00 |
+|   8 | 아우터     | 재킷         | 양면 롱 후리스 자켓 | 23300 |    100 |          42 | 2023-11-05 00:00:00 |
+|  11 | 아우터     | 패딩         | 롱 패팅 점퍼        | 47400 |     10 |          45 | 2023-11-01 00:00:00 |
+|   9 | 아우터     | 코트         | 양털 겨울 코트      | 50000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  10 | 아우터     | 코트         | 트렌치 코트         | 40000 |     50 |          30 | 2023-10-31 00:00:00 |
+|   1 | 티셔츠     | 긴소매       | 폴라 티셔츠         | 15000 |     34 |         100 | 2023-10-15 00:00:00 |
+|   2 | 티셔츠     | 긴소매       | 크롭 티셔츠         | 10000 |     50 |         100 | 2023-10-15 00:00:00 |
+|   3 | 티셔츠     | 반소매       | 순면라운드 반팔티   | 15900 |     10 |         153 | 2023-09-15 00:00:00 |
+|   4 | 티셔츠     | 민소매       | 에이 나시           |  9000 |     33 |          33 | 2023-09-10 00:00:00 |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+11 rows in set (0.00 sec)
+
+mysql> select type_a, count(type_a), sum(price) from product
+    -> group by type_a, price;
++------------+---------------+------------+
+| type_a     | count(type_a) | sum(price) |
++------------+---------------+------------+
+| 티셔츠     |             1 |      15000 |
+| 티셔츠     |             1 |      10000 |
+| 티셔츠     |             1 |      15900 |
+| 티셔츠     |             1 |       9000 |
+| 패션운동복 |             1 |      30000 |
+| 패션운동복 |             1 |      50000 |
+| 패션운동복 |             1 |      90000 |
+| 아우터     |             1 |      23300 |
+| 아우터     |             1 |      50000 |
+| 아우터     |             1 |      40000 |
+| 아우터     |             1 |      47400 |
++------------+---------------+------------+
+11 rows in set (0.00 sec)
+
+mysql> select distinct type_a, count(type_a), sum(price) from product
+    -> group by type_a, price;
++------------+---------------+------------+
+| type_a     | count(type_a) | sum(price) |
++------------+---------------+------------+
+| 아우터     |             1 |      23300 |
+| 아우터     |             1 |      40000 |
+| 아우터     |             1 |      47400 |
+| 아우터     |             1 |      50000 |
+| 티셔츠     |             1 |       9000 |
+| 티셔츠     |             1 |      10000 |
+| 티셔츠     |             1 |      15000 |
+| 티셔츠     |             1 |      15900 |
+| 패션운동복 |             1 |      30000 |
+| 패션운동복 |             1 |      50000 |
+| 패션운동복 |             1 |      90000 |
++------------+---------------+------------+
+11 rows in set (0.00 sec)
+
+mysql> select distinct type_a from product;
++------------+
+| type_a     |
++------------+
+| 티셔츠     |
+| 패션운동복 |
+| 아우터     |
++------------+
+3 rows in set (0.00 sec)
+
+mysql> select distinct type_a, count(type_a) from product
+    -> group by type_a;
++------------+---------------+
+| type_a     | count(type_a) |
++------------+---------------+
+| 티셔츠     |             4 |
+| 패션운동복 |             3 |
+| 아우터     |             4 |
++------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> select distinct type_a, count(type_a), sum(price) from product
+    -> group by type_a;
++------------+---------------+------------+
+| type_a     | count(type_a) | sum(price) |
++------------+---------------+------------+
+| 티셔츠     |             4 |      49900 |
+| 패션운동복 |             3 |     170000 |
+| 아우터     |             4 |     160700 |
++------------+---------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from product
+    -> where price >= 20000;
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+| num | type_a     | type_b       | name                | price | amount | sale_amount | register_date       |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+|   5 | 패션운동복 | 트레이닝상의 | 피트니스상의        | 30000 |     34 |          55 | 2023-12-05 00:00:00 |
+|   6 | 패션운동복 | 트레이닝하의 | 피트니스하의        | 50000 |     55 |          34 | 2023-12-06 00:00:00 |
+|   7 | 패션운동복 | 트레이닝세트 | 피트니스상하의      | 90000 |     70 |          34 | 2023-12-07 00:00:00 |
+|   8 | 아우터     | 재킷         | 양면 롱 후리스 자켓 | 23300 |    100 |          42 | 2023-11-05 00:00:00 |
+|   9 | 아우터     | 코트         | 양털 겨울 코트      | 50000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  10 | 아우터     | 코트         | 트렌치 코트         | 40000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  11 | 아우터     | 패딩         | 롱 패팅 점퍼        | 47400 |     10 |          45 | 2023-11-01 00:00:00 |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+7 rows in set (0.00 sec)
+
+mysql> alter table product add sale_price int generated always as
+    -> (price * 0.9) stored after price;
+Query OK, 11 rows affected (0.06 sec)
+Records: 11  Duplicates: 0  Warnings: 0
+
+mysql> select * from product;
++-----+------------+--------------+---------------------+-------+------------+--------+-------------+---------------------+
+| num | type_a     | type_b       | name                | price | sale_price | amount | sale_amount | register_date       |
++-----+------------+--------------+---------------------+-------+------------+--------+-------------+---------------------+
+|   1 | 티셔츠     | 긴소매       | 폴라 티셔츠         | 15000 |      13500 |     34 |         100 | 2023-10-15 00:00:00 |
+|   2 | 티셔츠     | 긴소매       | 크롭 티셔츠         | 10000 |       9000 |     50 |         100 | 2023-10-15 00:00:00 |
+|   3 | 티셔츠     | 반소매       | 순면라운드 반팔티   | 15900 |      14310 |     10 |         153 | 2023-09-15 00:00:00 |
+|   4 | 티셔츠     | 민소매       | 에이 나시           |  9000 |       8100 |     33 |          33 | 2023-09-10 00:00:00 |
+|   5 | 패션운동복 | 트레이닝상의 | 피트니스상의        | 30000 |      27000 |     34 |          55 | 2023-12-05 00:00:00 |
+|   6 | 패션운동복 | 트레이닝하의 | 피트니스하의        | 50000 |      45000 |     55 |          34 | 2023-12-06 00:00:00 |
+|   7 | 패션운동복 | 트레이닝세트 | 피트니스상하의      | 90000 |      81000 |     70 |          34 | 2023-12-07 00:00:00 |
+|   8 | 아우터     | 재킷         | 양면 롱 후리스 자켓 | 23300 |      20970 |    100 |          42 | 2023-11-05 00:00:00 |
+|   9 | 아우터     | 코트         | 양털 겨울 코트      | 50000 |      45000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  10 | 아우터     | 코트         | 트렌치 코트         | 40000 |      36000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  11 | 아우터     | 패딩         | 롱 패팅 점퍼        | 47400 |      42660 |     10 |          45 | 2023-11-01 00:00:00 |
++-----+------------+--------------+---------------------+-------+------------+--------+-------------+---------------------+
+11 rows in set (0.00 sec)
+
+mysql> alter table buy drop sale_price;
+ERROR 1091 (42000): Can't DROP 'sale_price'; check that column/key exists
+mysql> alter table product drop sale_price;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table product add sale_price int generated always as
+    -> (case when price>=20000 then price*0.9 else null end)
+    -> stored after price;
+Query OK, 11 rows affected (0.05 sec)
+Records: 11  Duplicates: 0  Warnings: 0
+
+mysql> select * from product;
++-----+------------+--------------+---------------------+-------+------------+--------+-------------+---------------------+
+| num | type_a     | type_b       | name                | price | sale_price | amount | sale_amount | register_date       |
++-----+------------+--------------+---------------------+-------+------------+--------+-------------+---------------------+
+|   1 | 티셔츠     | 긴소매       | 폴라 티셔츠         | 15000 |       NULL |     34 |         100 | 2023-10-15 00:00:00 |
+|   2 | 티셔츠     | 긴소매       | 크롭 티셔츠         | 10000 |       NULL |     50 |         100 | 2023-10-15 00:00:00 |
+|   3 | 티셔츠     | 반소매       | 순면라운드 반팔티   | 15900 |       NULL |     10 |         153 | 2023-09-15 00:00:00 |
+|   4 | 티셔츠     | 민소매       | 에이 나시           |  9000 |       NULL |     33 |          33 | 2023-09-10 00:00:00 |
+|   5 | 패션운동복 | 트레이닝상의 | 피트니스상의        | 30000 |      27000 |     34 |          55 | 2023-12-05 00:00:00 |
+|   6 | 패션운동복 | 트레이닝하의 | 피트니스하의        | 50000 |      45000 |     55 |          34 | 2023-12-06 00:00:00 |
+|   7 | 패션운동복 | 트레이닝세트 | 피트니스상하의      | 90000 |      81000 |     70 |          34 | 2023-12-07 00:00:00 |
+|   8 | 아우터     | 재킷         | 양면 롱 후리스 자켓 | 23300 |      20970 |    100 |          42 | 2023-11-05 00:00:00 |
+|   9 | 아우터     | 코트         | 양털 겨울 코트      | 50000 |      45000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  10 | 아우터     | 코트         | 트렌치 코트         | 40000 |      36000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  11 | 아우터     | 패딩         | 롱 패팅 점퍼        | 47400 |      42660 |     10 |          45 | 2023-11-01 00:00:00 |
++-----+------------+--------------+---------------------+-------+------------+--------+-------------+---------------------+
+11 rows in set (0.00 sec)
+
+mysql> select * from product
+    -> where register_date = monthname(November);
+ERROR 1054 (42S22): Unknown column 'November' in 'where clause'
+mysql> select * from product
+    -> where register_date = monthname(11);
+Empty set, 3 warnings (0.00 sec)
+
+mysql> select * from product
+    -> where monthname(register_date) = 11 ;
+Empty set, 11 warnings (0.00 sec)
+
+mysql> SELECT * FROM product
+    -> WHERE MONTH(register_date) = 11;
++-----+--------+--------+---------------------+-------+------------+--------+-------------+---------------------+
+| num | type_a | type_b | name                | price | sale_price | amount | sale_amount | register_date       |
++-----+--------+--------+---------------------+-------+------------+--------+-------------+---------------------+
+|   8 | 아우터 | 재킷   | 양면 롱 후리스 자켓 | 23300 |      20970 |    100 |          42 | 2023-11-05 00:00:00 |
+|  11 | 아우터 | 패딩   | 롱 패팅 점퍼        | 47400 |      42660 |     10 |          45 | 2023-11-01 00:00:00 |
++-----+--------+--------+---------------------+-------+------------+--------+-------------+---------------------+
+2 rows in set (0.01 sec)
+
+mysql> select * from product
+    -> where month(register_date) = 11;
++-----+--------+--------+---------------------+-------+------------+--------+-------------+---------------------+
+| num | type_a | type_b | name                | price | sale_price | amount | sale_amount | register_date       |
++-----+--------+--------+---------------------+-------+------------+--------+-------------+---------------------+
+|   8 | 아우터 | 재킷   | 양면 롱 후리스 자켓 | 23300 |      20970 |    100 |          42 | 2023-11-05 00:00:00 |
+|  11 | 아우터 | 패딩   | 롱 패팅 점퍼        | 47400 |      42660 |     10 |          45 | 2023-11-01 00:00:00 |
++-----+--------+--------+---------------------+-------+------------+--------+-------------+---------------------+
+2 rows in set (0.00 sec)
+
+mysql> select distinct type_a, sum(sale_amount) from product
+    -> group by type_a;
++------------+------------------+
+| type_a     | sum(sale_amount) |
++------------+------------------+
+| 티셔츠     |              386 |
+| 패션운동복 |              123 |
+| 아우터     |              147 |
++------------+------------------+
+3 rows in set (0.00 sec)
+
+mysql> select distinct type_a, sum(sale_amount) from product
+    -> group by type_a
+    -> having max(sum(sale_amount));
+ERROR 1111 (HY000): Invalid use of group function
+mysql> select distinct type_a, max(sum(sale_amount)) from product
+    -> group by type_a;
+ERROR 1111 (HY000): Invalid use of group function
+mysql> select distinct type_a, sum(sale_amount) from product
+    -> group by type_a;
++------------+------------------+
+| type_a     | sum(sale_amount) |
++------------+------------------+
+| 티셔츠     |              386 |
+| 패션운동복 |              123 |
+| 아우터     |              147 |
++------------+------------------+
+3 rows in set (0.00 sec)
+
+mysql> select distinct type_a, sum(sale_amount) sa from product
+    -> group by type_a
+    -> order by sa desc limit 0,1;
++--------+------+
+| type_a | sa   |
++--------+------+
+| 티셔츠 |  386 |
++--------+------+
+1 row in set (0.00 sec)
+
+mysql> select name, price as '정상가', round((price*0.9),0) as '할인가'
+    -> from product
+    -> where price >= 20000;
++---------------------+--------+--------+
+| name                | 정상가 | 할인가 |
++---------------------+--------+--------+
+| 피트니스상의        |  30000 |  27000 |
+| 피트니스하의        |  50000 |  45000 |
+| 피트니스상하의      |  90000 |  81000 |
+| 양면 롱 후리스 자켓 |  23300 |  20970 |
+| 양털 겨울 코트      |  50000 |  45000 |
+| 트렌치 코트         |  40000 |  36000 |
+| 롱 패팅 점퍼        |  47400 |  42660 |
++---------------------+--------+--------+
+7 rows in set (0.00 sec)
+
+mysql> select name, price as '정상가',
+    -> (case when price>=50000 then price*0.9 else price end) as '할인가'
+    -> from product;
++---------------------+--------+---------+
+| name                | 정상가 | 할인가  |
++---------------------+--------+---------+
+| 폴라 티셔츠         |  15000 |   15000 |
+| 크롭 티셔츠         |  10000 |   10000 |
+| 순면라운드 반팔티   |  15900 |   15900 |
+| 에이 나시           |   9000 |    9000 |
+| 피트니스상의        |  30000 |   30000 |
+| 피트니스하의        |  50000 | 45000.0 |
+| 피트니스상하의      |  90000 | 81000.0 |
+| 양면 롱 후리스 자켓 |  23300 |   23300 |
+| 양털 겨울 코트      |  50000 | 45000.0 |
+| 트렌치 코트         |  40000 |   40000 |
+| 롱 패팅 점퍼        |  47400 |   47400 |
++---------------------+--------+---------+
+11 rows in set (0.00 sec)
+
+mysql> select name, price as '정상가',
+    -> (case when price>=50000 then round((price*0.9),0) else price end) as '할인가'
+    -> from product;
++---------------------+--------+--------+
+| name                | 정상가 | 할인가 |
++---------------------+--------+--------+
+| 폴라 티셔츠         |  15000 |  15000 |
+| 크롭 티셔츠         |  10000 |  10000 |
+| 순면라운드 반팔티   |  15900 |  15900 |
+| 에이 나시           |   9000 |   9000 |
+| 피트니스상의        |  30000 |  30000 |
+| 피트니스하의        |  50000 |  45000 |
+| 피트니스상하의      |  90000 |  81000 |
+| 양면 롱 후리스 자켓 |  23300 |  23300 |
+| 양털 겨울 코트      |  50000 |  45000 |
+| 트렌치 코트         |  40000 |  40000 |
+| 롱 패팅 점퍼        |  47400 |  47400 |
++---------------------+--------+--------+
+11 rows in set (0.00 sec)
+
+mysql> select * from product;
++-----+------------+--------------+---------------------+-------+------------+--------+-------------+---------------------+
+| num | type_a     | type_b       | name                | price | sale_price | amount | sale_amount | register_date       |
++-----+------------+--------------+---------------------+-------+------------+--------+-------------+---------------------+
+|   1 | 티셔츠     | 긴소매       | 폴라 티셔츠         | 15000 |       NULL |     34 |         100 | 2023-10-15 00:00:00 |
+|   2 | 티셔츠     | 긴소매       | 크롭 티셔츠         | 10000 |       NULL |     50 |         100 | 2023-10-15 00:00:00 |
+|   3 | 티셔츠     | 반소매       | 순면라운드 반팔티   | 15900 |       NULL |     10 |         153 | 2023-09-15 00:00:00 |
+|   4 | 티셔츠     | 민소매       | 에이 나시           |  9000 |       NULL |     33 |          33 | 2023-09-10 00:00:00 |
+|   5 | 패션운동복 | 트레이닝상의 | 피트니스상의        | 30000 |      27000 |     34 |          55 | 2023-12-05 00:00:00 |
+|   6 | 패션운동복 | 트레이닝하의 | 피트니스하의        | 50000 |      45000 |     55 |          34 | 2023-12-06 00:00:00 |
+|   7 | 패션운동복 | 트레이닝세트 | 피트니스상하의      | 90000 |      81000 |     70 |          34 | 2023-12-07 00:00:00 |
+|   8 | 아우터     | 재킷         | 양면 롱 후리스 자켓 | 23300 |      20970 |    100 |          42 | 2023-11-05 00:00:00 |
+|   9 | 아우터     | 코트         | 양털 겨울 코트      | 50000 |      45000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  10 | 아우터     | 코트         | 트렌치 코트         | 40000 |      36000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  11 | 아우터     | 패딩         | 롱 패팅 점퍼        | 47400 |      42660 |     10 |          45 | 2023-11-01 00:00:00 |
++-----+------------+--------------+---------------------+-------+------------+--------+-------------+---------------------+
+11 rows in set (0.00 sec)
+
+mysql> select name, price as '정상가', round((price*0.9),0) as '할인가'
+    -> from product
+    -> where price >= 50000;
++----------------+--------+--------+
+| name           | 정상가 | 할인가 |
++----------------+--------+--------+
+| 피트니스하의   |  50000 |  45000 |
+| 피트니스상하의 |  90000 |  81000 |
+| 양털 겨울 코트 |  50000 |  45000 |
++----------------+--------+--------+
+3 rows in set (0.00 sec)
+
+mysql> alter table product drop sale_price;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from product;
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+| num | type_a     | type_b       | name                | price | amount | sale_amount | register_date       |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+|   1 | 티셔츠     | 긴소매       | 폴라 티셔츠         | 15000 |     34 |         100 | 2023-10-15 00:00:00 |
+|   2 | 티셔츠     | 긴소매       | 크롭 티셔츠         | 10000 |     50 |         100 | 2023-10-15 00:00:00 |
+|   3 | 티셔츠     | 반소매       | 순면라운드 반팔티   | 15900 |     10 |         153 | 2023-09-15 00:00:00 |
+|   4 | 티셔츠     | 민소매       | 에이 나시           |  9000 |     33 |          33 | 2023-09-10 00:00:00 |
+|   5 | 패션운동복 | 트레이닝상의 | 피트니스상의        | 30000 |     34 |          55 | 2023-12-05 00:00:00 |
+|   6 | 패션운동복 | 트레이닝하의 | 피트니스하의        | 50000 |     55 |          34 | 2023-12-06 00:00:00 |
+|   7 | 패션운동복 | 트레이닝세트 | 피트니스상하의      | 90000 |     70 |          34 | 2023-12-07 00:00:00 |
+|   8 | 아우터     | 재킷         | 양면 롱 후리스 자켓 | 23300 |    100 |          42 | 2023-11-05 00:00:00 |
+|   9 | 아우터     | 코트         | 양털 겨울 코트      | 50000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  10 | 아우터     | 코트         | 트렌치 코트         | 40000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  11 | 아우터     | 패딩         | 롱 패팅 점퍼        | 47400 |     10 |          45 | 2023-11-01 00:00:00 |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+11 rows in set (0.00 sec)
+
+mysql> select * from product
+    -> where month(register_date) = 11;
++-----+--------+--------+---------------------+-------+--------+-------------+---------------------+
+| num | type_a | type_b | name                | price | amount | sale_amount | register_date       |
++-----+--------+--------+---------------------+-------+--------+-------------+---------------------+
+|   8 | 아우터 | 재킷   | 양면 롱 후리스 자켓 | 23300 |    100 |          42 | 2023-11-05 00:00:00 |
+|  11 | 아우터 | 패딩   | 롱 패팅 점퍼        | 47400 |     10 |          45 | 2023-11-01 00:00:00 |
++-----+--------+--------+---------------------+-------+--------+-------------+---------------------+
+2 rows in set (0.00 sec)
+
+mysql> select distinct type_a, sum(sale_amount) sa from product
+    -> group by type_a
+    -> order by sa desc limit 0,1;
++--------+------+
+| type_a | sa   |
++--------+------+
+| 티셔츠 |  386 |
++--------+------+
+1 row in set (0.00 sec)
+
+mysql> select name, price as '정상가',
+    ->  if(price>=50000, round((price*0.9),0), price) as '할인가'
+    -> from product;
++---------------------+--------+--------+
+| name                | 정상가 | 할인가 |
++---------------------+--------+--------+
+| 폴라 티셔츠         |  15000 |  15000 |
+| 크롭 티셔츠         |  10000 |  10000 |
+| 순면라운드 반팔티   |  15900 |  15900 |
+| 에이 나시           |   9000 |   9000 |
+| 피트니스상의        |  30000 |  30000 |
+| 피트니스하의        |  50000 |  45000 |
+| 피트니스상하의      |  90000 |  81000 |
+| 양면 롱 후리스 자켓 |  23300 |  23300 |
+| 양털 겨울 코트      |  50000 |  45000 |
+| 트렌치 코트         |  40000 |  40000 |
+| 롱 패팅 점퍼        |  47400 |  47400 |
++---------------------+--------+--------+
+11 rows in set (0.00 sec)
+
+mysql> select date_format(register_date, '%y-%m') as mon from product;
++-------+
+| mon   |
++-------+
+| 23-10 |
+| 23-10 |
+| 23-09 |
+| 23-09 |
+| 23-12 |
+| 23-12 |
+| 23-12 |
+| 23-11 |
+| 23-10 |
+| 23-10 |
+| 23-11 |
++-------+
+11 rows in set (0.01 sec)
+
+mysql> select distinct date_format(register_date, '%Y-%m') from product;
++-------------------------------------+
+| date_format(register_date, '%Y-%m') |
++-------------------------------------+
+| 2023-10                             |
+| 2023-09                             |
+| 2023-12                             |
+| 2023-11                             |
++-------------------------------------+
+4 rows in set (0.00 sec)
+
+mysql> select distinct date_format(register_date, '%Y-%m') from product
+    -> order by date_format(register_date, '%Y-%m');
++-------------------------------------+
+| date_format(register_date, '%Y-%m') |
++-------------------------------------+
+| 2023-09                             |
+| 2023-10                             |
+| 2023-11                             |
+| 2023-12                             |
++-------------------------------------+
+4 rows in set (0.00 sec)
+
+mysql> select distinct date_format(register_date, '%Y-%m'), sum(sale_amount)
+    -> from product
+    -> group by date_format(register_date, '%Y-%m')
+    -> order by date_format(register_date, '%Y-%m');
++-------------------------------------+------------------+
+| date_format(register_date, '%Y-%m') | sum(sale_amount) |
++-------------------------------------+------------------+
+| 2023-09                             |              186 |
+| 2023-10                             |              260 |
+| 2023-11                             |               87 |
+| 2023-12                             |              123 |
++-------------------------------------+------------------+
+4 rows in set (0.00 sec)
+
+mysql> select distinct date_format(register_date, '%Y-%m') as 월별, sum(sale_amount)
+    -> from product
+    -> group by date_format(register_date, '%Y-%m')
+    -> order by date_format(register_date, '%Y-%m');
++---------+------------------+
+| 월별    | sum(sale_amount) |
++---------+------------------+
+| 2023-09 |              186 |
+| 2023-10 |              260 |
+| 2023-11 |               87 |
+| 2023-12 |              123 |
++---------+------------------+
+4 rows in set (0.00 sec)
+
+mysql> select distinct date_format(register_date, '%Y-%m') as mon,
+    -> sum(sale_amount) as sum from product
+    -> group by mon
+    -> order by mon;
++---------+------+
+| mon     | sum  |
++---------+------+
+| 2023-09 |  186 |
+| 2023-10 |  260 |
+| 2023-11 |   87 |
+| 2023-12 |  123 |
++---------+------+
+4 rows in set (0.00 sec)
+
+mysql> select max(sa) from
+    -> (select sum(sale_amount) sa from product
+    -> group by type_a) as p;
++---------+
+| max(sa) |
++---------+
+|     386 |
++---------+
+1 row in set (0.00 sec)
+
+mysql>
+mysql> select avg(sa) from
+    -> (select sum(sale_amount) sa from product
+    -> group by type_a) as p
+    -> ;
++----------+
+| avg(sa)  |
++----------+
+| 218.6667 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select avg(sa) from
+    -> (select sum(sale_amount) sa from product
+    -> group by type_a) as p;
++----------+
+| avg(sa)  |
++----------+
+| 218.6667 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select avg(sa) from
+    -> (select sum(sale_amount) sa from product
+    -> group by type_a) as p;^Z
++----------+
+| avg(sa)  |
++----------+
+| 218.6667 |
++----------+
+1 row in set (0.00 sec)
+
+    -> ;
+ERROR:
+No query specified
+
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> update buy set price = 17000
+    -> where num = 1;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from buy;
++-----+----------+-------------------+-------+--------+--------+---------------------+
+| num | customer | product_name      | price | amount | total  | buy_date            |
++-----+----------+-------------------+-------+--------+--------+---------------------+
+|   1 | 홍길동   | 폴라 티셔츠       | 17000 |      5 |  85000 | 2024-08-29 10:58:58 |
+|   2 | 홍길순   | 크롭 티셔츠       | 10000 |      3 |  30000 | 2024-08-29 10:59:26 |
+|   3 | 김순이   | 피트니스상하의    | 90000 |      2 | 180000 | 2024-08-29 11:03:40 |
+|   4 | 강감찬   | 트렌치 코트       | 40000 |      5 | 200000 | 2024-08-29 11:03:40 |
+|   5 | 김철수   | 피트니스상하의    | 90000 |      1 |  90000 | 2024-08-29 11:03:40 |
+|   6 | 김영이   | 피트니스상의      | 30000 |      2 |  60000 | 2024-08-29 11:03:40 |
+|   7 | 박진주   | 순면라운드 반팔티 | 15900 |      4 |  63600 | 2024-08-29 11:03:42 |
+|   9 | 강감찬   | 트렌치 코트       | 40000 |      5 | 200000 | 2024-08-29 11:42:21 |
+|  10 | 김철수   | 피트니스상하의    | 90000 |      1 |  90000 | 2024-08-29 11:42:21 |
+|  11 | 김영이   | 순면라운드 반팔티 | 15900 |      7 | 111300 | 2024-08-29 11:42:21 |
+|  12 | 박진주   | 피트니스상의      | 30000 |      4 | 120000 | 2024-08-29 11:42:25 |
++-----+----------+-------------------+-------+--------+--------+---------------------+
+11 rows in set (0.00 sec)
+
+mysql> rollback;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from buy;
++-----+----------+-------------------+-------+--------+--------+---------------------+
+| num | customer | product_name      | price | amount | total  | buy_date            |
++-----+----------+-------------------+-------+--------+--------+---------------------+
+|   1 | 홍길동   | 폴라 티셔츠       | 15000 |      5 |  75000 | 2024-08-29 10:58:58 |
+|   2 | 홍길순   | 크롭 티셔츠       | 10000 |      3 |  30000 | 2024-08-29 10:59:26 |
+|   3 | 김순이   | 피트니스상하의    | 90000 |      2 | 180000 | 2024-08-29 11:03:40 |
+|   4 | 강감찬   | 트렌치 코트       | 40000 |      5 | 200000 | 2024-08-29 11:03:40 |
+|   5 | 김철수   | 피트니스상하의    | 90000 |      1 |  90000 | 2024-08-29 11:03:40 |
+|   6 | 김영이   | 피트니스상의      | 30000 |      2 |  60000 | 2024-08-29 11:03:40 |
+|   7 | 박진주   | 순면라운드 반팔티 | 15900 |      4 |  63600 | 2024-08-29 11:03:42 |
+|   9 | 강감찬   | 트렌치 코트       | 40000 |      5 | 200000 | 2024-08-29 11:42:21 |
+|  10 | 김철수   | 피트니스상하의    | 90000 |      1 |  90000 | 2024-08-29 11:42:21 |
+|  11 | 김영이   | 순면라운드 반팔티 | 15900 |      7 | 111300 | 2024-08-29 11:42:21 |
+|  12 | 박진주   | 피트니스상의      | 30000 |      4 | 120000 | 2024-08-29 11:42:25 |
++-----+----------+-------------------+-------+--------+--------+---------------------+
+11 rows in set (0.00 sec)
+
+mysql> select * from product
+    -> where price >= 40000;
++-----+------------+--------------+----------------+-------+--------+-------------+---------------------+
+| num | type_a     | type_b       | name           | price | amount | sale_amount | register_date       |
++-----+------------+--------------+----------------+-------+--------+-------------+---------------------+
+|   6 | 패션운동복 | 트레이닝하의 | 피트니스하의   | 50000 |     55 |          34 | 2023-12-06 00:00:00 |
+|   7 | 패션운동복 | 트레이닝세트 | 피트니스상하의 | 90000 |     70 |          34 | 2023-12-07 00:00:00 |
+|   9 | 아우터     | 코트         | 양털 겨울 코트 | 50000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  10 | 아우터     | 코트         | 트렌치 코트    | 40000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  11 | 아우터     | 패딩         | 롱 패팅 점퍼   | 47400 |     10 |          45 | 2023-11-01 00:00:00 |
++-----+------------+--------------+----------------+-------+--------+-------------+---------------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from product
+    -> where price as '상품명(할인상품)' >= 40000;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'as '상품명(할인상품)' >= 40000' at line 2
+mysql> select distinct date_format(register_date,'%Y-%m) as mon,
+    '> sum(price*sale_amount) as sum from product
+    '> group by mon;
+    '> ';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 4
+mysql> select distinct date_format(register_date,'%Y-%m') as mon,
+    -> sum(price*sale_amount) as sum from product
+    -> group by mon;
++---------+---------+
+| mon     | sum     |
++---------+---------+
+| 2023-10 | 5200000 |
+| 2023-09 | 2729700 |
+| 2023-12 | 6410000 |
+| 2023-11 | 3111600 |
++---------+---------+
+4 rows in set (0.00 sec)
+
+mysql> select max(price) from product;
++------------+
+| max(price) |
++------------+
+|      90000 |
++------------+
+1 row in set (0.00 sec)
+
+order by max(price) desc limit 0,1' at line 1
+mysql> select type_a, price from product;
++------------+-------+
+| type_a     | price |
++------------+-------+
+| 티셔츠     | 15000 |
+| 티셔츠     | 10000 |
+| 티셔츠     | 15900 |
+| 티셔츠     |  9000 |
+| 패션운동복 | 30000 |
+| 패션운동복 | 50000 |
+| 패션운동복 | 90000 |
+| 아우터     | 23300 |
+| 아우터     | 50000 |
+| 아우터     | 40000 |
+| 아우터     | 47400 |
++------------+-------+
+11 rows in set (0.00 sec)
+
+mysql> group by type_a
+    -> order by price desc limit 0,1;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'group by type_a
+order by price desc limit 0,1' at line 1
+mysql> select * from product;
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+| num | type_a     | type_b       | name                | price | amount | sale_amount | register_date       |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+|   1 | 티셔츠     | 긴소매       | 폴라 티셔츠         | 15000 |     34 |         100 | 2023-10-15 00:00:00 |
+|   2 | 티셔츠     | 긴소매       | 크롭 티셔츠         | 10000 |     50 |         100 | 2023-10-15 00:00:00 |
+|   3 | 티셔츠     | 반소매       | 순면라운드 반팔티   | 15900 |     10 |         153 | 2023-09-15 00:00:00 |
+|   4 | 티셔츠     | 민소매       | 에이 나시           |  9000 |     33 |          33 | 2023-09-10 00:00:00 |
+|   5 | 패션운동복 | 트레이닝상의 | 피트니스상의        | 30000 |     34 |          55 | 2023-12-05 00:00:00 |
+|   6 | 패션운동복 | 트레이닝하의 | 피트니스하의        | 50000 |     55 |          34 | 2023-12-06 00:00:00 |
+|   7 | 패션운동복 | 트레이닝세트 | 피트니스상하의      | 90000 |     70 |          34 | 2023-12-07 00:00:00 |
+|   8 | 아우터     | 재킷         | 양면 롱 후리스 자켓 | 23300 |    100 |          42 | 2023-11-05 00:00:00 |
+|   9 | 아우터     | 코트         | 양털 겨울 코트      | 50000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  10 | 아우터     | 코트         | 트렌치 코트         | 40000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  11 | 아우터     | 패딩         | 롱 패팅 점퍼        | 47400 |     10 |          45 | 2023-11-01 00:00:00 |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+11 rows in set (0.00 sec)
+
+mysql> select type_a, price from product;
++------------+-------+
+| type_a     | price |
++------------+-------+
+| 티셔츠     | 15000 |
+| 티셔츠     | 10000 |
+| 티셔츠     | 15900 |
+| 티셔츠     |  9000 |
+| 패션운동복 | 30000 |
+| 패션운동복 | 50000 |
+| 패션운동복 | 90000 |
+| 아우터     | 23300 |
+| 아우터     | 50000 |
+| 아우터     | 40000 |
+| 아우터     | 47400 |
++------------+-------+
+11 rows in set (0.00 sec)
+
+mysql> order by price desc limit 0,1;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'order by price desc limit 0,1' at line 1
+mysql> select type_a, price from product
+    -> order by price desc limit 0,1;
++------------+-------+
+| type_a     | price |
++------------+-------+
+| 패션운동복 | 90000 |
++------------+-------+
+1 row in set (0.00 sec)
+
+mysql> select insert(customer,2,1,'O') from buy;
++--------------------------+
+| insert(customer,2,1,'O') |
++--------------------------+
+| 홍O동                    |
+| 홍O순                    |
+| 김O이                    |
+| 강O찬                    |
+| 김O수                    |
+| 김O이                    |
+| 박O주                    |
+| 강O찬                    |
+| 김O수                    |
+| 김O이                    |
+| 박O주                    |
++--------------------------+
+11 rows in set (0.00 sec)
+
+mysql> select insert(customer,2,1,'O') as customer from buy;
++----------+
+| customer |
++----------+
+| 홍O동    |
+| 홍O순    |
+| 김O이    |
+| 강O찬    |
+| 김O수    |
+| 김O이    |
+| 박O주    |
+| 강O찬    |
+| 김O수    |
+| 김O이    |
+| 박O주    |
++----------+
+11 rows in set (0.00 sec)
+
+mysql> select * from product
+    -> where price >= 40000;
++-----+------------+--------------+----------------+-------+--------+-------------+---------------------+
+| num | type_a     | type_b       | name           | price | amount | sale_amount | register_date       |
++-----+------------+--------------+----------------+-------+--------+-------------+---------------------+
+|   6 | 패션운동복 | 트레이닝하의 | 피트니스하의   | 50000 |     55 |          34 | 2023-12-06 00:00:00 |
+|   7 | 패션운동복 | 트레이닝세트 | 피트니스상하의 | 90000 |     70 |          34 | 2023-12-07 00:00:00 |
+|   9 | 아우터     | 코트         | 양털 겨울 코트 | 50000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  10 | 아우터     | 코트         | 트렌치 코트    | 40000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  11 | 아우터     | 패딩         | 롱 패팅 점퍼   | 47400 |     10 |          45 | 2023-11-01 00:00:00 |
++-----+------------+--------------+----------------+-------+--------+-------------+---------------------+
+5 rows in set (0.00 sec)
+
+mysql> select '이몽순', name, price, 2 from product
+    -> where num = 3;
++--------+-------------------+-------+---+
+| 이몽순 | name              | price | 2 |
++--------+-------------------+-------+---+
+| 이몽순 | 순면라운드 반팔티 | 15900 | 2 |
++--------+-------------------+-------+---+
+1 row in set (0.00 sec)
+
+mysql>
+mysql> insert into buy(customer, product_name, price, amount)
+    -> select '박진구', name, price, 3 from product
+    -> where num = 1;
+Query OK, 1 row affected (0.01 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> insert into buy(customer, product_name, price, amount)
+    -> select '박수아', name, price, 5 from product
+    -> where num = 8;;
+Query OK, 1 row affected (0.01 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+ERROR:
+No query specified
+
+mysql> select '이몽순', name, price, 2 from product
+    -> where num = 3;
++--------+-------------------+-------+---+
+| 이몽순 | name              | price | 2 |
++--------+-------------------+-------+---+
+| 이몽순 | 순면라운드 반팔티 | 15900 | 2 |
++--------+-------------------+-------+---+
+1 row in set (0.00 sec)
+
+mysql>
+mysql> insert into buy(customer, product_name, price, amount)
+    -> select '박진구', name, price, 3 from product
+    -> where num = 1;
+Query OK, 1 row affected (0.01 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> insert into buy(customer, product_name, price, amount)
+    -> select '박수아', name, price, 5 from product
+    -> where num = 8;
+Query OK, 1 row affected (0.01 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql> select * from buy;
++-----+----------+---------------------+-------+--------+--------+---------------------+
+| num | customer | product_name        | price | amount | total  | buy_date            |
++-----+----------+---------------------+-------+--------+--------+---------------------+
+|   1 | 홍길동   | 폴라 티셔츠         | 15000 |      5 |  75000 | 2024-08-29 10:58:58 |
+|   2 | 홍길순   | 크롭 티셔츠         | 10000 |      3 |  30000 | 2024-08-29 10:59:26 |
+|   3 | 김순이   | 피트니스상하의      | 90000 |      2 | 180000 | 2024-08-29 11:03:40 |
+|   4 | 강감찬   | 트렌치 코트         | 40000 |      5 | 200000 | 2024-08-29 11:03:40 |
+|   5 | 김철수   | 피트니스상하의      | 90000 |      1 |  90000 | 2024-08-29 11:03:40 |
+|   6 | 김영이   | 피트니스상의        | 30000 |      2 |  60000 | 2024-08-29 11:03:40 |
+|   7 | 박진주   | 순면라운드 반팔티   | 15900 |      4 |  63600 | 2024-08-29 11:03:42 |
+|   9 | 강감찬   | 트렌치 코트         | 40000 |      5 | 200000 | 2024-08-29 11:42:21 |
+|  10 | 김철수   | 피트니스상하의      | 90000 |      1 |  90000 | 2024-08-29 11:42:21 |
+|  11 | 김영이   | 순면라운드 반팔티   | 15900 |      7 | 111300 | 2024-08-29 11:42:21 |
+|  12 | 박진주   | 피트니스상의        | 30000 |      4 | 120000 | 2024-08-29 11:42:25 |
+|  13 | 박진구   | 폴라 티셔츠         | 15000 |      3 |  45000 | 2024-08-29 15:17:04 |
+|  14 | 박수아   | 양면 롱 후리스 자켓 | 23300 |      5 | 116500 | 2024-08-29 15:17:18 |
+|  15 | 박진구   | 폴라 티셔츠         | 15000 |      3 |  45000 | 2024-08-29 15:17:25 |
+|  16 | 박수아   | 양면 롱 후리스 자켓 | 23300 |      5 | 116500 | 2024-08-29 15:17:53 |
++-----+----------+---------------------+-------+--------+--------+---------------------+
+15 rows in set (0.00 sec)
+
+mysql> rollback;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select *from buy;
++-----+----------+---------------------+-------+--------+--------+---------------------+
+| num | customer | product_name        | price | amount | total  | buy_date            |
++-----+----------+---------------------+-------+--------+--------+---------------------+
+|   1 | 홍길동   | 폴라 티셔츠         | 15000 |      5 |  75000 | 2024-08-29 10:58:58 |
+|   2 | 홍길순   | 크롭 티셔츠         | 10000 |      3 |  30000 | 2024-08-29 10:59:26 |
+|   3 | 김순이   | 피트니스상하의      | 90000 |      2 | 180000 | 2024-08-29 11:03:40 |
+|   4 | 강감찬   | 트렌치 코트         | 40000 |      5 | 200000 | 2024-08-29 11:03:40 |
+|   5 | 김철수   | 피트니스상하의      | 90000 |      1 |  90000 | 2024-08-29 11:03:40 |
+|   6 | 김영이   | 피트니스상의        | 30000 |      2 |  60000 | 2024-08-29 11:03:40 |
+|   7 | 박진주   | 순면라운드 반팔티   | 15900 |      4 |  63600 | 2024-08-29 11:03:42 |
+|   9 | 강감찬   | 트렌치 코트         | 40000 |      5 | 200000 | 2024-08-29 11:42:21 |
+|  10 | 김철수   | 피트니스상하의      | 90000 |      1 |  90000 | 2024-08-29 11:42:21 |
+|  11 | 김영이   | 순면라운드 반팔티   | 15900 |      7 | 111300 | 2024-08-29 11:42:21 |
+|  12 | 박진주   | 피트니스상의        | 30000 |      4 | 120000 | 2024-08-29 11:42:25 |
+|  13 | 박진구   | 폴라 티셔츠         | 15000 |      3 |  45000 | 2024-08-29 15:17:04 |
+|  14 | 박수아   | 양면 롱 후리스 자켓 | 23300 |      5 | 116500 | 2024-08-29 15:17:18 |
+|  15 | 박진구   | 폴라 티셔츠         | 15000 |      3 |  45000 | 2024-08-29 15:17:25 |
+|  16 | 박수아   | 양면 롱 후리스 자켓 | 23300 |      5 | 116500 | 2024-08-29 15:17:53 |
++-----+----------+---------------------+-------+--------+--------+---------------------+
+15 rows in set (0.00 sec)
+
+mysql> DELETE FROM buy WHERE num IN (13, 14, 15, 16);
+Query OK, 4 rows affected (0.01 sec)
+
+mysql> select * from buy;
++-----+----------+-------------------+-------+--------+--------+---------------------+
+| num | customer | product_name      | price | amount | total  | buy_date            |
++-----+----------+-------------------+-------+--------+--------+---------------------+
+|   1 | 홍길동   | 폴라 티셔츠       | 15000 |      5 |  75000 | 2024-08-29 10:58:58 |
+|   2 | 홍길순   | 크롭 티셔츠       | 10000 |      3 |  30000 | 2024-08-29 10:59:26 |
+|   3 | 김순이   | 피트니스상하의    | 90000 |      2 | 180000 | 2024-08-29 11:03:40 |
+|   4 | 강감찬   | 트렌치 코트       | 40000 |      5 | 200000 | 2024-08-29 11:03:40 |
+|   5 | 김철수   | 피트니스상하의    | 90000 |      1 |  90000 | 2024-08-29 11:03:40 |
+|   6 | 김영이   | 피트니스상의      | 30000 |      2 |  60000 | 2024-08-29 11:03:40 |
+|   7 | 박진주   | 순면라운드 반팔티 | 15900 |      4 |  63600 | 2024-08-29 11:03:42 |
+|   9 | 강감찬   | 트렌치 코트       | 40000 |      5 | 200000 | 2024-08-29 11:42:21 |
+|  10 | 김철수   | 피트니스상하의    | 90000 |      1 |  90000 | 2024-08-29 11:42:21 |
+|  11 | 김영이   | 순면라운드 반팔티 | 15900 |      7 | 111300 | 2024-08-29 11:42:21 |
+|  12 | 박진주   | 피트니스상의      | 30000 |      4 | 120000 | 2024-08-29 11:42:25 |
++-----+----------+-------------------+-------+--------+--------+---------------------+
+11 rows in set (0.00 sec)
+
+mysql> insert into buy(customer, product_name, price, amount)
+    -> select '이몽순', name, price, 2 from product
+    -> where num = 3;
+Query OK, 1 row affected (0.01 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> insert into buy(customer, product_name, price, amount)
+    -> select '박진구', name, price, 3 from product
+    -> where num = 1;
+Query OK, 1 row affected (0.00 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> insert into buy(customer, product_name, price, amount)
+    -> select '박수아', name, price, 5 from product
+    -> where num = 8;
+Query OK, 1 row affected (0.01 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql> select * from buy;
++-----+----------+---------------------+-------+--------+--------+---------------------+
+| num | customer | product_name        | price | amount | total  | buy_date            |
++-----+----------+---------------------+-------+--------+--------+---------------------+
+|   1 | 홍길동   | 폴라 티셔츠         | 15000 |      5 |  75000 | 2024-08-29 10:58:58 |
+|   2 | 홍길순   | 크롭 티셔츠         | 10000 |      3 |  30000 | 2024-08-29 10:59:26 |
+|   3 | 김순이   | 피트니스상하의      | 90000 |      2 | 180000 | 2024-08-29 11:03:40 |
+|   4 | 강감찬   | 트렌치 코트         | 40000 |      5 | 200000 | 2024-08-29 11:03:40 |
+|   5 | 김철수   | 피트니스상하의      | 90000 |      1 |  90000 | 2024-08-29 11:03:40 |
+|   6 | 김영이   | 피트니스상의        | 30000 |      2 |  60000 | 2024-08-29 11:03:40 |
+|   7 | 박진주   | 순면라운드 반팔티   | 15900 |      4 |  63600 | 2024-08-29 11:03:42 |
+|   9 | 강감찬   | 트렌치 코트         | 40000 |      5 | 200000 | 2024-08-29 11:42:21 |
+|  10 | 김철수   | 피트니스상하의      | 90000 |      1 |  90000 | 2024-08-29 11:42:21 |
+|  11 | 김영이   | 순면라운드 반팔티   | 15900 |      7 | 111300 | 2024-08-29 11:42:21 |
+|  12 | 박진주   | 피트니스상의        | 30000 |      4 | 120000 | 2024-08-29 11:42:25 |
+|  17 | 이몽순   | 순면라운드 반팔티   | 15900 |      2 |  31800 | 2024-08-29 15:21:38 |
+|  18 | 박진구   | 폴라 티셔츠         | 15000 |      3 |  45000 | 2024-08-29 15:21:38 |
+|  19 | 박수아   | 양면 롱 후리스 자켓 | 23300 |      5 | 116500 | 2024-08-29 15:21:40 |
++-----+----------+---------------------+-------+--------+--------+---------------------+
+14 rows in set (0.00 sec)
+
+mysql> update buy set num = 17
+    -> where nu
+    -> ;
+ERROR 1054 (42S22): Unknown column 'nu' in 'where clause'
+mysql> update buy set num=13
+    -> where num =17;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from buy;
++-----+----------+---------------------+-------+--------+--------+---------------------+
+| num | customer | product_name        | price | amount | total  | buy_date            |
++-----+----------+---------------------+-------+--------+--------+---------------------+
+|   1 | 홍길동   | 폴라 티셔츠         | 15000 |      5 |  75000 | 2024-08-29 10:58:58 |
+|   2 | 홍길순   | 크롭 티셔츠         | 10000 |      3 |  30000 | 2024-08-29 10:59:26 |
+|   3 | 김순이   | 피트니스상하의      | 90000 |      2 | 180000 | 2024-08-29 11:03:40 |
+|   4 | 강감찬   | 트렌치 코트         | 40000 |      5 | 200000 | 2024-08-29 11:03:40 |
+|   5 | 김철수   | 피트니스상하의      | 90000 |      1 |  90000 | 2024-08-29 11:03:40 |
+|   6 | 김영이   | 피트니스상의        | 30000 |      2 |  60000 | 2024-08-29 11:03:40 |
+|   7 | 박진주   | 순면라운드 반팔티   | 15900 |      4 |  63600 | 2024-08-29 11:03:42 |
+|   9 | 강감찬   | 트렌치 코트         | 40000 |      5 | 200000 | 2024-08-29 11:42:21 |
+|  10 | 김철수   | 피트니스상하의      | 90000 |      1 |  90000 | 2024-08-29 11:42:21 |
+|  11 | 김영이   | 순면라운드 반팔티   | 15900 |      7 | 111300 | 2024-08-29 11:42:21 |
+|  12 | 박진주   | 피트니스상의        | 30000 |      4 | 120000 | 2024-08-29 11:42:25 |
+|  13 | 이몽순   | 순면라운드 반팔티   | 15900 |      2 |  31800 | 2024-08-29 15:21:38 |
+|  18 | 박진구   | 폴라 티셔츠         | 15000 |      3 |  45000 | 2024-08-29 15:21:38 |
+|  19 | 박수아   | 양면 롱 후리스 자켓 | 23300 |      5 | 116500 | 2024-08-29 15:21:40 |
++-----+----------+---------------------+-------+--------+--------+---------------------+
+14 rows in set (0.00 sec)
+
+mysql> update buy set num=14
+    -> where num=18;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update buy set num=15
+    -> where num=19;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from buy;
++-----+----------+---------------------+-------+--------+--------+---------------------+
+| num | customer | product_name        | price | amount | total  | buy_date            |
++-----+----------+---------------------+-------+--------+--------+---------------------+
+|   1 | 홍길동   | 폴라 티셔츠         | 15000 |      5 |  75000 | 2024-08-29 10:58:58 |
+|   2 | 홍길순   | 크롭 티셔츠         | 10000 |      3 |  30000 | 2024-08-29 10:59:26 |
+|   3 | 김순이   | 피트니스상하의      | 90000 |      2 | 180000 | 2024-08-29 11:03:40 |
+|   4 | 강감찬   | 트렌치 코트         | 40000 |      5 | 200000 | 2024-08-29 11:03:40 |
+|   5 | 김철수   | 피트니스상하의      | 90000 |      1 |  90000 | 2024-08-29 11:03:40 |
+|   6 | 김영이   | 피트니스상의        | 30000 |      2 |  60000 | 2024-08-29 11:03:40 |
+|   7 | 박진주   | 순면라운드 반팔티   | 15900 |      4 |  63600 | 2024-08-29 11:03:42 |
+|   9 | 강감찬   | 트렌치 코트         | 40000 |      5 | 200000 | 2024-08-29 11:42:21 |
+|  10 | 김철수   | 피트니스상하의      | 90000 |      1 |  90000 | 2024-08-29 11:42:21 |
+|  11 | 김영이   | 순면라운드 반팔티   | 15900 |      7 | 111300 | 2024-08-29 11:42:21 |
+|  12 | 박진주   | 피트니스상의        | 30000 |      4 | 120000 | 2024-08-29 11:42:25 |
+|  13 | 이몽순   | 순면라운드 반팔티   | 15900 |      2 |  31800 | 2024-08-29 15:21:38 |
+|  14 | 박진구   | 폴라 티셔츠         | 15000 |      3 |  45000 | 2024-08-29 15:21:38 |
+|  15 | 박수아   | 양면 롱 후리스 자켓 | 23300 |      5 | 116500 | 2024-08-29 15:21:40 |
++-----+----------+---------------------+-------+--------+--------+---------------------+
+14 rows in set (0.00 sec)
+
+mysql> create table if not exists product_non like product;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> insert into product_non
+    -> (select * from product where month(register_date) = 9);
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> delete from product where month(register_date) = 9);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+mysql> delete from product where month(register_date) = 9;
+Query OK, 2 rows affected (0.01 sec)
+
+mysql> select * from product;
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+| num | type_a     | type_b       | name                | price | amount | sale_amount | register_date       |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+|   1 | 티셔츠     | 긴소매       | 폴라 티셔츠         | 15000 |     34 |         100 | 2023-10-15 00:00:00 |
+|   2 | 티셔츠     | 긴소매       | 크롭 티셔츠         | 10000 |     50 |         100 | 2023-10-15 00:00:00 |
+|   5 | 패션운동복 | 트레이닝상의 | 피트니스상의        | 30000 |     34 |          55 | 2023-12-05 00:00:00 |
+|   6 | 패션운동복 | 트레이닝하의 | 피트니스하의        | 50000 |     55 |          34 | 2023-12-06 00:00:00 |
+|   7 | 패션운동복 | 트레이닝세트 | 피트니스상하의      | 90000 |     70 |          34 | 2023-12-07 00:00:00 |
+|   8 | 아우터     | 재킷         | 양면 롱 후리스 자켓 | 23300 |    100 |          42 | 2023-11-05 00:00:00 |
+|   9 | 아우터     | 코트         | 양털 겨울 코트      | 50000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  10 | 아우터     | 코트         | 트렌치 코트         | 40000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  11 | 아우터     | 패딩         | 롱 패팅 점퍼        | 47400 |     10 |          45 | 2023-11-01 00:00:00 |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+9 rows in set (0.00 sec)
+
+mysql> select * from product_non;
++-----+--------+--------+-------------------+-------+--------+-------------+---------------------+
+| num | type_a | type_b | name              | price | amount | sale_amount | register_date       |
++-----+--------+--------+-------------------+-------+--------+-------------+---------------------+
+|   3 | 티셔츠 | 반소매 | 순면라운드 반팔티 | 15900 |     10 |         153 | 2023-09-15 00:00:00 |
+|   4 | 티셔츠 | 민소매 | 에이 나시         |  9000 |     33 |          33 | 2023-09-10 00:00:00 |
++-----+--------+--------+-------------------+-------+--------+-------------+---------------------+
+2 rows in set (0.00 sec)
+
+price, amount ' at line 2
+mysql> select name, type_a, tpye_b,
+    -> if(price >= 40000, concat(name,'(할인상품)'),name) as 'name',
+    -> price, amount, sale_amount, register_date from product;
+ERROR 1054 (42S22): Unknown column 'tpye_b' in 'field list'
+mysql> select name, type_a,
+    -> if(price >= 40000, concat(name,'(할인상품)'),name) as 'name',
+    -> price, amount, sale_amount, register_date from product;
++---------------------+------------+--------------------------+-------+--------+-------------+---------------------+
+| name                | type_a     | name                     | price | amount | sale_amount | register_date       |
++---------------------+------------+--------------------------+-------+--------+-------------+---------------------+
+| 폴라 티셔츠         | 티셔츠     | 폴라 티셔츠              | 15000 |     34 |         100 | 2023-10-15 00:00:00 |
+| 크롭 티셔츠         | 티셔츠     | 크롭 티셔츠              | 10000 |     50 |         100 | 2023-10-15 00:00:00 |
+| 피트니스상의        | 패션운동복 | 피트니스상의             | 30000 |     34 |          55 | 2023-12-05 00:00:00 |
+| 피트니스하의        | 패션운동복 | 피트니스하의(할인상품)   | 50000 |     55 |          34 | 2023-12-06 00:00:00 |
+| 피트니스상하의      | 패션운동복 | 피트니스상하의(할인상품) | 90000 |     70 |          34 | 2023-12-07 00:00:00 |
+| 양면 롱 후리스 자켓 | 아우터     | 양면 롱 후리스 자켓      | 23300 |    100 |          42 | 2023-11-05 00:00:00 |
+| 양털 겨울 코트      | 아우터     | 양털 겨울 코트(할인상품) | 50000 |     50 |          30 | 2023-10-31 00:00:00 |
+| 트렌치 코트         | 아우터     | 트렌치 코트(할인상품)    | 40000 |     50 |          30 | 2023-10-31 00:00:00 |
+| 롱 패팅 점퍼        | 아우터     | 롱 패팅 점퍼(할인상품)   | 47400 |     10 |          45 | 2023-11-01 00:00:00 |
++---------------------+------------+--------------------------+-------+--------+-------------+---------------------+
+9 rows in set (0.01 sec)
+
+mysql> insert into product (select * from product_non where month(register_date) = 9);
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select * from product;
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+| num | type_a     | type_b       | name                | price | amount | sale_amount | register_date       |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+|   1 | 티셔츠     | 긴소매       | 폴라 티셔츠         | 15000 |     34 |         100 | 2023-10-15 00:00:00 |
+|   2 | 티셔츠     | 긴소매       | 크롭 티셔츠         | 10000 |     50 |         100 | 2023-10-15 00:00:00 |
+|   3 | 티셔츠     | 반소매       | 순면라운드 반팔티   | 15900 |     10 |         153 | 2023-09-15 00:00:00 |
+|   4 | 티셔츠     | 민소매       | 에이 나시           |  9000 |     33 |          33 | 2023-09-10 00:00:00 |
+|   5 | 패션운동복 | 트레이닝상의 | 피트니스상의        | 30000 |     34 |          55 | 2023-12-05 00:00:00 |
+|   6 | 패션운동복 | 트레이닝하의 | 피트니스하의        | 50000 |     55 |          34 | 2023-12-06 00:00:00 |
+|   7 | 패션운동복 | 트레이닝세트 | 피트니스상하의      | 90000 |     70 |          34 | 2023-12-07 00:00:00 |
+|   8 | 아우터     | 재킷         | 양면 롱 후리스 자켓 | 23300 |    100 |          42 | 2023-11-05 00:00:00 |
+|   9 | 아우터     | 코트         | 양털 겨울 코트      | 50000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  10 | 아우터     | 코트         | 트렌치 코트         | 40000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  11 | 아우터     | 패딩         | 롱 패팅 점퍼        | 47400 |     10 |          45 | 2023-11-01 00:00:00 |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+11 rows in set (0.00 sec)
+
+mysql> select name, type_a, type_b,
+    -> if(price >= 40000, concat(name,'(할인상품)'),name) as 'name',
+    -> price, amount, sale_amount, register_date from product;
++---------------------+------------+--------------+--------------------------+-------+--------+-------------+---------------------+
+| name                | type_a     | type_b       | name                     | price | amount | sale_amount | register_date       |
++---------------------+------------+--------------+--------------------------+-------+--------+-------------+---------------------+
+| 폴라 티셔츠         | 티셔츠     | 긴소매       | 폴라 티셔츠              | 15000 |     34 |         100 | 2023-10-15 00:00:00 |
+| 크롭 티셔츠         | 티셔츠     | 긴소매       | 크롭 티셔츠              | 10000 |     50 |         100 | 2023-10-15 00:00:00 |
+| 순면라운드 반팔티   | 티셔츠     | 반소매       | 순면라운드 반팔티        | 15900 |     10 |         153 | 2023-09-15 00:00:00 |
+| 에이 나시           | 티셔츠     | 민소매       | 에이 나시                |  9000 |     33 |          33 | 2023-09-10 00:00:00 |
+| 피트니스상의        | 패션운동복 | 트레이닝상의 | 피트니스상의             | 30000 |     34 |          55 | 2023-12-05 00:00:00 |
+| 피트니스하의        | 패션운동복 | 트레이닝하의 | 피트니스하의(할인상품)   | 50000 |     55 |          34 | 2023-12-06 00:00:00 |
+| 피트니스상하의      | 패션운동복 | 트레이닝세트 | 피트니스상하의(할인상품) | 90000 |     70 |          34 | 2023-12-07 00:00:00 |
+| 양면 롱 후리스 자켓 | 아우터     | 재킷         | 양면 롱 후리스 자켓      | 23300 |    100 |          42 | 2023-11-05 00:00:00 |
+| 양털 겨울 코트      | 아우터     | 코트         | 양털 겨울 코트(할인상품) | 50000 |     50 |          30 | 2023-10-31 00:00:00 |
+| 트렌치 코트         | 아우터     | 코트         | 트렌치 코트(할인상품)    | 40000 |     50 |          30 | 2023-10-31 00:00:00 |
+| 롱 패팅 점퍼        | 아우터     | 패딩         | 롱 패팅 점퍼(할인상품)   | 47400 |     10 |          45 | 2023-11-01 00:00:00 |
++---------------------+------------+--------------+--------------------------+-------+--------+-------------+---------------------+
+11 rows in set (0.00 sec)
+
+mysql> delete from product where month(register_date) = 9;
+Query OK, 2 rows affected (0.01 sec)
+
+mysql> select * from product;
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+| num | type_a     | type_b       | name                | price | amount | sale_amount | register_date       |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+|   1 | 티셔츠     | 긴소매       | 폴라 티셔츠         | 15000 |     34 |         100 | 2023-10-15 00:00:00 |
+|   2 | 티셔츠     | 긴소매       | 크롭 티셔츠         | 10000 |     50 |         100 | 2023-10-15 00:00:00 |
+|   5 | 패션운동복 | 트레이닝상의 | 피트니스상의        | 30000 |     34 |          55 | 2023-12-05 00:00:00 |
+|   6 | 패션운동복 | 트레이닝하의 | 피트니스하의        | 50000 |     55 |          34 | 2023-12-06 00:00:00 |
+|   7 | 패션운동복 | 트레이닝세트 | 피트니스상하의      | 90000 |     70 |          34 | 2023-12-07 00:00:00 |
+|   8 | 아우터     | 재킷         | 양면 롱 후리스 자켓 | 23300 |    100 |          42 | 2023-11-05 00:00:00 |
+|   9 | 아우터     | 코트         | 양털 겨울 코트      | 50000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  10 | 아우터     | 코트         | 트렌치 코트         | 40000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  11 | 아우터     | 패딩         | 롱 패팅 점퍼        | 47400 |     10 |          45 | 2023-11-01 00:00:00 |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+9 rows in set (0.00 sec)
+
+mysql>  select * from product_non;
++-----+--------+--------+-------------------+-------+--------+-------------+---------------------+
+| num | type_a | type_b | name              | price | amount | sale_amount | register_date       |
++-----+--------+--------+-------------------+-------+--------+-------------+---------------------+
+|   3 | 티셔츠 | 반소매 | 순면라운드 반팔티 | 15900 |     10 |         153 | 2023-09-15 00:00:00 |
+|   4 | 티셔츠 | 민소매 | 에이 나시         |  9000 |     33 |          33 | 2023-09-10 00:00:00 |
++-----+--------+--------+-------------------+-------+--------+-------------+---------------------+
+2 rows in set (0.00 sec)
+
+mysql> select max(price) from product;
++------------+
+| max(price) |
++------------+
+|      90000 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> select name, max(price) from product;
+ERROR 1140 (42000): In aggregated query without GROUP BY, expression #1 of SELECT list contains nonaggregated column 'testdb.product.name'; this is incompatible with sql_mode=only_full_group_by
+mysql> select name, price from product
+    -> order by price desc limit 0,1;
++----------------+-------+
+| name           | price |
++----------------+-------+
+| 피트니스상하의 | 90000 |
++----------------+-------+
+1 row in set (0.00 sec)
+
+mysql> select max(price) from product;
++------------+
+| max(price) |
++------------+
+|      90000 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> select name, max(price) from product;
+ERROR 1140 (42000): In aggregated query without GROUP BY, expression #1 of SELECT list contains nonaggregated column 'testdb.product.name'; this is incompatible with sql_mode=only_full_group_by
+mysql> select name, max(price) from product
+    -> group by name;
++---------------------+------------+
+| name                | max(price) |
++---------------------+------------+
+| 폴라 티셔츠         |      15000 |
+| 크롭 티셔츠         |      10000 |
+| 피트니스상의        |      30000 |
+| 피트니스하의        |      50000 |
+| 피트니스상하의      |      90000 |
+| 양면 롱 후리스 자켓 |      23300 |
+| 양털 겨울 코트      |      50000 |
+| 트렌치 코트         |      40000 |
+| 롱 패팅 점퍼        |      47400 |
++---------------------+------------+
+9 rows in set (0.00 sec)
+
+mysql> select name, max(price) from product
+    -> group by price;
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'testdb.product.name' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> select max(price) from product;
++------------+
+| max(price) |
++------------+
+|      90000 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> start transaction
+    -> insert into product_non
+    -> (select * from product where month(register_date) = 9)
+    -> delete from product where month(register_date) = 9
+    -> commit;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'insert into product_non
+(select * from product where month(register_date) = 9)
+d' at line 2
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> insert into product_non
+    -> (select * from product where month(register_date) =10);
+Query OK, 4 rows affected (0.00 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> delete from product where month(register_date) =10;
+Query OK, 4 rows affected (0.00 sec)
+
+mysql> select * from product_non;
++-----+--------+--------+-------------------+-------+--------+-------------+---------------------+
+| num | type_a | type_b | name              | price | amount | sale_amount | register_date       |
++-----+--------+--------+-------------------+-------+--------+-------------+---------------------+
+|   1 | 티셔츠 | 긴소매 | 폴라 티셔츠       | 15000 |     34 |         100 | 2023-10-15 00:00:00 |
+|   2 | 티셔츠 | 긴소매 | 크롭 티셔츠       | 10000 |     50 |         100 | 2023-10-15 00:00:00 |
+|   3 | 티셔츠 | 반소매 | 순면라운드 반팔티 | 15900 |     10 |         153 | 2023-09-15 00:00:00 |
+|   4 | 티셔츠 | 민소매 | 에이 나시         |  9000 |     33 |          33 | 2023-09-10 00:00:00 |
+|   9 | 아우터 | 코트   | 양털 겨울 코트    | 50000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  10 | 아우터 | 코트   | 트렌치 코트       | 40000 |     50 |          30 | 2023-10-31 00:00:00 |
++-----+--------+--------+-------------------+-------+--------+-------------+---------------------+
+6 rows in set (0.00 sec)
+
+mysql> select * from product;
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+| num | type_a     | type_b       | name                | price | amount | sale_amount | register_date       |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+|   5 | 패션운동복 | 트레이닝상의 | 피트니스상의        | 30000 |     34 |          55 | 2023-12-05 00:00:00 |
+|   6 | 패션운동복 | 트레이닝하의 | 피트니스하의        | 50000 |     55 |          34 | 2023-12-06 00:00:00 |
+|   7 | 패션운동복 | 트레이닝세트 | 피트니스상하의      | 90000 |     70 |          34 | 2023-12-07 00:00:00 |
+|   8 | 아우터     | 재킷         | 양면 롱 후리스 자켓 | 23300 |    100 |          42 | 2023-11-05 00:00:00 |
+|  11 | 아우터     | 패딩         | 롱 패팅 점퍼        | 47400 |     10 |          45 | 2023-11-01 00:00:00 |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+5 rows in set (0.00 sec)
+
+mysql> rollback;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from product_non;
++-----+--------+--------+-------------------+-------+--------+-------------+---------------------+
+| num | type_a | type_b | name              | price | amount | sale_amount | register_date       |
++-----+--------+--------+-------------------+-------+--------+-------------+---------------------+
+|   3 | 티셔츠 | 반소매 | 순면라운드 반팔티 | 15900 |     10 |         153 | 2023-09-15 00:00:00 |
+|   4 | 티셔츠 | 민소매 | 에이 나시         |  9000 |     33 |          33 | 2023-09-10 00:00:00 |
++-----+--------+--------+-------------------+-------+--------+-------------+---------------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from product;
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+| num | type_a     | type_b       | name                | price | amount | sale_amount | register_date       |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+|   1 | 티셔츠     | 긴소매       | 폴라 티셔츠         | 15000 |     34 |         100 | 2023-10-15 00:00:00 |
+|   2 | 티셔츠     | 긴소매       | 크롭 티셔츠         | 10000 |     50 |         100 | 2023-10-15 00:00:00 |
+|   5 | 패션운동복 | 트레이닝상의 | 피트니스상의        | 30000 |     34 |          55 | 2023-12-05 00:00:00 |
+|   6 | 패션운동복 | 트레이닝하의 | 피트니스하의        | 50000 |     55 |          34 | 2023-12-06 00:00:00 |
+|   7 | 패션운동복 | 트레이닝세트 | 피트니스상하의      | 90000 |     70 |          34 | 2023-12-07 00:00:00 |
+|   8 | 아우터     | 재킷         | 양면 롱 후리스 자켓 | 23300 |    100 |          42 | 2023-11-05 00:00:00 |
+|   9 | 아우터     | 코트         | 양털 겨울 코트      | 50000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  10 | 아우터     | 코트         | 트렌치 코트         | 40000 |     50 |          30 | 2023-10-31 00:00:00 |
+|  11 | 아우터     | 패딩         | 롱 패팅 점퍼        | 47400 |     10 |          45 | 2023-11-01 00:00:00 |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+9 rows in set (0.00 sec)
+
+mysql> select product_name, sum(amount) as sum from buy
+    -> group by product_name
+    -> order by sum desc limit 1;
++-------------------+------+
+| product_name      | sum  |
++-------------------+------+
+| 순면라운드 반팔티 |   13 |
++-------------------+------+
+1 row in set (0.00 sec)
+
+mysql>
+mysql>
+mysql> select product_name from buy
+    -> group by product_name
+    -> having sum(amount) = (
+    -> select max(total_sum) from
+    -> (select sum(amouont) as total_sum from buy
+    -> group by product_name) as p);
+ERROR 1054 (42S22): Unknown column 'amouont' in 'field list'
+mysql> select product_name from buy
+    -> group by product_name
+    -> having sum(amount) = (
+    -> select max(total_sum) from
+    -> (select sum(amout) as total_sum from buy
+    -> group by product_name) as p);
+ERROR 1054 (42S22): Unknown column 'amout' in 'field list'
+mysql> select product_name from buy
+    -> group by product_name
+    -> having sum(amount) = (
+    -> select max(total_sum) from
+    -> (select sum(amount) as total_sum from buy
+    -> group by product_name) as p);
++-------------------+
+| product_name      |
++-------------------+
+| 순면라운드 반팔티 |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql> exit
+Bye
+
+C:\Users\EZENIC-142>mysql -uroot -pezen
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 19
+Server version: 8.0.39 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create user 'school'@'localhost' identified by 'school';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> grant * privileges on school.*to 'school'@'localhost';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '* privileges on school.*to 'school'@'localhost'' at line 1
+mysql> grant all privileges on school.* to 'mysqlUser'@'localhost' with grant option;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> flush privileges;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select user, host from user;
++------------------+-----------+
+| user             | host      |
++------------------+-----------+
+| mysql.infoschema | localhost |
+| mysql.session    | localhost |
+| mysql.sys        | localhost |
+| mysqlUser        | localhost |
+| mysqlUser2       | localhost |
+| root             | localhost |
++------------------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> use mysqlUser;
+ERROR 1049 (42000): Unknown database 'mysqluser'
+mysql> exir
+    ->
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'exir' at line 1
+mysql> exit
+Bye
+
+C:\Users\EZENIC-142>mysql -uroot -pezen
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 27
+Server version: 8.0.39 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> grant all privileges on school.* to 'mysqlUser'@'localhost' with grant option;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> flush privileges;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> use mysqlUser
+ERROR 1049 (42000): Unknown database 'mysqluser'
+mysql> exit
+Bye
+
+C:\Users\EZENIC-142>mysql -umysqlUser -pmysql
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 28
+Server version: 8.0.39 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use school;
+ERROR 1049 (42000): Unknown database 'school'
+mysql> exit
+Bye
+
+C:\Users\EZENIC-142>mysql -uroot -pezen
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 29
+Server version: 8.0.39 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sys                |
+| testdb             |
+| world              |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> create datadase school;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'datadase school' at line 1
+mysql> create database school;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| school             |
+| sys                |
+| testdb             |
+| world              |
++--------------------+
+8 rows in set (0.00 sec)
+
+mysql> grant all privileges on school.* to 'mysqlUser'@'localhost' with grant option;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> flush privileges;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> exit
+Bye
+
+C:\Users\EZENIC-142>mysql -umysqlUser -pmysql
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 30
+Server version: 8.0.39 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use school;
+Database changed
+mysql> create table student(
+    -> std_num varchar(10),
+    -> std_name varchar(20),
+    -> std_major varchar(20),
+    -> std_term int ,
+    -> std_point int,
+    -> primary key(std_num));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table course(
+    -> co_code varchar(10),
+    -> co_name varchar(20) not null,
+    -> co_professor varchar(20),
+    -> co_point int default 3,
+    -> co_time int
+    -> co_timetable varchar 40,
+    -> primary key(co_code));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'co_timetable varchar 40,
+primary key(co_code))' at line 7
+mysql> create table course(
+    -> co_code varchar(10),
+    -> co_name varchar(20) not null,
+    -> co_professor varchar(20),
+    -> co_point int default 3,
+    -> co_time int,
+    -> co_timetable varchar 40,
+    -> primary key(co_code));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '40,
+primary key(co_code))' at line 7
+mysql> create table course(
+    -> co_code varchar(10),
+    -> co_name varchar(20) not null,
+    -> co_professor varchar(20),
+    -> co_point int default 3,
+    -> co_time int,
+    -> co_timetable varchar(40),
+    -> primary key(co_code));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table attend(
+    -> at_num int auto_increment,
+    -> at_std_num varchar(10),
+    -> at_co_code varchar(10),
+    -> at_year int,
+    -> at_term int,
+    -> at_mid int,
+    -> at_fimal int default 0,
+    -> at_attend int default 0,
+    -> at_hw int default 0,
+    -> at_repetition varchar(1) default n,
+    -> at_score varchar(4),
+    -> primary key(at_num));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'n,
+at_score varchar(4),
+primary key(at_num))' at line 11
+mysql> create table attend(
+    -> at_num int auto_increment,
+    -> at_std_num varchar(10),
+    -> at_co_code varchar(10),
+    -> at_year int,
+    -> at_term int,
+    -> at_mid int,
+    -> at_fimal int default 0,
+    -> at_attend int default 0,
+    -> at_hw int default 0,
+    -> at_repetition varchar(1) default 'n',
+    -> at_score varchar(4),
+    -> primary key(at_num));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> Alter table attend add foreign key(at_std_num)
+    -> References student(std_num);
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> Alter table attend add foreign key(at_co_code)
+    -> References course(co_code);
+Query OK, 0 rows affected (0.07 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from student;
+Empty set (0.00 sec)
+
+mysql> desc student;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| std_num   | varchar(10) | NO   | PRI | NULL    |       |
+| std_name  | varchar(20) | YES  |     | NULL    |       |
+| std_major | varchar(20) | YES  |     | NULL    |       |
+| std_term  | int         | YES  |     | NULL    |       |
+| std_point | int         | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> desc course;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| co_code      | varchar(10) | NO   | PRI | NULL    |       |
+| co_name      | varchar(20) | NO   |     | NULL    |       |
+| co_professor | varchar(20) | YES  |     | NULL    |       |
+| co_point     | int         | YES  |     | 3       |       |
+| co_time      | int         | YES  |     | NULL    |       |
+| co_timetable | varchar(40) | YES  |     | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> desc attend;
++---------------+-------------+------+-----+---------+----------------+
+| Field         | Type        | Null | Key | Default | Extra          |
++---------------+-------------+------+-----+---------+----------------+
+| at_num        | int         | NO   | PRI | NULL    | auto_increment |
+| at_std_num    | varchar(10) | YES  | MUL | NULL    |                |
+| at_co_code    | varchar(10) | YES  | MUL | NULL    |                |
+| at_year       | int         | YES  |     | NULL    |                |
+| at_term       | int         | YES  |     | NULL    |                |
+| at_mid        | int         | YES  |     | NULL    |                |
+| at_fimal      | int         | YES  |     | 0       |                |
+| at_attend     | int         | YES  |     | 0       |                |
+| at_hw         | int         | YES  |     | 0       |                |
+| at_repetition | varchar(1)  | YES  |     | n       |                |
+| at_score      | varchar(4)  | YES  |     | NULL    |                |
++---------------+-------------+------+-----+---------+----------------+
+11 rows in set (0.00 sec)
+
+mysql> insert into student values
+    -> ('2019160123','전봉준','컴퓨터공학과',2,64),
+    -> ('2019456001','강길동','디자인',3,60),
+    -> ('2020123001','강나래','화학공학',1,56),
+    -> ('2020123020','박철수','화학공학',1,57),
+    -> ('2020160001','강철수','컴퓨터공학',1,40),
+    -> ('2020160002','나영희','컴퓨터공학',1,60)
+    -> ('2022123001','강다운','화학공학',1,45),
+    -> ('2022123002','김수진','디자인',1,50),
+    -> ('2023160001','이영철','컴퓨터공학',1,55),
+    -> ('2023160002','최수지','디자인',1,65);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '('2022123001','강다운','화학공학',1,45),
+('2022123002','김수진','디\00EC\009E' at line 8
+mysql> insert into student values
+    -> ('2019160123','전봉준','컴퓨터공학과',2,64),
+    -> ('2019456001','강길동','디자인',3,60),
+    -> ('2020123001','강나래','화학공학',1,56),
+    -> ('2020123020','박철수','화학공학',1,57),
+    -> ('2020160001','강철수','컴퓨터공학',1,40),
+    -> ('2020160002','나영희','컴퓨터공학',1,60),
+    -> ('2022123001','강다운','화학공학',1,45),
+    -> ('2022123002','김수진','디자인',1,50),
+    -> ('2023160001','이영철','컴퓨터공학',1,55),
+    -> ('2023160002','최수지','디자인',1,65);
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> insert into course values
+    -> ('2020ipc001','컴퓨터개론','유관순',2,2,'화1A,1B,2A,2B'),
+    -> ('2020ipc002','기초전기','이순신',3,4,'월1A,1B,2A목1A,1B,2A'),
+    -> ('2020msc001','대학수학기초','홍길동',3,3,'월1A,1B,2A수1A,1B,2A'),
+    -> ('2020msc002','프로그래밍일반','임꺽정',3,3,'월1A,1B,2A목1A,1B,2A'),
+    -> ('2021deg001','디자인기초','황희',2,3,'목1A,1B,2A,2B'),
+    -> ('2021deg002','색채이론','신사임당',3,2,'금1A,1B,2A,2B'),
+    -> ('2022che001','화학이론','김길동',3,2,'월1A,1B,수2A,2B');
+Query OK, 7 rows affected (0.01 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> insert into attend(at_std_num, at_co_code) values
+    -> ('2020160001','2020msc001'),
+    -> ('2020160002','2020msc001'),
+    -> ('2023160002','2021deg001'),
+    -> ('2023160002','2021deg002'),
+    -> ('2019160123','2020msc002'),
+    -> ('2019456001','2020msc002'),
+    -> ('2020123001','2020ipc001'),
+    -> ('2020123020','2020ipc001'),
+    -> ('2020123020','2022che001'),
+    -> ('2020123001','2022che001'),
+    -> ('2019456001','2020ipc002'),
+    -> ('2019160123','2020ipc002'),
+    -> ('2022123001','2020msc002'),
+    -> ('2020160002','2020msc002'),
+    -> ('2019160123','2020msc001'),
+    -> ('2019456001','2020msc001'),
+    -> ('2023160002','2022che001'),
+    -> ('2022123001','2022che001'),
+    -> ('2023160001','2020msc002'),
+    -> ('2022123002','2021deg001'),
+    -> ('2022123002','2021deg002'),
+    -> ('2023160002','2020msc002');
+Query OK, 22 rows affected (0.01 sec)
+Records: 22  Duplicates: 0  Warnings: 0
+
+mysql> select * student;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'student' at line 1
+mysql> select * from student
+    -> ;
++------------+----------+--------------+----------+-----------+
+| std_num    | std_name | std_major    | std_term | std_point |
++------------+----------+--------------+----------+-----------+
+| 2019160123 | 전봉준   | 컴퓨터공학과 |        2 |        64 |
+| 2019456001 | 강길동   | 디자인       |        3 |        60 |
+| 2020123001 | 강나래   | 화학공학     |        1 |        56 |
+| 2020123020 | 박철수   | 화학공학     |        1 |        57 |
+| 2020160001 | 강철수   | 컴퓨터공학   |        1 |        40 |
+| 2020160002 | 나영희   | 컴퓨터공학   |        1 |        60 |
+| 2022123001 | 강다운   | 화학공학     |        1 |        45 |
+| 2022123002 | 김수진   | 디자인       |        1 |        50 |
+| 2023160001 | 이영철   | 컴퓨터공학   |        1 |        55 |
+| 2023160002 | 최수지   | 디자인       |        1 |        65 |
++------------+----------+--------------+----------+-----------+
+10 rows in set (0.00 sec)
+
+mysql> select * from course;
++------------+----------------+--------------+----------+---------+----------------------+
+| co_code    | co_name        | co_professor | co_point | co_time | co_timetable         |
++------------+----------------+--------------+----------+---------+----------------------+
+| 2020ipc001 | 컴퓨터개론     | 유관순       |        2 |       2 | 화1A,1B,2A,2B        |
+| 2020ipc002 | 기초전기       | 이순신       |        3 |       4 | 월1A,1B,2A목1A,1B,2A |
+| 2020msc001 | 대학수학기초   | 홍길동       |        3 |       3 | 월1A,1B,2A수1A,1B,2A |
+| 2020msc002 | 프로그래밍일반 | 임꺽정       |        3 |       3 | 월1A,1B,2A목1A,1B,2A |
+| 2021deg001 | 디자인기초     | 황희         |        2 |       3 | 목1A,1B,2A,2B        |
+| 2021deg002 | 색채이론       | 신사임당     |        3 |       2 | 금1A,1B,2A,2B        |
+| 2022che001 | 화학이론       | 김길동       |        3 |       2 | 월1A,1B,수2A,2B      |
++------------+----------------+--------------+----------+---------+----------------------+
+7 rows in set (0.00 sec)
+
+mysql> select * from attend;
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+| at_num | at_std_num | at_co_code | at_year | at_term | at_mid | at_fimal | at_attend | at_hw | at_repetition | at_score |
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+|      1 | 2020160001 | 2020msc001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|      2 | 2020160002 | 2020msc001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|      3 | 2023160002 | 2021deg001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|      4 | 2023160002 | 2021deg002 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|      5 | 2019160123 | 2020msc002 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|      6 | 2019456001 | 2020msc002 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|      7 | 2020123001 | 2020ipc001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|      8 | 2020123020 | 2020ipc001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|      9 | 2020123020 | 2022che001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     10 | 2020123001 | 2022che001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     11 | 2019456001 | 2020ipc002 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     12 | 2019160123 | 2020ipc002 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     13 | 2022123001 | 2020msc002 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     14 | 2020160002 | 2020msc002 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     15 | 2019160123 | 2020msc001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     16 | 2019456001 | 2020msc001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     17 | 2023160002 | 2022che001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     18 | 2022123001 | 2022che001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     19 | 2023160001 | 2020msc002 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     20 | 2022123002 | 2021deg001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     21 | 2022123002 | 2021deg002 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     22 | 2023160002 | 2020msc002 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+22 rows in set (0.00 sec)
+
+mysql> desc attend;
++---------------+-------------+------+-----+---------+----------------+
+| Field         | Type        | Null | Key | Default | Extra          |
++---------------+-------------+------+-----+---------+----------------+
+| at_num        | int         | NO   | PRI | NULL    | auto_increment |
+| at_std_num    | varchar(10) | YES  | MUL | NULL    |                |
+| at_co_code    | varchar(10) | YES  | MUL | NULL    |                |
+| at_year       | int         | YES  |     | NULL    |                |
+| at_term       | int         | YES  |     | NULL    |                |
+| at_mid        | int         | YES  |     | NULL    |                |
+| at_fimal      | int         | YES  |     | 0       |                |
+| at_attend     | int         | YES  |     | 0       |                |
+| at_hw         | int         | YES  |     | 0       |                |
+| at_repetition | varchar(1)  | YES  |     | n       |                |
+| at_score      | varchar(4)  | YES  |     | NULL    |                |
++---------------+-------------+------+-----+---------+----------------+
+11 rows in set (0.00 sec)
+
+mysql>
