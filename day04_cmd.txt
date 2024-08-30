@@ -1,0 +1,1339 @@
+Microsoft Windows [Version 10.0.19045.4529]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\EZENIC-142>mysql -umysqlUser -pmysql
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.39 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use school;
+Database changed
+mysql> select * from student;
++------------+----------+--------------+----------+-----------+
+| std_num    | std_name | std_major    | std_term | std_point |
++------------+----------+--------------+----------+-----------+
+| 2019160123 | 전봉준   | 컴퓨터공학과 |        2 |        64 |
+| 2019456001 | 강길동   | 디자인       |        3 |        60 |
+| 2020123001 | 강나래   | 화학공학     |        1 |        56 |
+| 2020123020 | 박철수   | 화학공학     |        1 |        57 |
+| 2020160001 | 강철수   | 컴퓨터공학   |        1 |        40 |
+| 2020160002 | 나영희   | 컴퓨터공학   |        1 |        60 |
+| 2022123001 | 강다운   | 화학공학     |        1 |        45 |
+| 2022123002 | 김수진   | 디자인       |        1 |        50 |
+| 2023160001 | 이영철   | 컴퓨터공학   |        1 |        55 |
+| 2023160002 | 최수지   | 디자인       |        1 |        65 |
++------------+----------+--------------+----------+-----------+
+10 rows in set (0.02 sec)
+
+mysql> select * from course;
++------------+----------------+--------------+----------+---------+----------------------+
+| co_code    | co_name        | co_professor | co_point | co_time | co_timetable         |
++------------+----------------+--------------+----------+---------+----------------------+
+| 2020ipc001 | 컴퓨터개론     | 유관순       |        2 |       2 | 화1A,1B,2A,2B        |
+| 2020ipc002 | 기초전기       | 이순신       |        3 |       4 | 월1A,1B,2A목1A,1B,2A |
+| 2020msc001 | 대학수학기초   | 홍길동       |        3 |       3 | 월1A,1B,2A수1A,1B,2A |
+| 2020msc002 | 프로그래밍일반 | 임꺽정       |        3 |       3 | 월1A,1B,2A목1A,1B,2A |
+| 2021deg001 | 디자인기초     | 황희         |        2 |       3 | 목1A,1B,2A,2B        |
+| 2021deg002 | 색채이론       | 신사임당     |        3 |       2 | 금1A,1B,2A,2B        |
+| 2022che001 | 화학이론       | 김길동       |        3 |       2 | 월1A,1B,수2A,2B      |
++------------+----------------+--------------+----------+---------+----------------------+
+7 rows in set (0.00 sec)
+
+mysql> select * from attend;
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+| at_num | at_std_num | at_co_code | at_year | at_term | at_mid | at_fimal | at_attend | at_hw | at_repetition | at_score |
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+|      1 | 2020160001 | 2020msc001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|      2 | 2020160002 | 2020msc001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|      3 | 2023160002 | 2021deg001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|      4 | 2023160002 | 2021deg002 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|      5 | 2019160123 | 2020msc002 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|      6 | 2019456001 | 2020msc002 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|      7 | 2020123001 | 2020ipc001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|      8 | 2020123020 | 2020ipc001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|      9 | 2020123020 | 2022che001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     10 | 2020123001 | 2022che001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     11 | 2019456001 | 2020ipc002 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     12 | 2019160123 | 2020ipc002 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     13 | 2022123001 | 2020msc002 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     14 | 2020160002 | 2020msc002 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     15 | 2019160123 | 2020msc001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     16 | 2019456001 | 2020msc001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     17 | 2023160002 | 2022che001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     18 | 2022123001 | 2022che001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     19 | 2023160001 | 2020msc002 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     20 | 2022123002 | 2021deg001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     21 | 2022123002 | 2021deg002 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     22 | 2023160002 | 2020msc002 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+22 rows in set (0.00 sec)
+
+mysql> update attend
+    -> set at_year = 2024;
+Query OK, 22 rows affected (0.01 sec)
+Rows matched: 22  Changed: 22  Warnings: 0
+
+mysql> alter table attend
+    -> rename column at_fimal to at_final;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> update attend set at_term =
+    -> case
+    -> when at_num <= 11 then 1
+    -> when at_num > 11 then 2
+    -> end;
+Query OK, 11 rows affected (0.01 sec)
+Rows matched: 22  Changed: 11  Warnings: 0
+
+mysql> update attend set at_mid = 30,
+    -> at_final = 40,
+    -> at_hw = 6,
+    -> at_attend = 8
+    -> where at_num = 1;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql>
+mysql> update attend set at_mid = 35,
+    -> at_final = 30,
+    -> at_hw = 8,
+    -> at_attend = 6
+    -> where at_num =2 ;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql>
+mysql> update attend set at_mid = 20,
+    -> at_final = 20,
+    -> at_hw = 4,
+    -> at_attend = 6
+    -> where at_num = 3;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql>
+mysql> update attend set at_mid = 40,
+    -> at_final = 20,
+    -> at_hw = 5,
+    -> at_attend = 3
+    -> where at_num = 4;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql>
+mysql> update attend set at_mid = 30,
+    -> at_final = 35,
+    -> at_hw = 10,
+    -> at_attend = 7
+    -> where at_num = 5;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql>
+mysql> update attend set at_mid = 35,
+    -> at_final = 40,
+    -> at_hw = 9,
+    -> at_attend = 10
+    -> where at_num = 6;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql>
+mysql> update attend set at_mid = 20,
+    -> at_final = 40,
+    -> at_hw = 7,
+    -> at_attend = 9
+    -> where at_num = 7;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql>
+mysql> update attend set at_mid = 20,
+    -> at_final = 20,
+    -> at_hw = 5,
+    -> at_attend = 4
+    -> where at_num = 8;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql>
+mysql> update attend set at_mid = 35,
+    -> at_final = 35,
+    -> at_hw = 5,
+    -> at_attend = 6
+    -> where at_num = 9;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql>
+mysql> update attend set at_mid = 40,
+    -> at_final = 35,
+    -> at_hw = 10,
+    -> at_attend = 5
+    -> where at_num = 10;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql>
+mysql> update attend set at_mid = 35,
+    -> at_final = 40,
+    -> at_hw = 6,
+    -> at_attend = 8
+    -> where at_num = 11;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update attend set at_score =
+    -> case
+    -> when at_mid + at_final + at_hw + at_attend >= 90 then 'A'
+    -> when at_mid + at_final + at_hw + at_attend >= 80 then 'B'
+    -> when at_mid + at_final + at_hw + at_attend >= 70 then 'C'
+    -> when at_mid + at_final + at_hw + at_attend >= 60 then 'D'
+    -> else 'F'
+    -> end;
+Query OK, 9 rows affected (0.01 sec)
+Rows matched: 22  Changed: 9  Warnings: 0
+
+mysql> update attend set at_repetition =
+    -> if(at_score = 'F' or at_attend <=3, 'y' , 'n')
+    -> where at_term = 1;
+Query OK, 3 rows affected (0.01 sec)
+Rows matched: 11  Changed: 3  Warnings: 0
+
+mysql> select * from attend;
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+| at_num | at_std_num | at_co_code | at_year | at_term | at_mid | at_final | at_attend | at_hw | at_repetition | at_score |
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+|      1 | 2020160001 | 2020msc001 |    2024 |       1 |     30 |       40 |         8 |     6 | n             | B        |
+|      2 | 2020160002 | 2020msc001 |    2024 |       1 |     35 |       30 |         6 |     8 | n             | C        |
+|      3 | 2023160002 | 2021deg001 |    2024 |       1 |     20 |       20 |         6 |     4 | y             | F        |
+|      4 | 2023160002 | 2021deg002 |    2024 |       1 |     40 |       20 |         3 |     5 | y             | D        |
+|      5 | 2019160123 | 2020msc002 |    2024 |       1 |     30 |       35 |         7 |    10 | n             | B        |
+|      6 | 2019456001 | 2020msc002 |    2024 |       1 |     35 |       40 |        10 |     9 | n             | A        |
+|      7 | 2020123001 | 2020ipc001 |    2024 |       1 |     20 |       40 |         9 |     7 | n             | C        |
+|      8 | 2020123020 | 2020ipc001 |    2024 |       1 |     20 |       20 |         4 |     5 | y             | F        |
+|      9 | 2020123020 | 2022che001 |    2024 |       1 |     35 |       35 |         6 |     5 | n             | B        |
+|     10 | 2020123001 | 2022che001 |    2024 |       1 |     40 |       35 |         5 |    10 | n             | A        |
+|     11 | 2019456001 | 2020ipc002 |    2024 |       1 |     35 |       40 |         8 |     6 | n             | B        |
+|     12 | 2019160123 | 2020ipc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | F        |
+|     13 | 2022123001 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | F        |
+|     14 | 2020160002 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | F        |
+|     15 | 2019160123 | 2020msc001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | F        |
+|     16 | 2019456001 | 2020msc001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | F        |
+|     17 | 2023160002 | 2022che001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | F        |
+|     18 | 2022123001 | 2022che001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | F        |
+|     19 | 2023160001 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | F        |
+|     20 | 2022123002 | 2021deg001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | F        |
+|     21 | 2022123002 | 2021deg002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | F        |
+|     22 | 2023160002 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | F        |
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+22 rows in set (0.00 sec)
+
+mysql> update attend set at_score = null where at_term = 2;
+Query OK, 11 rows affected (0.01 sec)
+Rows matched: 11  Changed: 11  Warnings: 0
+
+mysql> select at_score, count(at_score) from attend
+    -> groud by at_score;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'by at_score' at line 2
+mysql> select at_score, count(at_score) from attend
+    -> group by at_score;
++----------+-----------------+
+| at_score | count(at_score) |
++----------+-----------------+
+| B        |               4 |
+| C        |               2 |
+| F        |               2 |
+| D        |               1 |
+| A        |               2 |
+| NULL     |               0 |
++----------+-----------------+
+6 rows in set (0.00 sec)
+
+mysql> select at_score, count(at_score) from attend
+    -> where at_score is not null
+    -> group by at_score
+    -> order by at_score;
++----------+-----------------+
+| at_score | count(at_score) |
++----------+-----------------+
+| A        |               2 |
+| B        |               4 |
+| C        |               2 |
+| D        |               1 |
+| F        |               2 |
++----------+-----------------+
+5 rows in set (0.01 sec)
+
+mysql> select at_repetition, count(at_repetition) as '재수강' from attend
+    -> group by at_repetition;
++---------------+--------+
+| at_repetition | 재수강 |
++---------------+--------+
+| n             |     19 |
+| y             |      3 |
++---------------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select at_repetition, count(at_repetition) as '재수강' from attend
+    -> where at_repetition = 'y'
+    -> group by at_repetition;
++---------------+--------+
+| at_repetition | 재수강 |
++---------------+--------+
+| y             |      3 |
++---------------+--------+
+1 row in set (0.00 sec)
+
+mysql> select at_repetition, count(at_repetition) as '재수강' from attend
+    -> group by at_repetition
+    -> having at_repetition = 'y';
++---------------+--------+
+| at_repetition | 재수강 |
++---------------+--------+
+| y             |      3 |
++---------------+--------+
+1 row in set (0.00 sec)
+
+mysql> select * from attend where at_repetition = 'y';
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+| at_num | at_std_num | at_co_code | at_year | at_term | at_mid | at_final | at_attend | at_hw | at_repetition | at_score |
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+|      3 | 2023160002 | 2021deg001 |    2024 |       1 |     20 |       20 |         6 |     4 | y             | F        |
+|      4 | 2023160002 | 2021deg002 |    2024 |       1 |     40 |       20 |         3 |     5 | y             | D        |
+|      8 | 2020123020 | 2020ipc001 |    2024 |       1 |     20 |       20 |         4 |     5 | y             | F        |
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+3 rows in set (0.00 sec)
+
+mysql> select * from studnet;
+ERROR 1146 (42S02): Table 'school.studnet' doesn't exist
+mysql> select * from student;
++------------+----------+--------------+----------+-----------+
+| std_num    | std_name | std_major    | std_term | std_point |
++------------+----------+--------------+----------+-----------+
+| 2019160123 | 전봉준   | 컴퓨터공학과 |        2 |        64 |
+| 2019456001 | 강길동   | 디자인       |        3 |        60 |
+| 2020123001 | 강나래   | 화학공학     |        1 |        56 |
+| 2020123020 | 박철수   | 화학공학     |        1 |        57 |
+| 2020160001 | 강철수   | 컴퓨터공학   |        1 |        40 |
+| 2020160002 | 나영희   | 컴퓨터공학   |        1 |        60 |
+| 2022123001 | 강다운   | 화학공학     |        1 |        45 |
+| 2022123002 | 김수진   | 디자인       |        1 |        50 |
+| 2023160001 | 이영철   | 컴퓨터공학   |        1 |        55 |
+| 2023160002 | 최수지   | 디자인       |        1 |        65 |
++------------+----------+--------------+----------+-----------+
+10 rows in set (0.00 sec)
+
+mysql> select s.std_name from
+    -> student s inner join attend a on s.std=num = a.at_std_num
+    -> where a.at_repetition = 'y';
+ERROR 1054 (42S22): Unknown column 's.std' in 'on clause'
+mysql> select s.std_name from
+    -> student s inner join attend a on s.std_num = a.at_std_num
+    -> where a.at_repetition = 'y';
++----------+
+| std_name |
++----------+
+| 최수지   |
+| 최수지   |
+| 박철수   |
++----------+
+3 rows in set (0.00 sec)
+
+mysql> select * from
+    -> student s inner join attend a on s.std_num = a.at_std_num;
++------------+----------+--------------+----------+-----------+--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+| std_num    | std_name | std_major    | std_term | std_point | at_num | at_std_num | at_co_code | at_year | at_term | at_mid | at_final | at_attend | at_hw | at_repetition | at_score |
++------------+----------+--------------+----------+-----------+--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+| 2019160123 | 전봉준   | 컴퓨터공학과 |        2 |        64 |      5 | 2019160123 | 2020msc002 |    2024 |       1 |     30 |       35 |         7 |    10 | n             | B        |
+| 2019160123 | 전봉준   | 컴퓨터공학과 |        2 |        64 |     12 | 2019160123 | 2020ipc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+| 2019160123 | 전봉준   | 컴퓨터공학과 |        2 |        64 |     15 | 2019160123 | 2020msc001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+| 2019456001 | 강길동   | 디자인       |        3 |        60 |      6 | 2019456001 | 2020msc002 |    2024 |       1 |     35 |       40 |        10 |     9 | n             | A        |
+| 2019456001 | 강길동   | 디자인       |        3 |        60 |     11 | 2019456001 | 2020ipc002 |    2024 |       1 |     35 |       40 |         8 |     6 | n             | B        |
+| 2019456001 | 강길동   | 디자인       |        3 |        60 |     16 | 2019456001 | 2020msc001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+| 2020123001 | 강나래   | 화학공학     |        1 |        56 |      7 | 2020123001 | 2020ipc001 |    2024 |       1 |     20 |       40 |         9 |     7 | n             | C        |
+| 2020123001 | 강나래   | 화학공학     |        1 |        56 |     10 | 2020123001 | 2022che001 |    2024 |       1 |     40 |       35 |         5 |    10 | n             | A        |
+| 2020123020 | 박철수   | 화학공학     |        1 |        57 |      8 | 2020123020 | 2020ipc001 |    2024 |       1 |     20 |       20 |         4 |     5 | y             | F        |
+| 2020123020 | 박철수   | 화학공학     |        1 |        57 |      9 | 2020123020 | 2022che001 |    2024 |       1 |     35 |       35 |         6 |     5 | n             | B        |
+| 2020160001 | 강철수   | 컴퓨터공학   |        1 |        40 |      1 | 2020160001 | 2020msc001 |    2024 |       1 |     30 |       40 |         8 |     6 | n             | B        |
+| 2020160002 | 나영희   | 컴퓨터공학   |        1 |        60 |      2 | 2020160002 | 2020msc001 |    2024 |       1 |     35 |       30 |         6 |     8 | n             | C        |
+| 2020160002 | 나영희   | 컴퓨터공학   |        1 |        60 |     14 | 2020160002 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+| 2022123001 | 강다운   | 화학공학     |        1 |        45 |     13 | 2022123001 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+| 2022123001 | 강다운   | 화학공학     |        1 |        45 |     18 | 2022123001 | 2022che001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+| 2022123002 | 김수진   | 디자인       |        1 |        50 |     20 | 2022123002 | 2021deg001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+| 2022123002 | 김수진   | 디자인       |        1 |        50 |     21 | 2022123002 | 2021deg002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+| 2023160001 | 이영철   | 컴퓨터공학   |        1 |        55 |     19 | 2023160001 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+| 2023160002 | 최수지   | 디자인       |        1 |        65 |      3 | 2023160002 | 2021deg001 |    2024 |       1 |     20 |       20 |         6 |     4 | y             | F        |
+| 2023160002 | 최수지   | 디자인       |        1 |        65 |      4 | 2023160002 | 2021deg002 |    2024 |       1 |     40 |       20 |         3 |     5 | y             | D        |
+| 2023160002 | 최수지   | 디자인       |        1 |        65 |     17 | 2023160002 | 2022che001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+| 2023160002 | 최수지   | 디자인       |        1 |        65 |     22 | 2023160002 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
++------------+----------+--------------+----------+-----------+--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+22 rows in set (0.00 sec)
+
+mysql> select * from
+    -> student s inner join attend a on s.std_num = a.at_std_num
+    -> inner join course c on a.at_co_code = c.co_code;
++------------+----------+--------------+----------+-----------+--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+------------+----------------+--------------+----------+---------+----------------------+
+| std_num    | std_name | std_major    | std_term | std_point | at_num | at_std_num | at_co_code | at_year | at_term | at_mid | at_final | at_attend | at_hw | at_repetition | at_score | co_code    | co_name        | co_professor | co_point | co_time | co_timetable         |
++------------+----------+--------------+----------+-----------+--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+------------+----------------+--------------+----------+---------+----------------------+
+| 2020123001 | 강나래   | 화학공학     |        1 |        56 |      7 | 2020123001 | 2020ipc001 |    2024 |       1 |     20 |       40 |         9 |     7 | n             | C        | 2020ipc001 | 컴퓨터개론     | 유관순       |        2 |       2 | 화1A,1B,2A,2B        |
+| 2020123020 | 박철수   | 화학공학     |        1 |        57 |      8 | 2020123020 | 2020ipc001 |    2024 |       1 |     20 |       20 |         4 |     5 | y             | F        | 2020ipc001 | 컴퓨터개론     | 유관순       |        2 |       2 | 화1A,1B,2A,2B        |
+| 2019456001 | 강길동   | 디자인       |        3 |        60 |     11 | 2019456001 | 2020ipc002 |    2024 |       1 |     35 |       40 |         8 |     6 | n             | B        | 2020ipc002 | 기초전기       | 이순신       |        3 |       4 | 월1A,1B,2A목1A,1B,2A |
+| 2019160123 | 전봉준   | 컴퓨터공학과 |        2 |        64 |     12 | 2019160123 | 2020ipc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     | 2020ipc002 | 기초전기       | 이순신       |        3 |       4 | 월1A,1B,2A목1A,1B,2A |
+| 2020160001 | 강철수   | 컴퓨터공학   |        1 |        40 |      1 | 2020160001 | 2020msc001 |    2024 |       1 |     30 |       40 |         8 |     6 | n             | B        | 2020msc001 | 대학수학기초   | 홍길동       |        3 |       3 | 월1A,1B,2A수1A,1B,2A |
+| 2020160002 | 나영희   | 컴퓨터공학   |        1 |        60 |      2 | 2020160002 | 2020msc001 |    2024 |       1 |     35 |       30 |         6 |     8 | n             | C        | 2020msc001 | 대학수학기초   | 홍길동       |        3 |       3 | 월1A,1B,2A수1A,1B,2A |
+| 2019160123 | 전봉준   | 컴퓨터공학과 |        2 |        64 |     15 | 2019160123 | 2020msc001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     | 2020msc001 | 대학수학기초   | 홍길동       |        3 |       3 | 월1A,1B,2A수1A,1B,2A |
+| 2019456001 | 강길동   | 디자인       |        3 |        60 |     16 | 2019456001 | 2020msc001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     | 2020msc001 | 대학수학기초   | 홍길동       |        3 |       3 | 월1A,1B,2A수1A,1B,2A |
+| 2019160123 | 전봉준   | 컴퓨터공학과 |        2 |        64 |      5 | 2019160123 | 2020msc002 |    2024 |       1 |     30 |       35 |         7 |    10 | n             | B        | 2020msc002 | 프로그래밍일반 | 임꺽정       |        3 |       3 | 월1A,1B,2A목1A,1B,2A |
+| 2019456001 | 강길동   | 디자인       |        3 |        60 |      6 | 2019456001 | 2020msc002 |    2024 |       1 |     35 |       40 |        10 |     9 | n             | A        | 2020msc002 | 프로그래밍일반 | 임꺽정       |        3 |       3 | 월1A,1B,2A목1A,1B,2A |
+| 2022123001 | 강다운   | 화학공학     |        1 |        45 |     13 | 2022123001 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     | 2020msc002 | 프로그래밍일반 | 임꺽정       |        3 |       3 | 월1A,1B,2A목1A,1B,2A |
+| 2020160002 | 나영희   | 컴퓨터공학   |        1 |        60 |     14 | 2020160002 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     | 2020msc002 | 프로그래밍일반 | 임꺽정       |        3 |       3 | 월1A,1B,2A목1A,1B,2A |
+| 2023160001 | 이영철   | 컴퓨터공학   |        1 |        55 |     19 | 2023160001 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     | 2020msc002 | 프로그래밍일반 | 임꺽정       |        3 |       3 | 월1A,1B,2A목1A,1B,2A |
+| 2023160002 | 최수지   | 디자인       |        1 |        65 |     22 | 2023160002 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     | 2020msc002 | 프로그래밍일반 | 임꺽정       |        3 |       3 | 월1A,1B,2A목1A,1B,2A |
+| 2023160002 | 최수지   | 디자인       |        1 |        65 |      3 | 2023160002 | 2021deg001 |    2024 |       1 |     20 |       20 |         6 |     4 | y             | F        | 2021deg001 | 디자인기초     | 황희         |        2 |       3 | 목1A,1B,2A,2B        |
+| 2022123002 | 김수진   | 디자인       |        1 |        50 |     20 | 2022123002 | 2021deg001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     | 2021deg001 | 디자인기초     | 황희         |        2 |       3 | 목1A,1B,2A,2B        |
+| 2023160002 | 최수지   | 디자인       |        1 |        65 |      4 | 2023160002 | 2021deg002 |    2024 |       1 |     40 |       20 |         3 |     5 | y             | D        | 2021deg002 | 색채이론       | 신사임당     |        3 |       2 | 금1A,1B,2A,2B        |
+| 2022123002 | 김수진   | 디자인       |        1 |        50 |     21 | 2022123002 | 2021deg002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     | 2021deg002 | 색채이론       | 신사임당     |        3 |       2 | 금1A,1B,2A,2B        |
+| 2020123020 | 박철수   | 화학공학     |        1 |        57 |      9 | 2020123020 | 2022che001 |    2024 |       1 |     35 |       35 |         6 |     5 | n             | B        | 2022che001 | 화학이론       | 김길동       |        3 |       2 | 월1A,1B,수2A,2B      |
+| 2020123001 | 강나래   | 화학공학     |        1 |        56 |     10 | 2020123001 | 2022che001 |    2024 |       1 |     40 |       35 |         5 |    10 | n             | A        | 2022che001 | 화학이론       | 김길동       |        3 |       2 | 월1A,1B,수2A,2B      |
+| 2023160002 | 최수지   | 디자인       |        1 |        65 |     17 | 2023160002 | 2022che001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     | 2022che001 | 화학이론       | 김길동       |        3 |       2 | 월1A,1B,수2A,2B      |
+| 2022123001 | 강다운   | 화학공학     |        1 |        45 |     18 | 2022123001 | 2022che001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     | 2022che001 | 화학이론       | 김길동       |        3 |       2 | 월1A,1B,수2A,2B      |
++------------+----------+--------------+----------+-----------+--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+------------+----------------+--------------+----------+---------+----------------------+
+22 rows in set (0.00 sec)
+
+mysql> select * from
+    -> student s inner join attend a on s.std_num = a.at_std_num;
++------------+----------+--------------+----------+-----------+--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+| std_num    | std_name | std_major    | std_term | std_point | at_num | at_std_num | at_co_code | at_year | at_term | at_mid | at_final | at_attend | at_hw | at_repetition | at_score |
++------------+----------+--------------+----------+-----------+--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+| 2019160123 | 전봉준   | 컴퓨터공학과 |        2 |        64 |      5 | 2019160123 | 2020msc002 |    2024 |       1 |     30 |       35 |         7 |    10 | n             | B        |
+| 2019160123 | 전봉준   | 컴퓨터공학과 |        2 |        64 |     12 | 2019160123 | 2020ipc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+| 2019160123 | 전봉준   | 컴퓨터공학과 |        2 |        64 |     15 | 2019160123 | 2020msc001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+| 2019456001 | 강길동   | 디자인       |        3 |        60 |      6 | 2019456001 | 2020msc002 |    2024 |       1 |     35 |       40 |        10 |     9 | n             | A        |
+| 2019456001 | 강길동   | 디자인       |        3 |        60 |     11 | 2019456001 | 2020ipc002 |    2024 |       1 |     35 |       40 |         8 |     6 | n             | B        |
+| 2019456001 | 강길동   | 디자인       |        3 |        60 |     16 | 2019456001 | 2020msc001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+| 2020123001 | 강나래   | 화학공학     |        1 |        56 |      7 | 2020123001 | 2020ipc001 |    2024 |       1 |     20 |       40 |         9 |     7 | n             | C        |
+| 2020123001 | 강나래   | 화학공학     |        1 |        56 |     10 | 2020123001 | 2022che001 |    2024 |       1 |     40 |       35 |         5 |    10 | n             | A        |
+| 2020123020 | 박철수   | 화학공학     |        1 |        57 |      8 | 2020123020 | 2020ipc001 |    2024 |       1 |     20 |       20 |         4 |     5 | y             | F        |
+| 2020123020 | 박철수   | 화학공학     |        1 |        57 |      9 | 2020123020 | 2022che001 |    2024 |       1 |     35 |       35 |         6 |     5 | n             | B        |
+| 2020160001 | 강철수   | 컴퓨터공학   |        1 |        40 |      1 | 2020160001 | 2020msc001 |    2024 |       1 |     30 |       40 |         8 |     6 | n             | B        |
+| 2020160002 | 나영희   | 컴퓨터공학   |        1 |        60 |      2 | 2020160002 | 2020msc001 |    2024 |       1 |     35 |       30 |         6 |     8 | n             | C        |
+| 2020160002 | 나영희   | 컴퓨터공학   |        1 |        60 |     14 | 2020160002 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+| 2022123001 | 강다운   | 화학공학     |        1 |        45 |     13 | 2022123001 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+| 2022123001 | 강다운   | 화학공학     |        1 |        45 |     18 | 2022123001 | 2022che001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+| 2022123002 | 김수진   | 디자인       |        1 |        50 |     20 | 2022123002 | 2021deg001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+| 2022123002 | 김수진   | 디자인       |        1 |        50 |     21 | 2022123002 | 2021deg002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+| 2023160001 | 이영철   | 컴퓨터공학   |        1 |        55 |     19 | 2023160001 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+| 2023160002 | 최수지   | 디자인       |        1 |        65 |      3 | 2023160002 | 2021deg001 |    2024 |       1 |     20 |       20 |         6 |     4 | y             | F        |
+| 2023160002 | 최수지   | 디자인       |        1 |        65 |      4 | 2023160002 | 2021deg002 |    2024 |       1 |     40 |       20 |         3 |     5 | y             | D        |
+| 2023160002 | 최수지   | 디자인       |        1 |        65 |     17 | 2023160002 | 2022che001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+| 2023160002 | 최수지   | 디자인       |        1 |        65 |     22 | 2023160002 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
++------------+----------+--------------+----------+-----------+--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+22 rows in set (0.00 sec)
+
+mysql> where a.at_score = 'A';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where a.at_score = 'A'' at line 1
+mysql> select * from
+    -> student s inner join attend a on s.std_num = a.at_std_num
+    -> where a.at_score = 'A';
++------------+----------+-----------+----------+-----------+--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+| std_num    | std_name | std_major | std_term | std_point | at_num | at_std_num | at_co_code | at_year | at_term | at_mid | at_final | at_attend | at_hw | at_repetition | at_score |
++------------+----------+-----------+----------+-----------+--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+| 2019456001 | 강길동   | 디자인    |        3 |        60 |      6 | 2019456001 | 2020msc002 |    2024 |       1 |     35 |       40 |        10 |     9 | n             | A        |
+| 2020123001 | 강나래   | 화학공학  |        1 |        56 |     10 | 2020123001 | 2022che001 |    2024 |       1 |     40 |       35 |         5 |    10 | n             | A        |
++------------+----------+-----------+----------+-----------+--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+2 rows in set (0.00 sec)
+
+mysql> select s.std_name, s.std_name, s.std_major, a.at_score from
+    -> student s inner join attend a on s.std_num = a.at_std_num
+    -> where a.at_score = 'A';
++----------+----------+-----------+----------+
+| std_name | std_name | std_major | at_score |
++----------+----------+-----------+----------+
+| 강길동   | 강길동   | 디자인    | A        |
+| 강나래   | 강나래   | 화학공학  | A        |
++----------+----------+-----------+----------+
+2 rows in set (0.00 sec)
+
+mysql> select s.std_num, s.std_name, s.std_major, a.at_score from
+    -> student s inner join attend a on s.std_num = a.at_std_num
+    -> where a.at_score = 'A';
++------------+----------+-----------+----------+
+| std_num    | std_name | std_major | at_score |
++------------+----------+-----------+----------+
+| 2019456001 | 강길동   | 디자인    | A        |
+| 2020123001 | 강나래   | 화학공학  | A        |
++------------+----------+-----------+----------+
+2 rows in set (0.00 sec)
+
+mysql> select s.std_num, s.std_name, s.std_major from
+    -> student s inner join attend a on s.std_num = a.at_std_num
+    -> where a.at_score = 'F';
++------------+----------+-----------+
+| std_num    | std_name | std_major |
++------------+----------+-----------+
+| 2023160002 | 최수지   | 디자인    |
+| 2020123020 | 박철수   | 화학공학  |
++------------+----------+-----------+
+2 rows in set (0.00 sec)
+
+mysql> select s.std_num, s.std_name, c.co_name from
+    -> student s inner join attend a on s.std_num = a.at_std_num
+    -> inner join course c on a.at_co_code = c.co_code;
++------------+----------+----------------+
+| std_num    | std_name | co_name        |
++------------+----------+----------------+
+| 2020123001 | 강나래   | 컴퓨터개론     |
+| 2020123020 | 박철수   | 컴퓨터개론     |
+| 2019456001 | 강길동   | 기초전기       |
+| 2019160123 | 전봉준   | 기초전기       |
+| 2020160001 | 강철수   | 대학수학기초   |
+| 2020160002 | 나영희   | 대학수학기초   |
+| 2019160123 | 전봉준   | 대학수학기초   |
+| 2019456001 | 강길동   | 대학수학기초   |
+| 2019160123 | 전봉준   | 프로그래밍일반 |
+| 2019456001 | 강길동   | 프로그래밍일반 |
+| 2022123001 | 강다운   | 프로그래밍일반 |
+| 2020160002 | 나영희   | 프로그래밍일반 |
+| 2023160001 | 이영철   | 프로그래밍일반 |
+| 2023160002 | 최수지   | 프로그래밍일반 |
+| 2023160002 | 최수지   | 디자인기초     |
+| 2022123002 | 김수진   | 디자인기초     |
+| 2023160002 | 최수지   | 색채이론       |
+| 2022123002 | 김수진   | 색채이론       |
+| 2020123020 | 박철수   | 화학이론       |
+| 2020123001 | 강나래   | 화학이론       |
+| 2023160002 | 최수지   | 화학이론       |
+| 2022123001 | 강다운   | 화학이론       |
++------------+----------+----------------+
+22 rows in set (0.00 sec)
+
+mysql> where a.at_score = 'A';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where a.at_score = 'A'' at line 1
+mysql> select s.std_num, s.std_name, c.co_name from
+    -> student s inner join attend a on s.std_num = a.at_std_num
+    -> inner join course c on a.at_co_code = c.co_code
+    -> where a.at_score = 'A';
++------------+----------+----------------+
+| std_num    | std_name | co_name        |
++------------+----------+----------------+
+| 2019456001 | 강길동   | 프로그래밍일반 |
+| 2020123001 | 강나래   | 화학이론       |
++------------+----------+----------------+
+2 rows in set (0.00 sec)
+
+mysql> select s.std_num, s.std_name, c.co_name,
+    -> (at_mid+at_final+at_attend+at_hw) as' 성적' from
+    -> student s inner join attend a on s.std_num = a.at_std_num
+    -> inner join course c on a.at_co_code = c.co_code
+    -> where a.at_score = 'A';
++------------+----------+----------------+------+
+| std_num    | std_name | co_name        | 성적 |
++------------+----------+----------------+------+
+| 2019456001 | 강길동   | 프로그래밍일반 |   94 |
+| 2020123001 | 강나래   | 화학이론       |   90 |
++------------+----------+----------------+------+
+2 rows in set, 1 warning (0.00 sec)
+
+mysql> select c.co_name, sum(at_mid) '중간', sum(at_final) '기말',
+    -> sum(at_attend) '출석', sum(at_hw) '과제' from
+    -> student s inner join attend a on s.std_num = a.at_std_num
+    -> inner join course c on a.at_co_code = c.co_code
+    -> group by c.co_name;
++----------------+------+------+------+------+
+| co_name        | 중간 | 기말 | 출석 | 과제 |
++----------------+------+------+------+------+
+| 컴퓨터개론     |   40 |   60 |   13 |   12 |
+| 기초전기       |   35 |   40 |    8 |    6 |
+| 대학수학기초   |   65 |   70 |   14 |   14 |
+| 프로그래밍일반 |   65 |   75 |   17 |   19 |
+| 디자인기초     |   20 |   20 |    6 |    4 |
+| 색채이론       |   40 |   20 |    3 |    5 |
+| 화학이론       |   75 |   70 |   11 |   15 |
++----------------+------+------+------+------+
+7 rows in set (0.01 sec)
+
+mysql> select c.co_point, avg(at_mid) '중간', avg(at_final) '기말',
+    -> avg(at_attend) '출석', avg(at_hw) '과제' from
+    -> student s inner join attend a on s.std_num = a.at_std_num
+    -> inner join course c on a.at_co_code = c.co_code
+    -> group by c.co_point;
++----------+---------+---------+--------+--------+
+| co_point | 중간    | 기말    | 출석   | 과제   |
++----------+---------+---------+--------+--------+
+|        2 | 20.0000 | 20.0000 | 4.7500 | 4.0000 |
+|        3 | 35.0000 | 15.2778 | 2.9444 | 3.2778 |
++----------+---------+---------+--------+--------+
+2 rows in set (0.01 sec)
+
+mysql> select c.co_point '학점', round(avg(at_mid),2) '중간', round(avg(at_final),2) '기말',
+    -> round(avg(at_attend),2) '출석', round(avg(at_hw),2) '과제' from
+    -> student s inner join attend a on s.std_num = a.at_std_num
+    -> inner join course c on a.at_co_code = c.co_code
+    -> group by c.co_point;
++------+-------+-------+------+------+
+| 학점 | 중간  | 기말  | 출석 | 과제 |
++------+-------+-------+------+------+
+|    2 | 20.00 | 20.00 | 4.75 | 4.00 |
+|    3 | 35.00 | 15.28 | 2.94 | 3.28 |
++------+-------+-------+------+------+
+2 rows in set (0.01 sec)
+
+mysql> select c.co_name '과목', sum(at_mid) '중간', sum(at_final) '기말',
+    -> sum(at_attend) '출석', sum(at_hw) '과제' from
+    -> student s inner join attend a on s.std_num = a.at_std_num
+    -> inner join course c on a.at_co_code = c.co_code
+    -> group by c.co_name;
++----------------+------+------+------+------+
+| 과목           | 중간 | 기말 | 출석 | 과제 |
++----------------+------+------+------+------+
+| 컴퓨터개론     |   40 |   60 |   13 |   12 |
+| 기초전기       |   35 |   40 |    8 |    6 |
+| 대학수학기초   |   65 |   70 |   14 |   14 |
+| 프로그래밍일반 |   65 |   75 |   17 |   19 |
+| 디자인기초     |   20 |   20 |    6 |    4 |
+| 색채이론       |   40 |   20 |    3 |    5 |
+| 화학이론       |   75 |   70 |   11 |   15 |
++----------------+------+------+------+------+
+7 rows in set (0.00 sec)
+
+mysql> select c.co_name '과목', c.co_professor '교수명' from
+    -> student s inner join attend a on s.std_num = a.at_std_num
+    -> inner join course c on a.at_co_code = c.co_code
+    -> where s.std_name = '강철수';
++--------------+--------+
+| 과목         | 교수명 |
++--------------+--------+
+| 대학수학기초 | 홍길동 |
++--------------+--------+
+1 row in set (0.00 sec)
+
+mysql> select c.co_name '과목', c.co_professor '교수명' from
+    -> student s inner join attend a on s.std_num = a.at_std_num
+    -> inner join course c on a.at_co_code = c.co_code
+    -> where s.std_name = '최수지';
++----------------+----------+
+| 과목           | 교수명   |
++----------------+----------+
+| 디자인기초     | 황희     |
+| 색채이론       | 신사임당 |
+| 화학이론       | 김길동   |
+| 프로그래밍일반 | 임꺽정   |
++----------------+----------+
+4 rows in set (0.00 sec)
+
+mysql> select c.co_point '학점', round(avg(at_mid),2) '중간', round(avg(at_final),2) '기말',
+    -> round(avg(at_attend),2) '출석', round(avg(at_hw),2) '과제' from
+    -> student s inner join attend a on s.std_num = a.at_std_num
+    -> inner join course c on a.at_co_code = c.co_code
+    -> group by c.co_point
+    -> having round(avg(at_mid),2) is not null;
++------+-------+-------+------+------+
+| 학점 | 중간  | 기말  | 출석 | 과제 |
++------+-------+-------+------+------+
+|    2 | 20.00 | 20.00 | 4.75 | 4.00 |
+|    3 | 35.00 | 15.28 | 2.94 | 3.28 |
++------+-------+-------+------+------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT c.co_point AS '학점',
+    ->        ROUND(AVG(at_mid), 2) AS '중간',
+    ->        ROUND(AVG(at_final), 2) AS '기말',
+    ->        ROUND(AVG(at_attend), 2) AS '출석',
+    ->        ROUND(AVG(at_hw), 2) AS '과제'
+    -> FROM student s
+    -> INNER JOIN attend a ON s.std_num = a.at_std_num
+    -> INNER JOIN course c ON a.at_co_code = c.co_code
+    -> GROUP BY c.co_point
+    -> HAVING ROUND(AVG(at_mid), 2) IS NOT NULL
+    ->    AND ROUND(AVG(at_final), 2) IS NOT NULL
+    ->    AND ROUND(AVG(at_attend), 2) IS NOT NULL
+    ->    AND ROUND(AVG(at_hw), 2) IS NOT NULL;
++------+-------+-------+------+------+
+| 학점 | 중간  | 기말  | 출석 | 과제 |
++------+-------+-------+------+------+
+|    2 | 20.00 | 20.00 | 4.75 | 4.00 |
+|    3 | 35.00 | 15.28 | 2.94 | 3.28 |
++------+-------+-------+------+------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT c.co_point AS '학점',
+    ->        ROUND(AVG(at_mid), 2) AS '중간',
+    ->        ROUND(AVG(at_final), 2) AS '기말',
+    ->        ROUND(AVG(at_attend), 2) AS '출석',
+    ->        ROUND(AVG(at_hw), 2) AS '과제'
+    -> FROM student s
+    -> INNER JOIN attend a ON s.std_num = a.at_std_num
+    -> INNER JOIN course c ON a.at_co_code = c.co_code
+    -> GROUP BY c.co_point
+    -> HAVING '중간' IS NOT NULL
+    ->    AND '기말' IS NOT NULL
+    ->    AND '출석' IS NOT NULL
+    ->    AND '과제' IS NOT NULL;
++------+-------+-------+------+------+
+| 학점 | 중간  | 기말  | 출석 | 과제 |
++------+-------+-------+------+------+
+|    2 | 20.00 | 20.00 | 4.75 | 4.00 |
+|    3 | 35.00 | 15.28 | 2.94 | 3.28 |
++------+-------+-------+------+------+
+2 rows in set (0.00 sec)
+
+mysql> select c.co_point '학점', round(avg(at_mid),2) '중간', round(avg(at_final),2) '기말',
+    -> round(avg(at_attend),2) '출석', round(avg(at_hw),2) '과제' from
+    -> student s inner join attend a on s.std_num = a.at_std_num
+    -> inner join course c on a.at_co_code = c.co_code
+    -> group by c.co_point;
++------+-------+-------+------+------+
+| 학점 | 중간  | 기말  | 출석 | 과제 |
++------+-------+-------+------+------+
+|    2 | 20.00 | 20.00 | 4.75 | 4.00 |
+|    3 | 35.00 | 15.28 | 2.94 | 3.28 |
++------+-------+-------+------+------+
+2 rows in set (0.00 sec)
+
+mysql> select c.co_name '과목', sum(at_mid) '중간', sum(at_final) '기말',
+    -> sum(at_attend) '출석', sum(at_hw) '과제' from
+    -> attend a join course c on a.at_co_code = c.co_code
+    -> group by c.co_name;
++----------------+------+------+------+------+
+| 과목           | 중간 | 기말 | 출석 | 과제 |
++----------------+------+------+------+------+
+| 컴퓨터개론     |   40 |   60 |   13 |   12 |
+| 기초전기       |   35 |   40 |    8 |    6 |
+| 대학수학기초   |   65 |   70 |   14 |   14 |
+| 프로그래밍일반 |   65 |   75 |   17 |   19 |
+| 디자인기초     |   20 |   20 |    6 |    4 |
+| 색채이론       |   40 |   20 |    3 |    5 |
+| 화학이론       |   75 |   70 |   11 |   15 |
++----------------+------+------+------+------+
+7 rows in set (0.00 sec)
+mysql> select a.at_score, round(avg(at_mid),2) '중간', round(avg(at_final),2) '기말',
+    -> round(avg(at_attend),2) '출석', round(avg(at_hw),2) '과제' from
+    -> attend a
+    -> group by a.at_score
+    -> having a.at_score is not null
+    -> order by a.at_score;
++----------+-------+-------+------+------+
+| at_score | 중간  | 기말  | 출석 | 과제 |
++----------+-------+-------+------+------+
+| A        | 37.50 | 37.50 | 7.50 | 9.50 |
+| B        | 32.50 | 37.50 | 7.25 | 6.75 |
+| C        | 27.50 | 35.00 | 7.50 | 7.50 |
+| D        | 40.00 | 20.00 | 3.00 | 5.00 |
+| F        | 20.00 | 20.00 | 5.00 | 4.50 |
++----------+-------+-------+------+------+
+5 rows in set (0.00 sec)
+mysql> select a.at_score, round(avg(at_mid),2) '중간', round(avg(at_final),2) '기말',
+    -> round(avg(at_attend),2) '출석', round(avg(at_hw),2) '과제' from
+    -> attend a
+    -> group by a.at_score
+    -> having a.at_score is not null
+    -> order by a.at_score;
++----------+-------+-------+------+------+
+| at_score | 중간  | 기말  | 출석 | 과제 |
++----------+-------+-------+------+------+
+| A        | 37.50 | 37.50 | 7.50 | 9.50 |
+| B        | 32.50 | 37.50 | 7.25 | 6.75 |
+| C        | 27.50 | 35.00 | 7.50 | 7.50 |
+| D        | 40.00 | 20.00 | 3.00 | 5.00 |
+| F        | 20.00 | 20.00 | 5.00 | 4.50 |
++----------+-------+-------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> select c.co_name '과목', c.co_professor '교수명' from
+    -> course c inner join attend a on a.at_co_code = c.co_code
+    -> where s.std_name = '강철수';
+ERROR 1054 (42S22): Unknown column 's.std_name' in 'where clause'
+mysql> select c.co_name '과목', c.co_professor '교수명' from
+    -> course c inner join student s on a.at_co_code = c.co_code
+    -> where s.std_name = '강철수';
+ERROR 1054 (42S22): Unknown column 'a.at_co_code' in 'on clause'
+mysql> select c.co_name '과목', c.co_professor '교수명' from
+    -> course c inner join attend a on c.co_code = a.at_co_code
+    -> join student s on s.std_num = a.at_std_num
+    -> where s.std_name = '강철수';
++--------------+--------+
+| 과목         | 교수명 |
++--------------+--------+
+| 대학수학기초 | 홍길동 |
++--------------+--------+
+1 row in set (0.00 sec)
+
+mysql> select * from student;
++------------+----------+--------------+----------+-----------+
+| std_num    | std_name | std_major    | std_term | std_point |
++------------+----------+--------------+----------+-----------+
+| 2019160123 | 전봉준   | 컴퓨터공학과 |        2 |        64 |
+| 2019456001 | 강길동   | 디자인       |        3 |        60 |
+| 2020123001 | 강나래   | 화학공학     |        1 |        56 |
+| 2020123020 | 박철수   | 화학공학     |        1 |        57 |
+| 2020160001 | 강철수   | 컴퓨터공학   |        1 |        40 |
+| 2020160002 | 나영희   | 컴퓨터공학   |        1 |        60 |
+| 2022123001 | 강다운   | 화학공학     |        1 |        45 |
+| 2022123002 | 김수진   | 디자인       |        1 |        50 |
+| 2023160001 | 이영철   | 컴퓨터공학   |        1 |        55 |
+| 2023160002 | 최수지   | 디자인       |        1 |        65 |
++------------+----------+--------------+----------+-----------+
+10 rows in set (0.00 sec)
+
+mysql> select * from atted;
+ERROR 1146 (42S02): Table 'school.atted' doesn't exist
+mysql> select * from attend;
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+| at_num | at_std_num | at_co_code | at_year | at_term | at_mid | at_final | at_attend | at_hw | at_repetition | at_score |
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+|      1 | 2020160001 | 2020msc001 |    2024 |       1 |     30 |       40 |         8 |     6 | n             | B        |
+|      2 | 2020160002 | 2020msc001 |    2024 |       1 |     35 |       30 |         6 |     8 | n             | C        |
+|      3 | 2023160002 | 2021deg001 |    2024 |       1 |     20 |       20 |         6 |     4 | y             | F        |
+|      4 | 2023160002 | 2021deg002 |    2024 |       1 |     40 |       20 |         3 |     5 | y             | D        |
+|      5 | 2019160123 | 2020msc002 |    2024 |       1 |     30 |       35 |         7 |    10 | n             | B        |
+|      6 | 2019456001 | 2020msc002 |    2024 |       1 |     35 |       40 |        10 |     9 | n             | A        |
+|      7 | 2020123001 | 2020ipc001 |    2024 |       1 |     20 |       40 |         9 |     7 | n             | C        |
+|      8 | 2020123020 | 2020ipc001 |    2024 |       1 |     20 |       20 |         4 |     5 | y             | F        |
+|      9 | 2020123020 | 2022che001 |    2024 |       1 |     35 |       35 |         6 |     5 | n             | B        |
+|     10 | 2020123001 | 2022che001 |    2024 |       1 |     40 |       35 |         5 |    10 | n             | A        |
+|     11 | 2019456001 | 2020ipc002 |    2024 |       1 |     35 |       40 |         8 |     6 | n             | B        |
+|     12 | 2019160123 | 2020ipc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     13 | 2022123001 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     14 | 2020160002 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     15 | 2019160123 | 2020msc001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     16 | 2019456001 | 2020msc001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     17 | 2023160002 | 2022che001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     18 | 2022123001 | 2022che001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     19 | 2023160001 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     20 | 2022123002 | 2021deg001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     21 | 2022123002 | 2021deg002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     22 | 2023160002 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+22 rows in set (0.00 sec)
+
+mysql> select * from course;
++------------+----------------+--------------+----------+---------+----------------------+
+| co_code    | co_name        | co_professor | co_point | co_time | co_timetable         |
++------------+----------------+--------------+----------+---------+----------------------+
+| 2020ipc001 | 컴퓨터개론     | 유관순       |        2 |       2 | 화1A,1B,2A,2B        |
+| 2020ipc002 | 기초전기       | 이순신       |        3 |       4 | 월1A,1B,2A목1A,1B,2A |
+| 2020msc001 | 대학수학기초   | 홍길동       |        3 |       3 | 월1A,1B,2A수1A,1B,2A |
+| 2020msc002 | 프로그래밍일반 | 임꺽정       |        3 |       3 | 월1A,1B,2A목1A,1B,2A |
+| 2021deg001 | 디자인기초     | 황희         |        2 |       3 | 목1A,1B,2A,2B        |
+| 2021deg002 | 색채이론       | 신사임당     |        3 |       2 | 금1A,1B,2A,2B        |
+| 2022che001 | 화학이론       | 김길동       |        3 |       2 | 월1A,1B,수2A,2B      |
++------------+----------------+--------------+----------+---------+----------------------+
+7 rows in set (0.00 sec)
+
+mysql> select s.std_num, s.std_name, c.co_name from
+    -> student s join attend a on s.std_num = a.at_std_num
+    -> join course c on a.at_co_code = c.co_code
+    -> where  c.co_name = '프로그래밍';
+Empty set (0.00 sec)
+
+mysql> select s.std_num, s.std_name, s.std_major, c.co_name, co_professor  from
+    -> student s join attend a on s.std_num = a.at_std_num
+    -> join course c on a.at_co_code = c.co_code
+    -> where co_professor = '홍길동'
+    -> ;
++------------+----------+--------------+--------------+--------------+
+| std_num    | std_name | std_major    | co_name      | co_professor |
++------------+----------+--------------+--------------+--------------+
+| 2020160001 | 강철수   | 컴퓨터공학   | 대학수학기초 | 홍길동       |
+| 2020160002 | 나영희   | 컴퓨터공학   | 대학수학기초 | 홍길동       |
+| 2019160123 | 전봉준   | 컴퓨터공학과 | 대학수학기초 | 홍길동       |
+| 2019456001 | 강길동   | 디자인       | 대학수학기초 | 홍길동       |
++------------+----------+--------------+--------------+--------------+
+4 rows in set (0.00 sec)
+
+mysql> select sum(co_point) from
+    -> student s join attend a on s.std_num = a.at_std_num
+    -> join course c on a.at_co_code = c.co_code
+    -> where a.at_term = 1
+    -> and s.std_point is not null
+    -> group by co_point
+    -> having s.std_name = '최수지';
+ERROR 1054 (42S22): Unknown column 's.std_name' in 'having clause'
+mysql> select sum(co_point) from
+    -> student s join attend a on s.std_num = a.at_std_num
+    -> join course c on a.at_co_code = c.co_code
+    -> where a.at_term = 1
+    -> group by co_point
+    -> having s.std_name = '최수지';
+ERROR 1054 (42S22): Unknown column 's.std_name' in 'having clause'
+mysql> select s.std_num, s.std_name, s.std_mjor, c.co_name,
+    -> (at_mid+at_final+at_attend+at_hw) as '점수합계' from
+    -> student s join attend a on s.std_num = a.at_std_num
+    -> join course c on a.at_co_code = c.co_code
+    -> group by '점수합계'
+    -> having a.at_repetition = 'y';
+ERROR 1054 (42S22): Unknown column 's.std_mjor' in 'field list'
+mysql> select s.std_num, s.std_name, s.std_major, c.co_name,
+    -> (at_mid+at_final+at_attend+at_hw) as '점수합계' from
+    -> student s join attend a on s.std_num = a.at_std_num
+    -> join course c on a.at_co_code = c.co_code
+    -> group by '점수합계'
+    -> having a.at_repetition = 'y';
+ERROR 1054 (42S22): Unknown column 'a.at_repetition' in 'having clause'
+mysql> select s.std_num, s.std_name, s.std_major, c.co_name,
+    -> (at_mid+at_final+at_attend+at_hw) as '점수합계' from
+    -> student s join attend a on s.std_num = a.at_std_num
+    -> join course c on a.at_co_code = c.co_code
+    -> group by '점수합계'
+    -> having a. at_repetition = 'y';
+ERROR 1054 (42S22): Unknown column 'a.at_repetition' in 'having clause'
+mysql> select std_num, std_name, std_major from student
+    -> where std_num like '2020%';
++------------+----------+------------+
+| std_num    | std_name | std_major  |
++------------+----------+------------+
+| 2020123001 | 강나래   | 화학공학   |
+| 2020123020 | 박철수   | 화학공학   |
+| 2020160001 | 강철수   | 컴퓨터공학 |
+| 2020160002 | 나영희   | 컴퓨터공학 |
++------------+----------+------------+
+4 rows in set (0.00 sec)
+
+mysql> select s.std_num, s.std_name, s.std_major from student s
+    -> join attend a on s.std_num = a.at_std_num
+    -> join course c on a.at_co_code = c.co_code
+    -> where c.co_name = '프로그래밍일반';
++------------+----------+--------------+
+| std_num    | std_name | std_major    |
++------------+----------+--------------+
+| 2019160123 | 전봉준   | 컴퓨터공학과 |
+| 2019456001 | 강길동   | 디자인       |
+| 2022123001 | 강다운   | 화학공학     |
+| 2020160002 | 나영희   | 컴퓨터공학   |
+| 2023160001 | 이영철   | 컴퓨터공학   |
+| 2023160002 | 최수지   | 디자인       |
++------------+----------+--------------+
+6 rows in set (0.00 sec)
+
+mysql> select s.std_name, sum(c.co_point) as '학점합계' from
+    -> student s join attend a on s.std_num = a.at_std_num
+    -> join course c on a.at_co_code = c.co_code
+    -> where a.at_term = 1 and at_repetition = 'n'
+    -> group by s.std_name
+    -> having s.std_name = '최수지';
+Empty set (0.01 sec)
+
+mysql> select s.std_name, sum(c.co_point) as '학점합계' from
+    -> student s join attend a on s.std_num = a.at_std_num
+    -> join course c on a.at_co_code = c.co_code
+    -> where a.at_term = 1 and at_repetition = 'n'
+    -> group by s.std_name
+    -> having s.std_name = '최수지';
+Empty set (0.00 sec)
+
+mysql> select s.std_name, sum(c.co_point) as '학점합계' from
+    -> student s join attend a on std_num = at_std_num
+    -> join course c on at_co_code = co_code
+    -> where a.at_term = 1 and at_repetition = 'n'
+    -> group by s.std_name
+    -> having s.std_name = '최수지';
+Empty set (0.00 sec)
+
+mysql> select s.std_num, s.std_name, s.std_major, c.co_name,
+    -> (at_mid+at_final+at_attend+at_hw) as '점수합계' from
+    -> student s join attend a on s.std_num = a.at_std_num
+    -> join course c on a.at_co_code = c.co_code
+    -> where a. at_repetition = 'y';
++------------+----------+-----------+------------+----------+
+| std_num    | std_name | std_major | co_name    | 점수합계 |
++------------+----------+-----------+------------+----------+
+| 2023160002 | 최수지   | 디자인    | 디자인기초 |       50 |
+| 2023160002 | 최수지   | 디자인    | 색채이론   |       68 |
+| 2020123020 | 박철수   | 화학공학  | 컴퓨터개론 |       49 |
++------------+----------+-----------+------------+----------+
+3 rows in set (0.00 sec)
+
+mysql> select s.std_name, sum(c.co_point) as '학점합계' from
+    -> student s join attend a on std_num = at_std_num
+    -> join course c on at_co_code = co_code
+    -> where a.at_term = 1 and at_repetition = 'n'
+    -> group by s.std_name
+    -> having s.std_name = '최수지';
+Empty set (0.00 sec)
+
+mysql> select c.co_name '과목', sum(at_mid) '중간', sum(at_final) '기말',
+    -> sum(at_attend) '출석', sum(at_hw) '과제' from
+    -> attend a join course c on a.at_co_code = c.co_code
+    -> group by c.co_name WITH ROLLUP
+    -> order by GROUPING(c.co_name) ASC;
++----------------+------+------+------+------+
+| 과목           | 중간 | 기말 | 출석 | 과제 |
++----------------+------+------+------+------+
+| 기초전기       |   35 |   40 |    8 |    6 |
+| 대학수학기초   |   65 |   70 |   14 |   14 |
+| 디자인기초     |   20 |   20 |    6 |    4 |
+| 색채이론       |   40 |   20 |    3 |    5 |
+| 컴퓨터개론     |   40 |   60 |   13 |   12 |
+| 프로그래밍일반 |   65 |   75 |   17 |   19 |
+| 화학이론       |   75 |   70 |   11 |   15 |
+| NULL           |  340 |  355 |   72 |   75 |
++----------------+------+------+------+------+
+8 rows in set (0.01 sec)
+
+mysql> select c.co_name '과목', sum(at_mid) '중간', sum(at_final) '기말',
+    -> sum(at_attend) '출석', sum(at_hw) '과제' from
+    -> attend a join course c on a.at_co_code = c.co_code
+    -> group by c.co_name;
++----------------+------+------+------+------+
+| 과목           | 중간 | 기말 | 출석 | 과제 |
++----------------+------+------+------+------+
+| 컴퓨터개론     |   40 |   60 |   13 |   12 |
+| 기초전기       |   35 |   40 |    8 |    6 |
+| 대학수학기초   |   65 |   70 |   14 |   14 |
+| 프로그래밍일반 |   65 |   75 |   17 |   19 |
+| 디자인기초     |   20 |   20 |    6 |    4 |
+| 색채이론       |   40 |   20 |    3 |    5 |
+| 화학이론       |   75 |   70 |   11 |   15 |
++----------------+------+------+------+------+
+7 rows in set (0.00 sec)
+
+mysql> select c.co_name '과목', sum(at_mid) '중간', sum(at_final) '기말',
+    -> sum(at_attend) '출석', sum(at_hw) '과제' from
+    -> attend a join course c on a.at_co_code = c.co_code
+    -> group by c.co_code;
++----------------+------+------+------+------+
+| 과목           | 중간 | 기말 | 출석 | 과제 |
++----------------+------+------+------+------+
+| 컴퓨터개론     |   40 |   60 |   13 |   12 |
+| 기초전기       |   35 |   40 |    8 |    6 |
+| 대학수학기초   |   65 |   70 |   14 |   14 |
+| 프로그래밍일반 |   65 |   75 |   17 |   19 |
+| 디자인기초     |   20 |   20 |    6 |    4 |
+| 색채이론       |   40 |   20 |    3 |    5 |
+| 화학이론       |   75 |   70 |   11 |   15 |
++----------------+------+------+------+------+
+7 rows in set (0.00 sec)
+
+mysql> select * from course;
++------------+----------------+--------------+----------+---------+----------------------+
+| co_code    | co_name        | co_professor | co_point | co_time | co_timetable         |
++------------+----------------+--------------+----------+---------+----------------------+
+| 2020ipc001 | 컴퓨터개론     | 유관순       |        2 |       2 | 화1A,1B,2A,2B        |
+| 2020ipc002 | 기초전기       | 이순신       |        3 |       4 | 월1A,1B,2A목1A,1B,2A |
+| 2020msc001 | 대학수학기초   | 홍길동       |        3 |       3 | 월1A,1B,2A수1A,1B,2A |
+| 2020msc002 | 프로그래밍일반 | 임꺽정       |        3 |       3 | 월1A,1B,2A목1A,1B,2A |
+| 2021deg001 | 디자인기초     | 황희         |        2 |       3 | 목1A,1B,2A,2B        |
+| 2021deg002 | 색채이론       | 신사임당     |        3 |       2 | 금1A,1B,2A,2B        |
+| 2022che001 | 화학이론       | 김길동       |        3 |       2 | 월1A,1B,수2A,2B      |
++------------+----------------+--------------+----------+---------+----------------------+
+7 rows in set (0.00 sec)
+
+mysql> select c.co_name '과목', sum(at_mid) '중간', sum(at_final) '기말',
+    -> sum(at_attend) '출석', sum(at_hw) '과제' from
+    -> attend a join course c on a.at_co_code = c.co_code
+    -> group by c.co_name WITH ROLLUP
+    -> order by GROUPING(c.co_name) ASC;
++----------------+------+------+------+------+
+| 과목           | 중간 | 기말 | 출석 | 과제 |
++----------------+------+------+------+------+
+| 기초전기       |   35 |   40 |    8 |    6 |
+| 대학수학기초   |   65 |   70 |   14 |   14 |
+| 디자인기초     |   20 |   20 |    6 |    4 |
+| 색채이론       |   40 |   20 |    3 |    5 |
+| 컴퓨터개론     |   40 |   60 |   13 |   12 |
+| 프로그래밍일반 |   65 |   75 |   17 |   19 |
+| 화학이론       |   75 |   70 |   11 |   15 |
+| NULL           |  340 |  355 |   72 |   75 |
++----------------+------+------+------+------+
+8 rows in set (0.00 sec)
+
+mysql> select c.co_name '과목', sum(at_mid) '중간', sum(at_final) '기말',
+    -> sum(at_attend) '출석', sum(at_hw) '과제' from
+    -> attend a join course c on a.at_co_code = c.co_code
+    -> group by c.co_name WITH ROLLUP as '합계'
+    -> order by GROUPING(c.co_name) ASC;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'as '합계'
+order by GROUPING(c.co_name) ASC' at line 4
+mysql>
+mysql> select c.co_name '과목', sum(at_mid) '중간', sum(at_final) '기말',
+    -> sum(at_attend) '출석', sum(at_hw) '과제' from
+    -> attend a join course c on a.at_co_code = c.co_code
+    -> group by c.co_name WITH ROLLUP as '합계';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'as '합계'' at line 4
+mysql> select ifnull(c.co_name, '합계') '과목', sum(at_mid) '중간', sum(at_final) '기말',
+    -> sum(at_attend) '출석', sum(at_hw) '과제' from
+    -> attend a join course c on a.at_co_code = c.co_code
+    -> group by c.co_name WITH ROLLUP
+    -> order by GROUPING(c.co_name) ASC;
++----------------+------+------+------+------+
+| 과목           | 중간 | 기말 | 출석 | 과제 |
++----------------+------+------+------+------+
+| 기초전기       |   35 |   40 |    8 |    6 |
+| 대학수학기초   |   65 |   70 |   14 |   14 |
+| 디자인기초     |   20 |   20 |    6 |    4 |
+| 색채이론       |   40 |   20 |    3 |    5 |
+| 컴퓨터개론     |   40 |   60 |   13 |   12 |
+| 프로그래밍일반 |   65 |   75 |   17 |   19 |
+| 화학이론       |   75 |   70 |   11 |   15 |
+| 합계           |  340 |  355 |   72 |   75 |
++----------------+------+------+------+------+
+8 rows in set (0.00 sec)
+
+mysql> select ifull(at_score, '합계'), round(avg(at_mid),2) '중간', round(avg(at_final),2) '기말',
+    -> round(avg(at_attend),2) '출석', round(avg(at_hw),2) '과제' from attend
+    -> group by at_score
+    -> having at_score is not null
+    -> order by at_score;
+ERROR 1305 (42000): FUNCTION school.ifull does not exist
+mysql> select ifnull(at_score, '합계'), round(avg(at_mid),2) '중간', round(avg(at_final),2) '기말',
+    -> round(avg(at_attend),2) '출석', round(avg(at_hw),2) '과제' from attend
+    -> group by at_score with rollup
+    -> having at_score is not null
+    -> order by grouping(at_score) asc;
++--------------------------+-------+-------+------+------+
+| ifnull(at_score, '합계') | 중간  | 기말  | 출석 | 과제 |
++--------------------------+-------+-------+------+------+
+| A                        | 37.50 | 37.50 | 7.50 | 9.50 |
+| B                        | 32.50 | 37.50 | 7.25 | 6.75 |
+| C                        | 27.50 | 35.00 | 7.50 | 7.50 |
+| D                        | 40.00 | 20.00 | 3.00 | 5.00 |
+| F                        | 20.00 | 20.00 | 5.00 | 4.50 |
++--------------------------+-------+-------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> select a.at_score, round(avg(at_mid),2) '중간', round(avg(at_final),2) '기말',
+    -> round(avg(at_attend),2) '출석', round(avg(at_hw),2) '과제' from
+    -> attend a
+    -> group by a.at_score with rollup
+    -> having a.at_score is not null
+    -> order by grouping(at_score) asc;
++----------+-------+-------+------+------+
+| at_score | 중간  | 기말  | 출석 | 과제 |
++----------+-------+-------+------+------+
+| A        | 37.50 | 37.50 | 7.50 | 9.50 |
+| B        | 32.50 | 37.50 | 7.25 | 6.75 |
+| C        | 27.50 | 35.00 | 7.50 | 7.50 |
+| D        | 40.00 | 20.00 | 3.00 | 5.00 |
+| F        | 20.00 | 20.00 | 5.00 | 4.50 |
++----------+-------+-------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> select at_score, round(avg(at_mid),2) '중간', round(avg(at_final),2) '기말',
+    -> round(avg(at_attend),2) '출석', round(avg(at_hw),2) '과제' from attend
+    -> group by at_score
+    -> having at_score is not null
+    -> order by at_score;
++----------+-------+-------+------+------+
+| at_score | 중간  | 기말  | 출석 | 과제 |
++----------+-------+-------+------+------+
+| A        | 37.50 | 37.50 | 7.50 | 9.50 |
+| B        | 32.50 | 37.50 | 7.25 | 6.75 |
+| C        | 27.50 | 35.00 | 7.50 | 7.50 |
+| D        | 40.00 | 20.00 | 3.00 | 5.00 |
+| F        | 20.00 | 20.00 | 5.00 | 4.50 |
++----------+-------+-------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> select at_score, round(avg(at_mid),2) '중간', round(avg(at_final),2) '기말',
+    -> round(avg(at_attend),2) '출석', round(avg(at_hw),2) '과제' from attend
+    -> group by at_score with rollup
+    -> order by grouping(at_score) asc;
++----------+-------+-------+------+------+
+| at_score | 중간  | 기말  | 출석 | 과제 |
++----------+-------+-------+------+------+
+| NULL     |  NULL |  0.00 | 0.00 | 0.00 |
+| A        | 37.50 | 37.50 | 7.50 | 9.50 |
+| B        | 32.50 | 37.50 | 7.25 | 6.75 |
+| C        | 27.50 | 35.00 | 7.50 | 7.50 |
+| D        | 40.00 | 20.00 | 3.00 | 5.00 |
+| F        | 20.00 | 20.00 | 5.00 | 4.50 |
+| NULL     | 30.91 | 16.14 | 3.27 | 3.41 |
++----------+-------+-------+------+------+
+7 rows in set (0.00 sec)
+
+mysql> select ifnull(at_score, '합계'), round(avg(at_mid),2) '중간', round(avg(at_final),2) '기말',
+    -> round(avg(at_attend),2) '출석', round(avg(at_hw),2) '과제' from attend
+    -> group by at_score with rollup
+    -> order by grouping(at_score) asc;
++--------------------------+-------+-------+------+------+
+| ifnull(at_score, '합계') | 중간  | 기말  | 출석 | 과제 |
++--------------------------+-------+-------+------+------+
+| 합계                     |  NULL |  0.00 | 0.00 | 0.00 |
+| A                        | 37.50 | 37.50 | 7.50 | 9.50 |
+| B                        | 32.50 | 37.50 | 7.25 | 6.75 |
+| C                        | 27.50 | 35.00 | 7.50 | 7.50 |
+| D                        | 40.00 | 20.00 | 3.00 | 5.00 |
+| F                        | 20.00 | 20.00 | 5.00 | 4.50 |
+| 합계                     | 30.91 | 16.14 | 3.27 | 3.41 |
++--------------------------+-------+-------+------+------+
+7 rows in set (0.00 sec)
+
+mysql> select ifnull(at_score, '합계'), round(avg(at_mid),2) '중간', round(avg(at_final),2) '기말',
+    -> round(avg(at_attend),2) '출석', round(avg(at_hw),2) '과제' from attend
+    -> where at_score is not null
+    -> group by at_score with rollup
+    -> order by grouping(at_score) asc;
++--------------------------+-------+-------+------+------+
+| ifnull(at_score, '합계') | 중간  | 기말  | 출석 | 과제 |
++--------------------------+-------+-------+------+------+
+| A                        | 37.50 | 37.50 | 7.50 | 9.50 |
+| B                        | 32.50 | 37.50 | 7.25 | 6.75 |
+| C                        | 27.50 | 35.00 | 7.50 | 7.50 |
+| D                        | 40.00 | 20.00 | 3.00 | 5.00 |
+| F                        | 20.00 | 20.00 | 5.00 | 4.50 |
+| 합계                     | 30.91 | 32.27 | 6.55 | 6.82 |
++--------------------------+-------+-------+------+------+
+6 rows in set (0.00 sec)
+
+mysql> select ifnull(at_score, '합계 평균'), round(avg(at_mid),2) '중간', round(avg(at_final),2) '기말',
+    -> round(avg(at_attend),2) '출석', round(avg(at_hw),2) '과제' from attend
+    -> where at_score is not null
+    -> group by at_score with rollup
+    -> order by grouping(at_score) asc;
++-------------------------------+-------+-------+------+------+
+| ifnull(at_score, '합계 평균') | 중간  | 기말  | 출석 | 과제 |
++-------------------------------+-------+-------+------+------+
+| A                             | 37.50 | 37.50 | 7.50 | 9.50 |
+| B                             | 32.50 | 37.50 | 7.25 | 6.75 |
+| C                             | 27.50 | 35.00 | 7.50 | 7.50 |
+| D                             | 40.00 | 20.00 | 3.00 | 5.00 |
+| F                             | 20.00 | 20.00 | 5.00 | 4.50 |
+| 합계 평균                     | 30.91 | 32.27 | 6.55 | 6.82 |
++-------------------------------+-------+-------+------+------+
+6 rows in set (0.00 sec)
+
+mysql> select ifnull(at_score, '평균') as '학점', round(avg(at_mid),2) '중간', round(avg(at_final),2) '기말',
+    -> round(avg(at_attend),2) '출석', round(avg(at_hw),2) '과제' from attend
+    -> where at_score is not null
+    -> group by at_score with rollup
+    -> order by grouping(at_score) asc;
++------+-------+-------+------+------+
+| 학점 | 중간  | 기말  | 출석 | 과제 |
++------+-------+-------+------+------+
+| A    | 37.50 | 37.50 | 7.50 | 9.50 |
+| B    | 32.50 | 37.50 | 7.25 | 6.75 |
+| C    | 27.50 | 35.00 | 7.50 | 7.50 |
+| D    | 40.00 | 20.00 | 3.00 | 5.00 |
+| F    | 20.00 | 20.00 | 5.00 | 4.50 |
+| 평균 | 30.91 | 32.27 | 6.55 | 6.82 |
++------+-------+-------+------+------+
+6 rows in set (0.00 sec)
+
+mysql> select * from attend where at_term = 1;
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+| at_num | at_std_num | at_co_code | at_year | at_term | at_mid | at_final | at_attend | at_hw | at_repetition | at_score |
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+|      1 | 2020160001 | 2020msc001 |    2024 |       1 |     30 |       40 |         8 |     6 | n             | B        |
+|      2 | 2020160002 | 2020msc001 |    2024 |       1 |     35 |       30 |         6 |     8 | n             | C        |
+|      3 | 2023160002 | 2021deg001 |    2024 |       1 |     20 |       20 |         6 |     4 | y             | F        |
+|      4 | 2023160002 | 2021deg002 |    2024 |       1 |     40 |       20 |         3 |     5 | y             | D        |
+|      5 | 2019160123 | 2020msc002 |    2024 |       1 |     30 |       35 |         7 |    10 | n             | B        |
+|      6 | 2019456001 | 2020msc002 |    2024 |       1 |     35 |       40 |        10 |     9 | n             | A        |
+|      7 | 2020123001 | 2020ipc001 |    2024 |       1 |     20 |       40 |         9 |     7 | n             | C        |
+|      8 | 2020123020 | 2020ipc001 |    2024 |       1 |     20 |       20 |         4 |     5 | y             | F        |
+|      9 | 2020123020 | 2022che001 |    2024 |       1 |     35 |       35 |         6 |     5 | n             | B        |
+|     10 | 2020123001 | 2022che001 |    2024 |       1 |     40 |       35 |         5 |    10 | n             | A        |
+|     11 | 2019456001 | 2020ipc002 |    2024 |       1 |     35 |       40 |         8 |     6 | n             | B        |
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+11 rows in set (0.00 sec)
+
+mysql> select * from attend where at_term=1 order by at_final desc;
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+| at_num | at_std_num | at_co_code | at_year | at_term | at_mid | at_final | at_attend | at_hw | at_repetition | at_score |
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+|      1 | 2020160001 | 2020msc001 |    2024 |       1 |     30 |       40 |         8 |     6 | n             | B        |
+|      6 | 2019456001 | 2020msc002 |    2024 |       1 |     35 |       40 |        10 |     9 | n             | A        |
+|      7 | 2020123001 | 2020ipc001 |    2024 |       1 |     20 |       40 |         9 |     7 | n             | C        |
+|     11 | 2019456001 | 2020ipc002 |    2024 |       1 |     35 |       40 |         8 |     6 | n             | B        |
+|      5 | 2019160123 | 2020msc002 |    2024 |       1 |     30 |       35 |         7 |    10 | n             | B        |
+|      9 | 2020123020 | 2022che001 |    2024 |       1 |     35 |       35 |         6 |     5 | n             | B        |
+|     10 | 2020123001 | 2022che001 |    2024 |       1 |     40 |       35 |         5 |    10 | n             | A        |
+|      2 | 2020160002 | 2020msc001 |    2024 |       1 |     35 |       30 |         6 |     8 | n             | C        |
+|      3 | 2023160002 | 2021deg001 |    2024 |       1 |     20 |       20 |         6 |     4 | y             | F        |
+|      4 | 2023160002 | 2021deg002 |    2024 |       1 |     40 |       20 |         3 |     5 | y             | D        |
+|      8 | 2020123020 | 2020ipc001 |    2024 |       1 |     20 |       20 |         4 |     5 | y             | F        |
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+11 rows in set (0.00 sec)
+
+mysql> select at_std_num, at_final,
+    -> rank() over(order by at_final desc) as ranking
+    -> from attend
+    -> where at_term = 1;
++------------+----------+---------+
+| at_std_num | at_final | ranking |
++------------+----------+---------+
+| 2020160001 |       40 |       1 |
+| 2019456001 |       40 |       1 |
+| 2020123001 |       40 |       1 |
+| 2019456001 |       40 |       1 |
+| 2019160123 |       35 |       5 |
+| 2020123020 |       35 |       5 |
+| 2020123001 |       35 |       5 |
+| 2020160002 |       30 |       8 |
+| 2023160002 |       20 |       9 |
+| 2023160002 |       20 |       9 |
+| 2020123020 |       20 |       9 |
++------------+----------+---------+
+11 rows in set (0.01 sec)
+
+mysql> select at_std_num, at_final,
+    -> dense_rank() over(order by at_final desc) as ranking
+    -> from attend
+    -> where at_term = 1;
++------------+----------+---------+
+| at_std_num | at_final | ranking |
++------------+----------+---------+
+| 2020160001 |       40 |       1 |
+| 2019456001 |       40 |       1 |
+| 2020123001 |       40 |       1 |
+| 2019456001 |       40 |       1 |
+| 2019160123 |       35 |       2 |
+| 2020123020 |       35 |       2 |
+| 2020123001 |       35 |       2 |
+| 2020160002 |       30 |       3 |
+| 2023160002 |       20 |       4 |
+| 2023160002 |       20 |       4 |
+| 2020123020 |       20 |       4 |
++------------+----------+---------+
+11 rows in set (0.00 sec)
+
+mysql> select at_std_num, at_final,
+    -> rank() over(order by at_final desc) as ranking
+    -> (select ranking from attend where ranking > 5
+    -> )from attend
+    -> where at_term = 1;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(select ranking from attend where ranking > 5
+)from attend
+where at_term = 1' at line 3
+mysql> select ranking from
+    -> (select at_std_num, at_final,
+    -> rank() over(order by at_final desc) as ranking
+    -> from attend
+    -> where at_term = 1) as r
+    -> where ranking < 5;
++---------+
+| ranking |
++---------+
+|       1 |
+|       1 |
+|       1 |
+|       1 |
++---------+
+4 rows in set (0.00 sec)
+
+mysql> select * from
+    -> (select at_std_num, at_final,
+    -> rank() over(order by at_final desc) as ranking
+    -> from attend
+    -> where at_term = 1) as r
+    -> where ranking < 5;
++------------+----------+---------+
+| at_std_num | at_final | ranking |
++------------+----------+---------+
+| 2020160001 |       40 |       1 |
+| 2019456001 |       40 |       1 |
+| 2020123001 |       40 |       1 |
+| 2019456001 |       40 |       1 |
++------------+----------+---------+
+4 rows in set (0.00 sec)

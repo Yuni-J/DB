@@ -1,0 +1,72 @@
+WITH ROLLUP은 SQL에서 집계 결과에 총합계와 부분 합계를 추가하는 데 사용되는 기능입니다. 이 기능은 GROUP BY 절과 함께 사용되며, 데이터 집계 시 계층적 집계 결과를 제공하는 데 유용합니다.
+
+WITH ROLLUP의 의미와 사용
+계층적 집계:
+
+WITH ROLLUP을 사용하면 그룹화된 결과에 대해 추가적인 집계 행을 생성할 수 있습니다. 이는 각 그룹의 하위 집계와 최종 집계(총합계)를 포함하여 데이터의 요약 정보를 제공합니다.
+결과 예시:
+
+만약 WITH ROLLUP을 사용하지 않으면, GROUP BY 절로 그룹화된 데이터만 결과로 반환됩니다. 하지만 WITH ROLLUP을 사용하면, 각 그룹의 하위 집계와 전체 집계를 포함한 결과를 얻을 수 있습니다.
+작동 원리:
+
+WITH ROLLUP은 그룹화된 데이터를 단계별로 집계합니다. 즉, 가장 구체적인 그룹화부터 시작하여 상위 수준의 집계로 진행합니다. 마지막에는 전체 집계를 추가합니다.
+예제
+다음은 WITH ROLLUP을 사용하는 간단한 예제입니다:
+
+sql
+코드 복사
+SELECT 
+    department, 
+    job_title, 
+    COUNT(*) AS employee_count
+FROM 
+    employees
+GROUP BY 
+    department, 
+    job_title
+WITH ROLLUP;
+
+결과 설명:
+부서별, 직책별 집계:
+
+department와 job_title별로 직원 수를 집계합니다.
+부서별 집계:
+
+각 부서의 직원 수 합계가 포함됩니다. 직책별로 집계된 결과 아래에 각 부서의 총 직원 수가 추가됩니다.
+전체 집계:
+
+모든 부서와 직책을 합친 전체 직원 수가 마지막에 추가됩니다.
+결과 예시:
+department	job_title	employee_count
+Sales	Manager	5
+Sales	Associate	20
+Sales	NULL	25
+Engineering	Engineer	15
+Engineering	NULL	15
+NULL	NULL	40
+부서별, 직책별 직원 수는 각 department와 job_title의 조합에 대해 표시됩니다.
+부서별 합계는 job_title이 NULL인 행으로 표시됩니다.
+전체 합계는 department와 job_title 모두 NULL인 행으로 표시됩니다.
+GROUPING 함수
+WITH ROLLUP을 사용할 때 GROUPING 함수를 사용하여 각 행이 집계 수준(상위 집계 또는 하위 집계)에 해당하는지를 확인할 수 있습니다.
+
+예제:
+
+sql
+코드 복사
+SELECT 
+    department, 
+    job_title, 
+    COUNT(*) AS employee_count,
+    GROUPING(department) AS dept_grouping,
+    GROUPING(job_title) AS job_grouping
+FROM 
+    employees
+GROUP BY 
+    department, 
+    job_title
+WITH ROLLUP;
+
+GROUPING(department)는 department가 집계 수준인지 여부를 나타냅니다. 전체 합계와 부분 합계에서는 1이 됩니다.
+GROUPING(job_title)는 job_title이 집계 수준인지 여부를 나타냅니다. 각 부서별 합계 및 전체 합계에서는 1이 됩니다.
+이와 같이 WITH ROLLUP은 복잡한 집계 쿼리에서 유용하게 사용되며, 데이터의 요약 및 통합된 결과를 쉽게 얻을 수 있도록 도와줍니다.
