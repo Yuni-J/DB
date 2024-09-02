@@ -1,0 +1,247 @@
+Microsoft Windows [Version 10.0.19045.4529]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\EZENIC-142>mysql -uroot -pezen
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.39 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database college;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> grant all privileges on college. * to 'mysqlUser'@'localhost' with grant option;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> flush privileges;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> exit
+Bye
+
+C:\Users\EZENIC-142>mysql -umysqlUser -pmysql
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 10
+Server version: 8.0.39 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use college;
+Database changed
+
+mysql> create table student(
+    -> st_num int,
+    -> st_name varchar(20) not null,
+    -> st_term int not null default 1,
+    -> st_point int not null default 0,
+    -> primary key(st_num));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table course(
+    -> co_num int not null,
+    -> co_pr_num int not null,
+    -> co_su_num int not null,
+    -> co_term int not null default 1,
+    -> co_year int not null,
+    -> co_timetable varchar(100),
+    -> primary key(co_num));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table subject(
+    -> su_num int,
+    -> su_code varchar(20) not null,
+    -> su_title varchar(45) not null,
+    -> su_point int not null default 0,
+    -> su_time int not null default 0,
+    -> primary key(su_num));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table attend(
+    -> at_num int not null,
+    -> at_st_num int not null,
+    -> at_co_num int not null,
+    -> at_mid int not null default 0,
+    -> at_final int not null default 0,
+    -> at_hw int not null default 0,
+    -> at_attend int not null default 0,
+    -> at_score varchar(10),
+    -> at_pass varchar(1) default 'f',
+    -> at_repetition varchar(1) default 'n',
+    -> primary key(at_num));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table professor(
+    -> pr_num int not null,
+    -> pr_name varchar(20) not null,
+    -> pr_age int not null,
+    -> pr_room varchar(45) not null,
+    -> pr_state varchar(40) default '재직',
+    -> pr_position varchar(40) default '조교수',
+    -> primary key(pr_num));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table guide(
+    -> gu_num int not null,
+    -> gu_pr_num int not null,
+    -> gu_st_num int not null,
+    -> gu_year int,
+    -> primary key(gu_num));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> Alter table attend add foreign key(at_st_num)
+    -> References student(st_num);
+Query OK, 0 rows affected (0.07 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> Alter table attend add foreign key(at_co_num)
+    -> References course(co_num);
+Query OK, 0 rows affected (0.07 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> Alter table course add foreign key(co_su_num)
+    -> References subject(su_num);
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> Alter table course add foreign key(co_pr_num)
+    -> References professor(pr_num);
+Query OK, 0 rows affected (0.16 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> Alter table guide add foreign key(gu_st_num)
+    -> References student(st_num);
+Query OK, 0 rows affected (0.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> Alter table guide add foreign key(gu_pr_num)
+    -> References professor(pr_num);
+Query OK, 0 rows affected (0.07 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> insert into student(st_num, st_name,st_term) values
+    -> (2020123001,'김영철',1),
+    -> (2020123002,'나영희',1),
+    -> (2020160001,'강철수',2),
+    -> (2020160002,'박철수',2),
+    -> (2020456001,'강군',2);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> insert into subject values
+    -> (1,'msc001','대학수학',3,3),
+    -> (2,'com001','컴퓨터개론',2,2),
+    -> (3,'com002','운영체제',3,3),
+    -> (4,'abc001','디자인이론',2,2),
+    -> (5,'abc002','생활영어',2,3);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> insert into professor values
+    -> (2005789001, '홍길동',60,'B동302호','재직','정교수'),
+    -> (2006456001, '박영실',65,'B동301호','안식년','정교수'),
+    -> (2010160001, '강길동',55,'A동202호','재직','조교수'),
+    -> (2010160002, '김길순',50,'A동301호','재직','조교수'),
+    -> (2011123001, '이순신',55,'A동203호','재직','정교수');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> insert into course(co_num, co_pr_num, co_su_num, co_term, co_year, co_timetable) values
+    -> (1, 2005789001,1,1,2002,'월2a/2b/3a/3b/4a/4b'),
+    -> (2, 2010160002,1,2,2002,'월2a/2b/3a/3b/4a/4b'),
+    -> (3, 2010160001,2,1,2002,'화1a/1b/2a/2b'),
+    -> (4, 2010160001,3,1,2002,'목2a/2b/3a/3b/4a/4b'),
+    -> (5, 2011123001,4,2,2002,'화1a/1b/2a/2b'),
+    -> (6, 2011123001,5,2,2002,'수1a/1b/2a/2b');
+Query OK, 6 rows affected (0.01 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> insert into guide(gu_num, gu_pr_num, gu_st_num, gu_year) values
+    -> (1, 2010160001,2020160001,2023),
+    -> (2, 2010160001,2020160002,2023),
+    -> (3, 2011123001,2020123001,2023),
+    -> (4, 2011123001,2020123002,2023),
+    -> (5, 2010160002,2020456001,2023);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> insert into attend(at_st_num, at_co_num) values
+    -> (2020123001,1),
+    -> (2020123001,2),
+    -> (2020123001,3),
+    -> (2020123001,4),
+    -> (2020123001,5),
+    -> (2020123001,6),
+    -> (2020123002,1),
+    -> (2020123002,2),
+    -> (2020123002,3),
+    -> (2020123002,4),
+    -> (2020123002,5),
+    -> (2020160001,1),
+    -> (2020160001,2),
+    -> (2020160001,3),
+    -> (2020160001,4),
+    -> (2020160001,5),
+    -> (2020160001,6),
+    -> (2020160002,1),
+    -> (2020160002,2),
+    -> (2020160002,3),
+    -> (2020160002,4),
+    -> (2020160002,5),
+    -> (2020160002,6),
+    -> (2020456001,1),
+    -> (2020456001,2),
+    -> (2020456001,3),
+    -> (2020456001,4),
+    -> (2020456001,5);
+ERROR 1364 (HY000): Field 'at_num' doesn't have a default value
+mysql> insert into attend(at_num, at_st_num, at_co_num) values
+    -> (1,2020123001,1),
+    -> (2,2020123001,2),
+    -> (3,2020123001,3),
+    -> (4,2020123001,4),
+    -> (5,2020123001,5),
+    -> (6,2020123001,6),
+    -> (7,2020123002,1),
+    -> (8,2020123002,2),
+    -> (9,2020123002,3),
+    -> (10,2020123002,4),
+    -> (11,2020123002,5),
+    -> (12,2020160001,1),
+    -> (13,2020160001,2),
+    -> (14,2020160001,3),
+    -> (15,2020160001,4),
+    -> (16,2020160001,5),
+    -> (17,2020160001,6),
+    -> (18,2020160002,1),
+    -> (19,2020160002,2),
+    -> (20,2020160002,3),
+    -> (21,2020160002,4),
+    -> (22,2020160002,5),
+    -> (23,2020160002,6),
+    -> (24,2020456001,1),
+    -> (25,2020456001,2),
+    -> (26,2020456001,3),
+    -> (27,2020456001,4),
+    -> (28,2020456001,5);
+Query OK, 28 rows affected (0.00 sec)
+Records: 28  Duplicates: 0  Warnings: 0
