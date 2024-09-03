@@ -1,0 +1,1474 @@
+Microsoft Windows [Version 10.0.19045.4529]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\EZENIC-142>mysql -uroot -pezen
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.39 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> set global log_bin_trust_function_creators = on;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> exit
+Bye
+
+C:\Users\EZENIC-142>mysql -umysqlUser -pmysql
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 10
+Server version: 8.0.39 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show global variables like 'log_bin_trust_function_creators';
++---------------------------------+-------+
+| Variable_name                   | Value |
++---------------------------------+-------+
+| log_bin_trust_function_creators | ON    |
++---------------------------------+-------+
+1 row in set, 1 warning (0.01 sec)
+
+mysql> use testdb;
+Database changed
+mysql> drop trigger if exists update_buy;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> delimiter $$
+mysql> create trigger update_buy after update on buy
+    -> for each row
+    -> begin
+    ->
+    ->  update product set
+    ->  amount = amount - new.amount + old.amount,
+    ->  sale_amount = sale_amount + new.amount - old.amount
+    ->  where name in = new.product_name;
+    ->
+    -> end $$
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '= new.product_name;
+
+end' at line 8
+mysql> create trigger update_buy after update on buy
+    -> for each row
+    -> begin
+    ->
+    ->  update product set
+    ->  amount = amount - new.amount + old.amount,
+    ->  sale_amount = sale_amount + new.amount - old.amount
+    ->  where name = new.product_name;
+    ->
+    -> end $$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> delimiter ;
+mysql> select * from product;
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+| num | type_a     | type_b       | name                | price | amount | sale_amount | register_date       |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+|   1 | 티셔츠     | 긴소매       | 폴라 티셔츠         | 15000 |     98 |           2 | 2023-10-15 00:00:00 |
+|   2 | 티셔츠     | 긴소매       | 크롭 티셔츠         | 10000 |    100 |           0 | 2023-10-15 00:00:00 |
+|   5 | 패션운동복 | 트레이닝상의 | 피트니스상의        | 30000 |    100 |           0 | 2023-12-05 00:00:00 |
+|   6 | 패션운동복 | 트레이닝하의 | 피트니스하의        | 50000 |    100 |           0 | 2023-12-06 00:00:00 |
+|   7 | 패션운동복 | 트레이닝세트 | 피트니스상하의      | 90000 |    100 |           0 | 2023-12-07 00:00:00 |
+|   8 | 아우터     | 재킷         | 양면 롱 후리스 자켓 | 23300 |    100 |           0 | 2023-11-05 00:00:00 |
+|   9 | 아우터     | 코트         | 양털 겨울 코트      | 50000 |    100 |           0 | 2023-10-31 00:00:00 |
+|  10 | 아우터     | 코트         | 트렌치 코트         | 40000 |    100 |           0 | 2023-10-31 00:00:00 |
+|  11 | 아우터     | 패딩         | 롱 패팅 점퍼        | 47400 |    100 |           0 | 2023-11-01 00:00:00 |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+9 rows in set (0.00 sec)
+
+mysql> select * from buy;
++-----+----------+---------------------+-------+--------+--------+---------------------+
+| num | customer | product_name        | price | amount | total  | buy_date            |
++-----+----------+---------------------+-------+--------+--------+---------------------+
+|   2 | 홍길순   | 크롭 티셔츠         | 10000 |      3 |  30000 | 2024-08-29 10:59:26 |
+|   3 | 김순이   | 피트니스상하의      | 90000 |      2 | 180000 | 2024-08-29 11:03:40 |
+|   4 | 강감찬   | 트렌치 코트         | 40000 |      5 | 200000 | 2024-08-29 11:03:40 |
+|   5 | 김철수   | 피트니스상하의      | 90000 |      1 |  90000 | 2024-08-29 11:03:40 |
+|   6 | 김영이   | 피트니스상의        | 30000 |      2 |  60000 | 2024-08-29 11:03:40 |
+|   7 | 박진주   | 순면라운드 반팔티   | 15900 |      4 |  63600 | 2024-08-29 11:03:42 |
+|   9 | 강감찬   | 트렌치 코트         | 40000 |      5 | 200000 | 2024-08-29 11:42:21 |
+|  10 | 김철수   | 피트니스상하의      | 90000 |      1 |  90000 | 2024-08-29 11:42:21 |
+|  11 | 김영이   | 순면라운드 반팔티   | 15900 |      7 | 111300 | 2024-08-29 11:42:21 |
+|  12 | 박진주   | 피트니스상의        | 30000 |      4 | 120000 | 2024-08-29 11:42:25 |
+|  13 | 이몽순   | 순면라운드 반팔티   | 15900 |      2 |  31800 | 2024-08-29 15:21:38 |
+|  15 | 박수아   | 양면 롱 후리스 자켓 | 23300 |      5 | 116500 | 2024-08-29 15:21:40 |
+|  25 | 홍길동   | 폴라 티셔츠         | 15000 |     10 | 150000 | 2024-09-02 17:20:03 |
+|  26 | 홍길동   | 폴라 티셔츠         | 15000 |      5 |  75000 | 2024-09-02 18:04:50 |
++-----+----------+---------------------+-------+--------+--------+---------------------+
+14 rows in set (0.00 sec)
+
+mysql> update buy set
+    -> amount = 5
+    -> where num 26;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '26' at line 3
+mysql> update buy set
+    -> amount = 5
+    -> where num = 26;
+Query OK, 0 rows affected (0.01 sec)
+Rows matched: 1  Changed: 0  Warnings: 0
+
+mysql> update buy set
+    -> amount = 10
+    -> where num = 26;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from buy;
++-----+----------+---------------------+-------+--------+--------+---------------------+
+| num | customer | product_name        | price | amount | total  | buy_date            |
++-----+----------+---------------------+-------+--------+--------+---------------------+
+|   2 | 홍길순   | 크롭 티셔츠         | 10000 |      3 |  30000 | 2024-08-29 10:59:26 |
+|   3 | 김순이   | 피트니스상하의      | 90000 |      2 | 180000 | 2024-08-29 11:03:40 |
+|   4 | 강감찬   | 트렌치 코트         | 40000 |      5 | 200000 | 2024-08-29 11:03:40 |
+|   5 | 김철수   | 피트니스상하의      | 90000 |      1 |  90000 | 2024-08-29 11:03:40 |
+|   6 | 김영이   | 피트니스상의        | 30000 |      2 |  60000 | 2024-08-29 11:03:40 |
+|   7 | 박진주   | 순면라운드 반팔티   | 15900 |      4 |  63600 | 2024-08-29 11:03:42 |
+|   9 | 강감찬   | 트렌치 코트         | 40000 |      5 | 200000 | 2024-08-29 11:42:21 |
+|  10 | 김철수   | 피트니스상하의      | 90000 |      1 |  90000 | 2024-08-29 11:42:21 |
+|  11 | 김영이   | 순면라운드 반팔티   | 15900 |      7 | 111300 | 2024-08-29 11:42:21 |
+|  12 | 박진주   | 피트니스상의        | 30000 |      4 | 120000 | 2024-08-29 11:42:25 |
+|  13 | 이몽순   | 순면라운드 반팔티   | 15900 |      2 |  31800 | 2024-08-29 15:21:38 |
+|  15 | 박수아   | 양면 롱 후리스 자켓 | 23300 |      5 | 116500 | 2024-08-29 15:21:40 |
+|  25 | 홍길동   | 폴라 티셔츠         | 15000 |     10 | 150000 | 2024-09-02 17:20:03 |
+|  26 | 홍길동   | 폴라 티셔츠         | 15000 |     10 | 150000 | 2024-09-02 18:04:50 |
++-----+----------+---------------------+-------+--------+--------+---------------------+
+14 rows in set (0.00 sec)
+
+mysql> update buy set
+    -> amount = amount + 10
+    -> where num = 26;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from buy;
++-----+----------+---------------------+-------+--------+--------+---------------------+
+| num | customer | product_name        | price | amount | total  | buy_date            |
++-----+----------+---------------------+-------+--------+--------+---------------------+
+|   2 | 홍길순   | 크롭 티셔츠         | 10000 |      3 |  30000 | 2024-08-29 10:59:26 |
+|   3 | 김순이   | 피트니스상하의      | 90000 |      2 | 180000 | 2024-08-29 11:03:40 |
+|   4 | 강감찬   | 트렌치 코트         | 40000 |      5 | 200000 | 2024-08-29 11:03:40 |
+|   5 | 김철수   | 피트니스상하의      | 90000 |      1 |  90000 | 2024-08-29 11:03:40 |
+|   6 | 김영이   | 피트니스상의        | 30000 |      2 |  60000 | 2024-08-29 11:03:40 |
+|   7 | 박진주   | 순면라운드 반팔티   | 15900 |      4 |  63600 | 2024-08-29 11:03:42 |
+|   9 | 강감찬   | 트렌치 코트         | 40000 |      5 | 200000 | 2024-08-29 11:42:21 |
+|  10 | 김철수   | 피트니스상하의      | 90000 |      1 |  90000 | 2024-08-29 11:42:21 |
+|  11 | 김영이   | 순면라운드 반팔티   | 15900 |      7 | 111300 | 2024-08-29 11:42:21 |
+|  12 | 박진주   | 피트니스상의        | 30000 |      4 | 120000 | 2024-08-29 11:42:25 |
+|  13 | 이몽순   | 순면라운드 반팔티   | 15900 |      2 |  31800 | 2024-08-29 15:21:38 |
+|  15 | 박수아   | 양면 롱 후리스 자켓 | 23300 |      5 | 116500 | 2024-08-29 15:21:40 |
+|  25 | 홍길동   | 폴라 티셔츠         | 15000 |     10 | 150000 | 2024-09-02 17:20:03 |
+|  26 | 홍길동   | 폴라 티셔츠         | 15000 |     20 | 300000 | 2024-09-02 18:04:50 |
++-----+----------+---------------------+-------+--------+--------+---------------------+
+14 rows in set (0.00 sec)
+
+mysql> select * from product;
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+| num | type_a     | type_b       | name                | price | amount | sale_amount | register_date       |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+|   1 | 티셔츠     | 긴소매       | 폴라 티셔츠         | 15000 |     83 |          17 | 2023-10-15 00:00:00 |
+|   2 | 티셔츠     | 긴소매       | 크롭 티셔츠         | 10000 |    100 |           0 | 2023-10-15 00:00:00 |
+|   5 | 패션운동복 | 트레이닝상의 | 피트니스상의        | 30000 |    100 |           0 | 2023-12-05 00:00:00 |
+|   6 | 패션운동복 | 트레이닝하의 | 피트니스하의        | 50000 |    100 |           0 | 2023-12-06 00:00:00 |
+|   7 | 패션운동복 | 트레이닝세트 | 피트니스상하의      | 90000 |    100 |           0 | 2023-12-07 00:00:00 |
+|   8 | 아우터     | 재킷         | 양면 롱 후리스 자켓 | 23300 |    100 |           0 | 2023-11-05 00:00:00 |
+|   9 | 아우터     | 코트         | 양털 겨울 코트      | 50000 |    100 |           0 | 2023-10-31 00:00:00 |
+|  10 | 아우터     | 코트         | 트렌치 코트         | 40000 |    100 |           0 | 2023-10-31 00:00:00 |
+|  11 | 아우터     | 패딩         | 롱 패팅 점퍼        | 47400 |    100 |           0 | 2023-11-01 00:00:00 |
++-----+------------+--------------+---------------------+-------+--------+-------------+---------------------+
+9 rows in set (0.00 sec)
+
+mysql> use school;
+Database changed
+mysql> select * from course;
++------------+----------------+--------------+----------+---------+----------------------+
+| co_code    | co_name        | co_professor | co_point | co_time | co_timetable         |
++------------+----------------+--------------+----------+---------+----------------------+
+| 2020ipc001 | 컴퓨터개론     | 유관순       |        2 |       2 | 화1A,1B,2A,2B        |
+| 2020ipc002 | 기초전기       | 이순신       |        3 |       4 | 월1A,1B,2A목1A,1B,2A |
+| 2020msc001 | 대학수학기초   | 홍길동       |        3 |       3 | 월1A,1B,2A수1A,1B,2A |
+| 2020msc002 | 프로그래밍일반 | 임꺽정       |        3 |       3 | 월1A,1B,2A목1A,1B,2A |
+| 2021deg001 | 디자인기초     | 황희         |        2 |       3 | 목1A,1B,2A,2B        |
+| 2021deg002 | 색채이론       | 신사임당     |        3 |       2 | 금1A,1B,2A,2B        |
+| 2022che001 | 화학이론       | 김길동       |        3 |       2 | 월1A,1B,수2A,2B      |
++------------+----------------+--------------+----------+---------+----------------------+
+7 rows in set (0.00 sec)
+
+mysql> select * from attend;
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+| at_num | at_std_num | at_co_code | at_year | at_term | at_mid | at_final | at_attend | at_hw | at_repetition | at_score |
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+|      1 | 2020160001 | 2020msc001 |    2024 |       1 |     30 |       40 |         8 |     6 | n             | B        |
+|      2 | 2020160002 | 2020msc001 |    2024 |       1 |     35 |       30 |         6 |     8 | n             | C        |
+|      3 | 2023160002 | 2021deg001 |    2024 |       1 |     20 |       20 |         6 |     4 | y             | F        |
+|      4 | 2023160002 | 2021deg002 |    2024 |       1 |     40 |       20 |         3 |     5 | y             | D        |
+|      5 | 2019160123 | 2020msc002 |    2024 |       1 |     30 |       35 |         7 |    10 | n             | B        |
+|      6 | 2019456001 | 2020msc002 |    2024 |       1 |     35 |       40 |        10 |     9 | n             | A        |
+|      7 | 2020123001 | 2020ipc001 |    2024 |       1 |     20 |       40 |         9 |     7 | n             | C        |
+|      8 | 2020123020 | 2020ipc001 |    2024 |       1 |     20 |       20 |         4 |     5 | y             | F        |
+|      9 | 2020123020 | 2022che001 |    2024 |       1 |     35 |       35 |         6 |     5 | n             | B        |
+|     10 | 2020123001 | 2022che001 |    2024 |       1 |     40 |       35 |         5 |    10 | n             | A        |
+|     11 | 2019456001 | 2020ipc002 |    2024 |       1 |     35 |       40 |         8 |     6 | n             | B        |
+|     12 | 2019160123 | 2020ipc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     13 | 2022123001 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     14 | 2020160002 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     15 | 2019160123 | 2020msc001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     16 | 2019456001 | 2020msc001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     17 | 2023160002 | 2022che001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     18 | 2022123001 | 2022che001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     19 | 2023160001 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     20 | 2022123002 | 2021deg001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     21 | 2022123002 | 2021deg002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     22 | 2023160002 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+22 rows in set (0.00 sec)
+
+mysql> alter table course add co_degree int default 0;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select co_code, count(at_co_code) from course c
+    -> join attend a on c.co_code=a.at_co_code
+    -> group by at_co_code;
++------------+-------------------+
+| co_code    | count(at_co_code) |
++------------+-------------------+
+| 2020ipc001 |                 2 |
+| 2020ipc002 |                 2 |
+| 2020msc001 |                 4 |
+| 2020msc002 |                 6 |
+| 2021deg001 |                 2 |
+| 2021deg002 |                 2 |
+| 2022che001 |                 4 |
++------------+-------------------+
+7 rows in set (0.01 sec)
+
+mysql> update course
+    -> set co_degree = count(at_co_code)
+    -> group by at_co_code;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'group by at_co_code' at line 3
+mysql> update course
+    -> set co_degree = count(at_co_code);
+ERROR 1111 (HY000): Invalid use of group function
+mysql> update course c
+    -> set co_degree = count(at_co_code)
+    -> join attend a on c.co_code=a.at_co_code
+    -> group by a.at_co_code;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'join attend a on c.co_code=a.at_co_code
+group by a.at_co_code' at line 3
+mysql> update course
+    -> set co_degree = count(at_co_code)
+    -> group by co_degree;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'group by co_degree' at line 3
+mysql> update course
+    -> set co_degree = count(at_co_code)
+    -> where at_co_code = co_code;
+ERROR 1054 (42S22): Unknown column 'at_co_code' in 'where clause'
+mysql> update course
+    -> set co_degree = count(at_co_code)
+    -> from(select co_code, count(at_co_code) from course c
+    -> join attend a on c.co_code=a.at_co_code
+    -> group by a.at_co_code) as count
+    -> where co_code = at_co_code;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from(select co_code, count(at_co_code) from course c
+join attend a on c.co_code=' at line 3
+mysql> select co_code, count(at_co_code) from course c
+    -> join attend a on c.co_code=a.at_co_code
+    -> group by a.at_co_code;
++------------+-------------------+
+| co_code    | count(at_co_code) |
++------------+-------------------+
+| 2020ipc001 |                 2 |
+| 2020ipc002 |                 2 |
+| 2020msc001 |                 4 |
+| 2020msc002 |                 6 |
+| 2021deg001 |                 2 |
+| 2021deg002 |                 2 |
+| 2022che001 |                 4 |
++------------+-------------------+
+7 rows in set (0.00 sec)
+
+mysql> update course
+    -> set co_degree = count(at_co_code)
+    -> from(select co_code, count(at_co_code) from course c
+    -> join attend a on c.co_code=a.at_co_code
+    -> group by a.at_co_code) as count
+    -> where c.co_code = count.at_co_code;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from(select co_code, count(at_co_code) from course c
+join attend a on c.co_code=' at line 3
+mysql> upadate course c
+    -> set co_degree = cnt.totla_cnt
+    -> from(
+    -> select co_code, count(at_co_code) as total_cnt
+    -> from attend a
+    -> group by a.at_co_code
+    -> ) as cnt
+    -> where c.co_code = cnt.at_co_code;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'upadate course c
+set co_degree = cnt.totla_cnt
+from(
+select co_code, count(at_co' at line 1
+mysql> upadate course c
+    -> set co_degree = cnt.total_cnt
+    -> from(
+    -> select co_code, count(at_co_code) as total_cnt
+    -> from attend a
+    -> group by a.at_co_code
+    -> ) as cnt
+    -> where c.co_code = cnt.at_co_code;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'upadate course c
+set co_degree = cnt.total_cnt
+from(
+select co_code, count(at_co' at line 1
+mysql> update course
+    -> set co_degree = cnt.count(at_co_code)
+    -> from(
+    -> select co_code, count(at_co_code) from course c
+    -> join attend a on c.co_code=a.at_co_code
+    -> group by a.at_co_code
+    -> ) as cnt
+    -> where c.co_code = cnt.at_co_code;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from(
+select co_code, count(at_co_code) from course c
+join attend a on c.co_code' at line 3
+mysql> upadate course
+    -> set co_degree = (
+    -> select count(at_co_code)
+    -> from attend a
+    -> where co_code = a.at_co_code);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'upadate course
+set co_degree = (
+select count(at_co_code)
+from attend a
+where' at line 1
+mysql> upadate course c
+    -> set co_degree = (select count(at_co_code) from attend a
+    -> where c.co_code = a.at_co_code);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'upadate course c
+set co_degree = (select count(at_co_code) from attend a
+where' at line 1
+mysql> update course c
+    -> set co_degree = (select count(at_co_code) from attend a
+    -> where c.co_code = a.at_co_code);
+Query OK, 7 rows affected (0.01 sec)
+Rows matched: 7  Changed: 7  Warnings: 0
+
+mysql> select * from course;
++------------+----------------+--------------+----------+---------+----------------------+-----------+
+| co_code    | co_name        | co_professor | co_point | co_time | co_timetable         | co_degree |
++------------+----------------+--------------+----------+---------+----------------------+-----------+
+| 2020ipc001 | 컴퓨터개론     | 유관순       |        2 |       2 | 화1A,1B,2A,2B        |         2 |
+| 2020ipc002 | 기초전기       | 이순신       |        3 |       4 | 월1A,1B,2A목1A,1B,2A |         2 |
+| 2020msc001 | 대학수학기초   | 홍길동       |        3 |       3 | 월1A,1B,2A수1A,1B,2A |         4 |
+| 2020msc002 | 프로그래밍일반 | 임꺽정       |        3 |       3 | 월1A,1B,2A목1A,1B,2A |         6 |
+| 2021deg001 | 디자인기초     | 황희         |        2 |       3 | 목1A,1B,2A,2B        |         2 |
+| 2021deg002 | 색채이론       | 신사임당     |        3 |       2 | 금1A,1B,2A,2B        |         2 |
+| 2022che001 | 화학이론       | 김길동       |        3 |       2 | 월1A,1B,수2A,2B      |         4 |
++------------+----------------+--------------+----------+---------+----------------------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> drop trigger if exists count_code
+    -> ;
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+mysql> delimiter $$
+mysql> create trigger count_code after insert on attend
+    -> for each row
+    -> begin
+    ->
+    -> update course set
+    -> co_degree = co_degree + 1
+    -> where co_code = new.at_co_code
+    ->
+    ->
+    -> end $$
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'end' at line 10
+mysql>
+mysql> create trigger count_code after insert on attend
+    -> for each row
+    -> begin
+    ->
+    -> update course set
+    -> co_degree = co_degree + 1
+    -> where co_code = new.at_co_code;
+    ->
+    ->
+    -> end $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> insert into attend(at_num,at_std_num,at_co_year)
+    -> values(23, 2023160003, 2020ipc001,2024);
+ERROR 1054 (42S22): Unknown column 'at_co_year' in 'field list'
+mysql> insert into attend(at_num,at_std_num,at_year)
+    -> values(23, 2023160003, 2020ipc001,2024);
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> insert into attend(at_num,at_std_num,at_co_code,at_year)
+    -> values(23, 2023160003, 2020ipc001,2024);
+ERROR 1054 (42S22): Unknown column '2020ipc001' in 'field list'
+mysql> insert into attend(at_std_num, at_co_code, at_year)
+    -> values(2023160003, 2020ipc001, 2024);
+ERROR 1054 (42S22): Unknown column '2020ipc001' in 'field list'
+mysql> insert into attend(at_std_num, at_co_code, at_year)
+    -> values(2023160003, 2020ipc001, 2024);
+ERROR 1054 (42S22): Unknown column '2020ipc001' in 'field list'
+mysql> insert into attend(at_std_num, at_co_code)
+    -> values(2023160003, 2020ipc001);
+ERROR 1054 (42S22): Unknown column '2020ipc001' in 'field list'
+mysql> insert into attend(at_std_num, at_co_code)
+    -> values(2023160003, '2020ipc001');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from attend;
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+| at_num | at_std_num | at_co_code | at_year | at_term | at_mid | at_final | at_attend | at_hw | at_repetition | at_score |
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+|      1 | 2020160001 | 2020msc001 |    2024 |       1 |     30 |       40 |         8 |     6 | n             | B        |
+|      2 | 2020160002 | 2020msc001 |    2024 |       1 |     35 |       30 |         6 |     8 | n             | C        |
+|      3 | 2023160002 | 2021deg001 |    2024 |       1 |     20 |       20 |         6 |     4 | y             | F        |
+|      4 | 2023160002 | 2021deg002 |    2024 |       1 |     40 |       20 |         3 |     5 | y             | D        |
+|      5 | 2019160123 | 2020msc002 |    2024 |       1 |     30 |       35 |         7 |    10 | n             | B        |
+|      6 | 2019456001 | 2020msc002 |    2024 |       1 |     35 |       40 |        10 |     9 | n             | A        |
+|      7 | 2020123001 | 2020ipc001 |    2024 |       1 |     20 |       40 |         9 |     7 | n             | C        |
+|      8 | 2020123020 | 2020ipc001 |    2024 |       1 |     20 |       20 |         4 |     5 | y             | F        |
+|      9 | 2020123020 | 2022che001 |    2024 |       1 |     35 |       35 |         6 |     5 | n             | B        |
+|     10 | 2020123001 | 2022che001 |    2024 |       1 |     40 |       35 |         5 |    10 | n             | A        |
+|     11 | 2019456001 | 2020ipc002 |    2024 |       1 |     35 |       40 |         8 |     6 | n             | B        |
+|     12 | 2019160123 | 2020ipc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     13 | 2022123001 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     14 | 2020160002 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     15 | 2019160123 | 2020msc001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     16 | 2019456001 | 2020msc001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     17 | 2023160002 | 2022che001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     18 | 2022123001 | 2022che001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     19 | 2023160001 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     20 | 2022123002 | 2021deg001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     21 | 2022123002 | 2021deg002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     22 | 2023160002 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     23 | 2023160003 | 2020ipc001 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+23 rows in set (0.00 sec)
+
+mysql> select * from course;
++------------+----------------+--------------+----------+---------+----------------------+-----------+
+| co_code    | co_name        | co_professor | co_point | co_time | co_timetable         | co_degree |
++------------+----------------+--------------+----------+---------+----------------------+-----------+
+| 2020ipc001 | 컴퓨터개론     | 유관순       |        2 |       2 | 화1A,1B,2A,2B        |         3 |
+| 2020ipc002 | 기초전기       | 이순신       |        3 |       4 | 월1A,1B,2A목1A,1B,2A |         2 |
+| 2020msc001 | 대학수학기초   | 홍길동       |        3 |       3 | 월1A,1B,2A수1A,1B,2A |         4 |
+| 2020msc002 | 프로그래밍일반 | 임꺽정       |        3 |       3 | 월1A,1B,2A목1A,1B,2A |         6 |
+| 2021deg001 | 디자인기초     | 황희         |        2 |       3 | 목1A,1B,2A,2B        |         2 |
+| 2021deg002 | 색채이론       | 신사임당     |        3 |       2 | 금1A,1B,2A,2B        |         2 |
+| 2022che001 | 화학이론       | 김길동       |        3 |       2 | 월1A,1B,수2A,2B      |         4 |
++------------+----------------+--------------+----------+---------+----------------------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> drop trigger if exists update_attend;
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+mysql> delimiter $$
+mysql> create trigger update_attend after update on attend
+    -> for each row
+    -> begin
+    ->
+    -> update course set
+    -> co_degree = co_degree + 1
+    -> where co_code = new.at_co_code,
+    ->
+    -> co_degree = co_degree - 1
+    -> where co_code = old.at_co_code;
+    ->
+    ->
+    -> end $$
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',
+
+co_degree = co_degree - 1
+where co_code = old.at_co_code;
+
+
+end' at line 7
+mysql> create trigger update_attend after update on attend
+    -> for each row
+    -> begin
+    ->
+    -> update course set
+    -> co_degree = co_degree + 1
+    -> where co_code = new.at_co_code
+    ->
+    -> co_degree = co_degree - 1
+    -> where co_code = old.at_co_code;
+    ->
+    ->
+    -> end $$
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'co_degree = co_degree - 1
+where co_code = old.at_co_code;
+
+
+end' at line 9
+mysql> create trigger update_attend after update on attend
+    -> for each row
+    -> begin
+    ->
+    -> update course set
+    -> co_degree = co_degree + 1
+    -> where co_code = new.at_co_code;
+    ->
+    -> co_degree = co_degree - 1
+    -> where co_code = old.at_co_code;
+    ->
+    ->
+    -> end $$
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '= co_degree - 1
+where co_code = old.at_co_code;
+
+
+end' at line 9
+mysql> create trigger update_attend after update on attend
+    -> for each row
+    -> begin
+    -> update course set
+    -> co_degree = co_degree + 1
+    -> where co_code = new.at_co_code;
+    -> update course set
+    -> co_degree = co_degree - 1
+    -> where co_code = old.at_co_code;
+    -> end $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter;
+    ->
+    -> ;
+    -> '
+    '> ';
+    -> ;
+    ->  ;
+    -> ;
+    -> '
+    '>  ;
+    '>  ' ;
+    ->  ' ;
+    '> ' ;
+    -> '/
+    '> $$
+    '> '
+    -> $$
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'delimiter;
+;
+'
+';
+;
+ ;
+;
+'
+ ;
+ ' ;
+ ' ;
+' ;
+'/
+$$
+'' at line 1
+mysql> delimiter ;
+mysql> update attend at_co_code
+    -> set = '2020ipc002'
+    -> where at_num = 23;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '= '2020ipc002'
+where at_num = 23' at line 2
+mysql> update attend at_co_code
+    -> set = '2020ipc002'
+    -> where at_num = '23';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '= '2020ipc002'
+where at_num = '23'' at line 2
+mysql> update attend set
+    -> at_co_code = '2020ipc002'
+    -> where at_num = 23;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from attend;
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+| at_num | at_std_num | at_co_code | at_year | at_term | at_mid | at_final | at_attend | at_hw | at_repetition | at_score |
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+|      1 | 2020160001 | 2020msc001 |    2024 |       1 |     30 |       40 |         8 |     6 | n             | B        |
+|      2 | 2020160002 | 2020msc001 |    2024 |       1 |     35 |       30 |         6 |     8 | n             | C        |
+|      3 | 2023160002 | 2021deg001 |    2024 |       1 |     20 |       20 |         6 |     4 | y             | F        |
+|      4 | 2023160002 | 2021deg002 |    2024 |       1 |     40 |       20 |         3 |     5 | y             | D        |
+|      5 | 2019160123 | 2020msc002 |    2024 |       1 |     30 |       35 |         7 |    10 | n             | B        |
+|      6 | 2019456001 | 2020msc002 |    2024 |       1 |     35 |       40 |        10 |     9 | n             | A        |
+|      7 | 2020123001 | 2020ipc001 |    2024 |       1 |     20 |       40 |         9 |     7 | n             | C        |
+|      8 | 2020123020 | 2020ipc001 |    2024 |       1 |     20 |       20 |         4 |     5 | y             | F        |
+|      9 | 2020123020 | 2022che001 |    2024 |       1 |     35 |       35 |         6 |     5 | n             | B        |
+|     10 | 2020123001 | 2022che001 |    2024 |       1 |     40 |       35 |         5 |    10 | n             | A        |
+|     11 | 2019456001 | 2020ipc002 |    2024 |       1 |     35 |       40 |         8 |     6 | n             | B        |
+|     12 | 2019160123 | 2020ipc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     13 | 2022123001 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     14 | 2020160002 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     15 | 2019160123 | 2020msc001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     16 | 2019456001 | 2020msc001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     17 | 2023160002 | 2022che001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     18 | 2022123001 | 2022che001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     19 | 2023160001 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     20 | 2022123002 | 2021deg001 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     21 | 2022123002 | 2021deg002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     22 | 2023160002 | 2020msc002 |    2024 |       2 |   NULL |        0 |         0 |     0 | n             | NULL     |
+|     23 | 2023160003 | 2020ipc002 |    NULL |    NULL |   NULL |        0 |         0 |     0 | n             | NULL     |
++--------+------------+------------+---------+---------+--------+----------+-----------+-------+---------------+----------+
+23 rows in set (0.00 sec)
+
+mysql> select * from course;
++------------+----------------+--------------+----------+---------+----------------------+-----------+
+| co_code    | co_name        | co_professor | co_point | co_time | co_timetable         | co_degree |
++------------+----------------+--------------+----------+---------+----------------------+-----------+
+| 2020ipc001 | 컴퓨터개론     | 유관순       |        2 |       2 | 화1A,1B,2A,2B        |         2 |
+| 2020ipc002 | 기초전기       | 이순신       |        3 |       4 | 월1A,1B,2A목1A,1B,2A |         3 |
+| 2020msc001 | 대학수학기초   | 홍길동       |        3 |       3 | 월1A,1B,2A수1A,1B,2A |         4 |
+| 2020msc002 | 프로그래밍일반 | 임꺽정       |        3 |       3 | 월1A,1B,2A목1A,1B,2A |         6 |
+| 2021deg001 | 디자인기초     | 황희         |        2 |       3 | 목1A,1B,2A,2B        |         2 |
+| 2021deg002 | 색채이론       | 신사임당     |        3 |       2 | 금1A,1B,2A,2B        |         2 |
+| 2022che001 | 화학이론       | 김길동       |        3 |       2 | 월1A,1B,수2A,2B      |         4 |
++------------+----------------+--------------+----------+---------+----------------------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> select * from buy;
+ERROR 1146 (42S02): Table 'school.buy' doesn't exist
+mysql> use testdb
+Database changed
+mysql> select * from buy;
++-----+----------+---------------------+-------+--------+--------+---------------------+
+| num | customer | product_name        | price | amount | total  | buy_date            |
++-----+----------+---------------------+-------+--------+--------+---------------------+
+|   2 | 홍길순   | 크롭 티셔츠         | 10000 |      3 |  30000 | 2024-08-29 10:59:26 |
+|   3 | 김순이   | 피트니스상하의      | 90000 |      2 | 180000 | 2024-08-29 11:03:40 |
+|   4 | 강감찬   | 트렌치 코트         | 40000 |      5 | 200000 | 2024-08-29 11:03:40 |
+|   5 | 김철수   | 피트니스상하의      | 90000 |      1 |  90000 | 2024-08-29 11:03:40 |
+|   6 | 김영이   | 피트니스상의        | 30000 |      2 |  60000 | 2024-08-29 11:03:40 |
+|   7 | 박진주   | 순면라운드 반팔티   | 15900 |      4 |  63600 | 2024-08-29 11:03:42 |
+|   9 | 강감찬   | 트렌치 코트         | 40000 |      5 | 200000 | 2024-08-29 11:42:21 |
+|  10 | 김철수   | 피트니스상하의      | 90000 |      1 |  90000 | 2024-08-29 11:42:21 |
+|  11 | 김영이   | 순면라운드 반팔티   | 15900 |      7 | 111300 | 2024-08-29 11:42:21 |
+|  12 | 박진주   | 피트니스상의        | 30000 |      4 | 120000 | 2024-08-29 11:42:25 |
+|  13 | 이몽순   | 순면라운드 반팔티   | 15900 |      2 |  31800 | 2024-08-29 15:21:38 |
+|  15 | 박수아   | 양면 롱 후리스 자켓 | 23300 |      5 | 116500 | 2024-08-29 15:21:40 |
+|  25 | 홍길동   | 폴라 티셔츠         | 15000 |     10 | 150000 | 2024-09-02 17:20:03 |
+|  26 | 홍길동   | 폴라 티셔츠         | 15000 |     20 | 300000 | 2024-09-02 18:04:50 |
++-----+----------+---------------------+-------+--------+--------+---------------------+
+14 rows in set (0.00 sec)
+
+mysql> drop procedure if exists select_buy;
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+
+mysql> delimiter $$
+mysql> create procedure select_buy(in in_product_name varchar(100))
+    -> begin
+    -> select customer from by
+    -> where product_name = in+product_name;
+    -> end $$
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'by
+where product_name = in+product_name;
+end' at line 3
+mysql> delimiter ;
+mysql> call select_buy('폴라 티셔츠');
+ERROR 1305 (42000): PROCEDURE testdb.select_buy does not exist
+mysql> drop procedure if exists select_buy;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> delimiter $$
+mysql> create procedure select_buy(in in_product_name varchar(100))
+    -> begin
+    -> select customer from buy
+    -> where product_name = in+product_name;
+    -> end $$
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'in+product_name;
+end' at line 4
+mysql> delimiter ;
+mysql> drop procedure if exists select_buy;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> delimiter $$
+mysql> create procedure select_buy(in in_product_name varchar(100))
+    -> begin
+    -> select customer from buy
+    -> where product_name = in_product_name;
+    -> end $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> call select_buy('폴라 티셔츠');
++----------+
+| customer |
++----------+
+| 홍길동   |
+| 홍길동   |
++----------+
+2 rows in set (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call select_buy('순면라운드 반팔티');
++----------+
+| customer |
++----------+
+| 박진주   |
+| 김영이   |
+| 이몽순   |
++----------+
+3 rows in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> drop procedure if exists select_10;
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+mysql> delimiter $$
+mysql>
+mysql> create procedure select_10()
+    -> begin
+    -> select customer, sum(total) from buy
+    -> group by customer
+    -> having sum(total) >= 100000;
+    ->
+    -> end $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> call select_10();
++----------+------------+
+| customer | sum(total) |
++----------+------------+
+| 김순이   |     180000 |
+| 강감찬   |     400000 |
+| 김철수   |     180000 |
+| 김영이   |     171300 |
+| 박진주   |     183600 |
+| 박수아   |     116500 |
+| 홍길동   |     450000 |
++----------+------------+
+7 rows in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> drop procedure if exists select_total();
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '()' at line 1
+mysql> delimiter $$
+mysql>
+mysql> create procedure select_total(in select_total() int)
+    -> begin
+    -> select customer, sum(total) as 'select_total()만원이상' from buy
+    -> group by customer
+    -> having sum(total) >= select_total() * 10000;
+    ->
+    -> end $$
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '() int)
+begin
+select customer, sum(total) as 'select_total()만원이상' from b' at line 1
+mysql> delimiter ;
+mysql> drop procedure if exists select_total();
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '()' at line 1
+mysql> delimiter $$
+mysql>
+mysql> create procedure select_total(in select_total int)
+    -> begin
+    -> select customer, sum(total) from buy
+    -> group by customer
+    -> having sum(total) >= select_total * 10000;
+    ->
+    -> end $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> drop procedure if exists select_total;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter $$
+mysql>
+mysql> create procedure select_total(in select_total int)
+    -> begin
+    -> select customer, sum(total) from buy
+    -> group by customer
+    -> having sum(total) >= select_total * 10000;
+    ->
+    -> end $$
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> call select total(100);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select total(100)' at line 1
+mysql> call select total100;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select total100' at line 1
+mysql> call select_total 100;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '100' at line 1
+mysql> drop procedure if exists select_total;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter $$
+mysql>
+mysql> create procedure select_total(in select_total(int))
+    -> begin
+    -> select customer, sum(total) from buy
+    -> group by customer
+    -> having sum(total) >= select_total * 10000;
+    ->
+    -> end $$
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(int))
+begin
+select customer, sum(total) from buy
+group by customer
+having sum(' at line 1
+mysql> delimiter ;
+mysql> drop procedure if exists select_total;
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+mysql> delimiter $$
+mysql>
+mysql> create procedure select_total(in select_total '(' int ')' )
+    -> begin
+    -> select customer, sum(total) from buy
+    -> group by customer
+    -> having sum(total) >= select_total * 10000;
+    ->
+    -> end $$
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''(' int ')' )
+begin
+select customer, sum(total) from buy
+group by customer
+havi' at line 1
+mysql> delimiter ;
+mysql> desc buy;
++--------------+--------------+------+-----+-------------------+-------------------+
+| Field        | Type         | Null | Key | Default           | Extra             |
++--------------+--------------+------+-----+-------------------+-------------------+
+| num          | int          | NO   | PRI | NULL              | auto_increment    |
+| customer     | varchar(20)  | YES  |     | NULL              |                   |
+| product_name | varchar(100) | YES  |     | NULL              |                   |
+| price        | int          | YES  |     | 0                 |                   |
+| amount       | int          | YES  |     | 0                 |                   |
+| total        | int          | YES  |     | NULL              | STORED GENERATED  |
+| buy_date     | datetime     | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
++--------------+--------------+------+-----+-------------------+-------------------+
+7 rows in set (0.02 sec)
+
+mysql> drop procedure if exists select_total;
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+mysql> delimiter $$
+mysql>
+mysql> create procedure select_total(in select_total int)
+    -> begin
+    -> select customer, sum(total) from buy
+    -> group by customer
+    -> having sum(total) >= select_total * 10000;
+    ->
+    -> end $$
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> call select_total 100;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '100' at line 1
+mysql> call select_total(100);
+Empty set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call select_total(10);
++----------+------------+
+| customer | sum(total) |
++----------+------------+
+| 김순이   |     180000 |
+| 강감찬   |     400000 |
+| 김철수   |     180000 |
+| 김영이   |     171300 |
+| 박진주   |     183600 |
+| 박수아   |     116500 |
+| 홍길동   |     450000 |
++----------+------------+
+7 rows in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call select_total(20);
++----------+------------+
+| customer | sum(total) |
++----------+------------+
+| 강감찬   |     400000 |
+| 홍길동   |     450000 |
++----------+------------+
+2 rows in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> drop procedure if exists select_total;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter $$
+mysql>
+mysql> create procedure select_total(in in_sum int)
+    -> begin
+    -> select customer, sum(total) from buy
+    -> group by customer
+    -> having sum(total) >= in_sum * 10000;
+    ->
+    -> end $$
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> call select_total(100);
+Empty set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call select_total(100);
+Empty set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call select_total(40);
++----------+------------+
+| customer | sum(total) |
++----------+------------+
+| 강감찬   |     400000 |
+| 홍길동   |     450000 |
++----------+------------+
+2 rows in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call select_total(10);
++----------+------------+
+| customer | sum(total) |
++----------+------------+
+| 김순이   |     180000 |
+| 강감찬   |     400000 |
+| 김철수   |     180000 |
+| 김영이   |     171300 |
+| 박진주   |     183600 |
+| 박수아   |     116500 |
+| 홍길동   |     450000 |
++----------+------------+
+7 rows in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call select_total(40);
++----------+------------+
+| customer | sum(total) |
++----------+------------+
+| 강감찬   |     400000 |
+| 홍길동   |     450000 |
++----------+------------+
+2 rows in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> drop procedure if exists count_buy;
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+mysql> delimiter //
+mysql> create procedure count_buy(
+    -> in in_product_name varchar(100),
+    -> out out_cnt int
+    -> )
+    -> begin
+    -> select count(product_name) into out_cnt
+    -> from buy
+    -> where product_name = in.product_name;
+    -> end //
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> call count_buy('크롭 반팔티', @cnt);
+ERROR 1054 (42S22): Unknown column 'in.product_name' in 'where clause'
+mysql> call count_buy('크롭 티셔츠', @cnt);
+ERROR 1054 (42S22): Unknown column 'in.product_name' in 'where clause'
+mysql> call count_buy('크롭 티셔츠', @cnt);
+ERROR 1054 (42S22): Unknown column 'in.product_name' in 'where clause'
+mysql> drop procedure if exists count_buy;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter //
+mysql> create procedure count_buy(
+    -> in in_product_name varchar(100),
+    -> out out_cnt int
+    -> )
+    -> begin
+    -> select count(product_name) into out_cnt
+    -> from buy
+    -> where product_name = in_product_name;
+    -> end //
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> call count_buy('크롭 티셔츠', @cnt);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select @cnt as '판매횟수';
++----------+
+| 판매횟수 |
++----------+
+|        1 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> drop procedure if exists sum_amount;
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+mysql> delimiter //
+mysql> create procedure sum_amount(
+    -> in in_product_name varchar(100)
+    -> out out_sum int
+    -> )
+    -> begin
+    -> select product_name, sum(amount) into out_sum
+    -> from buy
+    -> where product_name = in_product_name
+    -> group by amount;
+    -> end //
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'out out_sum int
+)
+begin
+select product_name, sum(amount) into out_sum
+from buy
+' at line 3
+mysql> delimiter ;
+mysql> drop procedure if exists sum_amount;
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+mysql> delimiter //
+mysql> create procedure sum_amount(
+    -> in in_product_name varchar(100),
+    -> out out_sum int
+    -> )
+    -> begin
+    -> select product_name, sum(amount) into out_sum
+    -> from buy
+    -> where product_name = in_product_name
+    -> group by amount;
+    -> end //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> call sum_amount('크롭 티셔츠', @sum);
+ERROR 1222 (21000): The used SELECT statements have a different number of columns
+mysql> call sum_amount('크롭 티셔츠', @sum);
+ERROR 1222 (21000): The used SELECT statements have a different number of columns
+mysql> drop procedure if exists sum_amount;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter //
+mysql> create procedure sum_amount(
+    -> in in_product_name varchar(100),
+    -> out out_sum int
+    -> )
+    -> begin
+    -> select sum(amount) into out_sum
+    -> from buy
+    -> where product_name = in_product_name
+    -> group by product_name;
+    -> end //
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> call sum_amount('크롭 티셔츠', @sum);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select @sum as '판매수량 합계';
++---------------+
+| 판매수량 합계 |
++---------------+
+|             3 |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> call sum_amount('순면라운드 반팔티', @sum);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select @sum as '판매수량 합계';
++---------------+
+| 판매수량 합계 |
++---------------+
+|            13 |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> use college;
+Database changed
+mysql> select * from student;
++------------+---------+---------+----------+
+| st_num     | st_name | st_term | st_point |
++------------+---------+---------+----------+
+| 2020123001 | 김영철  |       1 |        0 |
+| 2020123002 | 나영희  |       1 |        0 |
+| 2020160001 | 강철수  |       2 |        0 |
+| 2020160002 | 박철수  |       2 |        0 |
+| 2020456001 | 강군    |       2 |        0 |
++------------+---------+---------+----------+
+5 rows in set (0.01 sec)
+
+mysql> select concat(su_title, '(', co_term, ')') as '김영철 수강과목'
+    -> from attend a
+    -> join course on at_co_num = co_num
+    -> join subject on co_su_com = su_num
+    -> join (select st_num from student where st_name = '김영철') as st
+    -> on st.st_num = a.at_st_num;
+ERROR 1054 (42S22): Unknown column 'co_su_com' in 'on clause'
+mysql> select concat(su_title, '(', co_term, ')') as '김영철 수강과목'
+    -> from attend a
+    -> join course on at_co_num = co_num
+    -> join subject on co_su_num = su_num
+    -> join (select st_num from student where st_name = '김영철') as st
+    -> on st.st_num = a.at_st_num;
++-----------------+
+| 김영철 수강과목 |
++-----------------+
+| 대학수학(1)     |
+| 대학수학(2)     |
+| 컴퓨터개론(1)   |
+| 운영체제(1)     |
+| 디자인이론(2)   |
+| 생활영어(2)     |
++-----------------+
+6 rows in set (0.03 sec)
+
+mysql> select * from attend
+    -> ;
++--------+------------+-----------+--------+----------+-------+-----------+----------+---------+---------------+
+| at_num | at_st_num  | at_co_num | at_mid | at_final | at_hw | at_attend | at_score | at_pass | at_repetition |
++--------+------------+-----------+--------+----------+-------+-----------+----------+---------+---------------+
+|      1 | 2020123001 |         1 |     40 |       40 |     9 |        10 | A        | p       | n             |
+|      2 | 2020123001 |         2 |     38 |       35 |     7 |         8 | B        | p       | n             |
+|      3 | 2020123001 |         3 |     30 |       28 |     7 |         5 | C        | f       | n             |
+|      4 | 2020123001 |         4 |     38 |       35 |     7 |         8 | B        | p       | n             |
+|      5 | 2020123001 |         5 |     38 |       35 |     7 |         8 | B        | p       | n             |
+|      6 | 2020123001 |         6 |     38 |       35 |     7 |         8 | B        | p       | n             |
+|      7 | 2020123002 |         1 |     12 |       20 |     6 |         2 | F        | f       | y             |
+|      8 | 2020123002 |         2 |     25 |       19 |     5 |         7 | F        | f       | y             |
+|      9 | 2020123002 |         3 |     40 |       40 |     9 |        10 | A        | p       | n             |
+|     10 | 2020123002 |         4 |     38 |       35 |     7 |         8 | B        | p       | n             |
+|     11 | 2020123002 |         5 |     30 |       28 |     7 |         5 | C        | f       | n             |
+|     12 | 2020160001 |         1 |     28 |       25 |    10 |         6 | D        | f       | n             |
+|     13 | 2020160001 |         2 |     25 |       19 |     5 |         7 | F        | f       | y             |
+|     14 | 2020160001 |         3 |     38 |       35 |     6 |         7 | B        | p       | n             |
+|     15 | 2020160001 |         4 |     40 |       40 |     9 |        10 | A        | p       | n             |
+|     16 | 2020160001 |         5 |     12 |       20 |     6 |         2 | F        | f       | y             |
+|     17 | 2020160001 |         6 |     38 |       35 |     6 |         7 | B        | p       | n             |
+|     18 | 2020160002 |         1 |     38 |       35 |     6 |         7 | B        | p       | n             |
+|     19 | 2020160002 |         2 |     28 |       25 |    10 |         6 | D        | f       | n             |
+|     20 | 2020160002 |         3 |     30 |       28 |     7 |         5 | C        | f       | n             |
+|     21 | 2020160002 |         4 |     28 |       25 |    10 |         6 | D        | f       | n             |
+|     22 | 2020160002 |         5 |     25 |       19 |     5 |         7 | F        | f       | y             |
+|     23 | 2020160002 |         6 |     38 |       35 |     6 |         7 | B        | p       | n             |
+|     24 | 2020456001 |         1 |     12 |       20 |     6 |         2 | F        | f       | y             |
+|     25 | 2020456001 |         2 |     30 |       28 |     7 |         5 | C        | f       | n             |
+|     26 | 2020456001 |         3 |     38 |       35 |     6 |         7 | B        | p       | n             |
+|     27 | 2020456001 |         4 |     30 |       28 |     7 |         5 | C        | f       | n             |
+|     28 | 2020456001 |         5 |     31 |       29 |     8 |         9 | C        | f       | n             |
++--------+------------+-----------+--------+----------+-------+-----------+----------+---------+---------------+
+28 rows in set (0.00 sec)
+
+mysql> select * from course;
++--------+------------+-----------+---------+---------+---------------------+
+| co_num | co_pr_num  | co_su_num | co_term | co_year | co_timetable        |
++--------+------------+-----------+---------+---------+---------------------+
+|      1 | 2005789001 |         1 |       1 |    2002 | 월2a/2b/3a/3b/4a/4b |
+|      2 | 2010160002 |         1 |       2 |    2002 | 월2a/2b/3a/3b/4a/4b |
+|      3 | 2010160001 |         2 |       1 |    2002 | 화1a/1b/2a/2b       |
+|      4 | 2010160001 |         3 |       1 |    2002 | 목2a/2b/3a/3b/4a/4b |
+|      5 | 2011123001 |         4 |       2 |    2002 | 화1a/1b/2a/2b       |
+|      6 | 2011123001 |         5 |       2 |    2002 | 수1a/1b/2a/2b       |
++--------+------------+-----------+---------+---------+---------------------+
+6 rows in set (0.00 sec)
+
+mysql> select * subject;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'subject' at line 1
+mysql> select * from subject;
++--------+---------+------------+----------+---------+
+| su_num | su_code | su_title   | su_point | su_time |
++--------+---------+------------+----------+---------+
+|      1 | msc001  | 대학수학   |        3 |       3 |
+|      2 | com001  | 컴퓨터개론 |        2 |       2 |
+|      3 | com002  | 운영체제   |        3 |       3 |
+|      4 | abc001  | 디자인이론 |        2 |       2 |
+|      5 | abc002  | 생활영어   |        2 |       3 |
++--------+---------+------------+----------+---------+
+5 rows in set (0.00 sec)
+
+mysql> drop procedure if exists update_stpoint;
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+mysql> delimiter $$
+mysql> create procedure update_stpoint(
+    -> in in_st_num int
+    -> )
+    -> begin
+    -> update student set
+    -> st_point = (
+    -> select sum(s.su_point) from attend a
+    -> join course c on a.at_co_code = c.co_code
+    -> join subject s on c.co_su_num = s.su_num
+    -> where a.at_repetition = 'n'
+    -> and a.at_stu_num = in_st_num
+    -> where st_num = in_st_num;
+    ->
+    -> end $$
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where st_num = in_st_num;
+
+end' at line 12
+mysql> drop procedure if exists update_stpoint;
+    -> delimiter ;
+    -> $$
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'delimiter' at line 1
+mysql> drop procedure if exists update_stpoint;
+    -> delimiter $$
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'delimiter' at line 1
+mysql> drop procedure if exists update_stpoint;
+    -> $$
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+mysql> drop procedure if exists update_stpoint;
+    -> $$
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> drop procedure if exists update_stpoint;
+    -> delimiter $$
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'delimiter' at line 1
+mysql> create procedure update_stpoint(
+    -> in in_st_num int
+    -> )
+    -> begin
+    ->
+    -> update student set
+    -> st_point = (
+    -> select sum(s.su_point) from attend a
+    -> join course c on a.at_co_code = c.co_code
+    -> join subject s on c.co_su_num = s.su_num
+    -> where a.at_repetition = 'n'
+    -> and a.at_stu_num = in_st_num)
+    -> where st_num = in_st_num;
+    ->
+    -> end $$
+Query OK, 0 rows affected (0.00 sec)
+
+mysql>
+mysql> delimiter ;
+mysql> call update_stpoint(2020123001);
+ERROR 1054 (42S22): Unknown column 'a.at_stu_num' in 'where clause'
+mysql> drop procedure if exists update_stpoint;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter $$
+mysql> create procedure update_stpoint(
+    -> in in_st_num int
+    -> )
+    -> begin
+    ->
+    -> update student set
+    -> st_point = (
+    -> select sum(s.su_point) from attend a
+    -> join course c on a.at_co_code = c.co_code
+    -> join subject s on c.co_su_num = s.su_num
+    -> where a.at_repetition = 'n'
+    -> and a.at_st_num = in_st_num)
+    -> where st_num = in_st_num;
+    ->
+    -> end $$
+Query OK, 0 rows affected (0.00 sec)
+
+mysql>
+mysql> delimiter ;
+mysql> call update_stpoint(2020123001);
+ERROR 1054 (42S22): Unknown column 'a.at_co_code' in 'on clause'
+mysql> drop procedure if exists update_stpoint;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter $$
+mysql> create procedure update_stpoint(
+    -> in in_st_num int
+    -> )
+    -> begin
+    ->
+    -> update student set
+    -> st_point = (
+    -> select sum(s.su_point) from attend a
+    -> join course c on a.at_co_num = c.co_num
+    -> join subject s on c.co_su_num = s.su_num
+    -> where a.at_repetition = 'n'
+    -> and a.at_st_num = in_st_num)
+    -> where st_num = in_st_num;
+    ->
+    -> end $$
+Query OK, 0 rows affected (0.00 sec)
+
+mysql>
+mysql> delimiter ;
+mysql> call update_stpoint(2020123001);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from student;
++------------+---------+---------+----------+
+| st_num     | st_name | st_term | st_point |
++------------+---------+---------+----------+
+| 2020123001 | 김영철  |       1 |       15 |
+| 2020123002 | 나영희  |       1 |        0 |
+| 2020160001 | 강철수  |       2 |        0 |
+| 2020160002 | 박철수  |       2 |        0 |
+| 2020456001 | 강군    |       2 |        0 |
++------------+---------+---------+----------+
+5 rows in set (0.00 sec)
+
+mysql> drop procedure if exists update_stpointAll;
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+mysql> delimiter $$
+mysql> create procedure update_stpointAll(
+    -> )
+    -> begin
+    ->
+    -> update student set
+    -> st_point = (
+    -> select sum(s.su_point) from attend a
+    -> join course c on a.at_co_num = c.co_num
+    -> join subject s on c.co_su_num = s.su_num
+    -> where a.at_repetition = 'n'
+    -> )
+    ->
+    -> where st_num;
+    ->
+    -> end $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql> delimiter ;
+mysql> select * from student;
++------------+---------+---------+----------+
+| st_num     | st_name | st_term | st_point |
++------------+---------+---------+----------+
+| 2020123001 | 김영철  |       1 |       15 |
+| 2020123002 | 나영희  |       1 |        0 |
+| 2020160001 | 강철수  |       2 |        0 |
+| 2020160002 | 박철수  |       2 |        0 |
+| 2020456001 | 강군    |       2 |        0 |
++------------+---------+---------+----------+
+5 rows in set (0.00 sec)
+
+mysql> call update_stpointAll();
+Query OK, 5 rows affected (0.01 sec)
+
+mysql> select * from student;
++------------+---------+---------+----------+
+| st_num     | st_name | st_term | st_point |
++------------+---------+---------+----------+
+| 2020123001 | 김영철  |       1 |       55 |
+| 2020123002 | 나영희  |       1 |       55 |
+| 2020160001 | 강철수  |       2 |       55 |
+| 2020160002 | 박철수  |       2 |       55 |
+| 2020456001 | 강군    |       2 |       55 |
++------------+---------+---------+----------+
+5 rows in set (0.00 sec)
+
+mysql> select * from student;
++------------+---------+---------+----------+
+| st_num     | st_name | st_term | st_point |
++------------+---------+---------+----------+
+| 2020123001 | 김영철  |       1 |       15 |
+| 2020123002 | 나영희  |       1 |        0 |
+| 2020160001 | 강철수  |       2 |        0 |
+| 2020160002 | 박철수  |       2 |        0 |
+| 2020456001 | 강군    |       2 |        0 |
++------------+---------+---------+----------+
+5 rows in set (0.00 sec)
+
+mysql> drop procedure if exists update_stpointAll;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter $$
+mysql> create procedure update_stpointAll(
+    -> )
+    -> begin
+    ->
+    -> update student set
+    -> st_point = (
+    -> select sum(s.su_point) from attend a
+    -> join course c on a.at_co_num = c.co_num
+    -> join subject s on c.co_su_num = s.su_num
+    -> where a.at_repetition = 'n'
+    -> and a.at_st_num = st_num
+    -> )
+    ->
+    -> where st_num;
+    ->
+    -> end $$
+Query OK, 0 rows affected (0.00 sec)
+
+mysql>
+mysql> delimiter ;
+mysql> call update_stpointAll();
+Query OK, 4 rows affected (0.01 sec)
+
+mysql> select * from student;
++------------+---------+---------+----------+
+| st_num     | st_name | st_term | st_point |
++------------+---------+---------+----------+
+| 2020123001 | 김영철  |       1 |       15 |
+| 2020123002 | 나영희  |       1 |        7 |
+| 2020160001 | 강철수  |       2 |       10 |
+| 2020160002 | 박철수  |       2 |       13 |
+| 2020456001 | 강군    |       2 |       10 |
++------------+---------+---------+----------+
+5 rows in set (0.00 sec)
+
+mysql> drop procedure if exists update_stpointAll;
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+mysql> delimiter $$
+mysql> create procedure update_stpointAll(
+    -> )
+    -> begin
+    ->
+    -> update student set
+    -> st_point = (
+    -> select sum(s.su_point) from attend a
+    -> join course c on a.at_co_num = c.co_num
+    -> join subject s on c.co_su_num = s.su_num
+    -> where a.at_repetition = 'n'
+    -> and a.at_st_num = st_num
+    -> );
+    ->
+    -> end $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql> delimiter ;
+mysql> call update_stpointAll();
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from student;
++------------+---------+---------+----------+
+| st_num     | st_name | st_term | st_point |
++------------+---------+---------+----------+
+| 2020123001 | 김영철  |       1 |       15 |
+| 2020123002 | 나영희  |       1 |        7 |
+| 2020160001 | 강철수  |       2 |       10 |
+| 2020160002 | 박철수  |       2 |       13 |
+| 2020456001 | 강군    |       2 |       10 |
++------------+---------+---------+----------+
+5 rows in set (0.00 sec)
+
+mysql>

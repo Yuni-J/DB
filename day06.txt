@@ -1,0 +1,356 @@
+day06
+
+
+school 데이터베이스에서 처리
+1. course 테이블에 해당 코스의 수강인원을 집계하는 필드를 생성
+필드명 : co_degree
+alter table course add co_degree int default 0;
+
+2. co_degree 필드에 해당 코스를 듣고 있는 학생을 집계하여 업데이트
+update course  
+set co_degree = (select count(at_co_code) from attend  
+where co_code = at_co_code);
+
+select co_code, count(at_co_code) from course c
+join attend a on c.co_code=a.at_co_code
+group by a.at_co_code;
+
+3. attend에 수강신청을 하면 course의 co_degree가 
+자동 증가하는 트리거
+
+drop trigger if exists count_code;
+
+delimiter $$
+
+create trigger count_code after insert on attend
+for each row
+begin
+
+update course set
+co_degree = co_degree + 1
+where co_code = new.at_co_code;
+
+
+end $$
+
+delimiter ;
+
+insert into attend(at_std_num, at_co_code)
+values(2023160003, '2020ipc001');
+
+--------------------------------------------------------------------------------
+update 트리거 생성
+attend 값이 변경되면 co_degree의 값도 같이 변경되도록 트리거 작성
+
+drop trigger if exists update_attend;
+
+delimiter $$
+
+create trigger update_attend after update on attend
+for each row
+begin
+-- Increment co_degree for the new course code
+update course set
+co_degree = co_degree + 1
+where co_code = new.at_co_code;
+
+-- Decrement co_degree for the old course code
+update course set
+co_degree = co_degree - 1 
+where co_code = old.at_co_code;
+
+
+end $$
+
+delimiter ;
+
+
+update attend set 
+at_co_code = '2020ipc002'
+where at_num = 23;
+
+--------------------------------------------------------------------------------
+프로시저 : Procedure
+여러 쿼리를 한번에 수행하는 함수
+- tirgger / procedure : java(서버)단에서 해결 가능.
+- Transaction 작업을 이용하여 해결.
+장점 : 처리시간이 줄어든다.
+유지보수성이 좋다.
+단점 : 재사용성이 나쁘다.
+
+- 구문 
+drop procedure if exists 프로시저명;
+delimiter $$
+
+create procedure 프로시저명(매개변수, 리턴타입)
+begin 
+쿼리문;
+
+end $$
+
+delimiter ;
+
+- 매개변수 
+IN / OUT / INOUT
+IN : 프로시저에 값을 전달
+ - 원본값을 프로시저가 끝난 후에도 유지되고, 
+   프로시저는 in 파라미터의 복사본을 사용
+
+OUT : 리턴 값
+
+INOUT : 호출자에 의해 하나의 변수가 호기화되고,
+  프로시저에 의해 수정 + 호출자에게 리턴
+
+--------------------------------------------------------------------------------
+프로시저 = > product / buy 테이블 이용
+
+제품명을 입력하면 그 제품을 구매한 coustomer을 리턴
+
+폴라 티셔츠 제품을 입력하면
+ => 그 제품을 구매한 손님 리스트를 리턴
+프로시저명 : select_buy
+매개변수 : 제품명 (in in_product_name)
+
+drop procedure if exists select_buy;
+delimiter $$
+
+create procedure select_buy(in in_product_name varchar(100))
+begin
+select customer from buy 
+where product_name = in_product_name;
+
+end $$
+delimiter ;
+
+--호출
+call select_buy('폴라 티셔츠');
+call select_buy('순면라운드 반팔티');
+
+--------------------------------------------------------------------------------
+구매 금액이 10만원이상인 손님이름과 합산구매가격을 출력
+손님이름이 같은 이름이면 합산
+프로시저명 : select_10
+
+drop procedure if exists select_10;
+delimiter $$
+
+create procedure select_10()
+begin
+select customer, sum(total) from buy 
+group by customer
+having sum(total) >= 100000;
+
+end $$
+delimiter ;
+
+call select_10();
+
+프로시저명 : select_total(100) 
+  => 구매합산 100만원이상 명단 (손님이름과 구매가격 합산)
+
+drop procedure if exists select_total;
+delimiter $$
+
+create procedure select_total(in in_sum int)
+begin
+select customer, sum(total) from buy 
+group by customer
+having sum(total) >= in_sum * 10000;
+
+end $$
+delimiter ;
+
+call select_total(100);
+call select_total(10);
+call select_total(40);
+
+--------------------------------------------------------------------------------
+특정 제품을 구매한 인원수(구매 횟수)를 리턴하는 프로시저 작성
+프로시정명 : count_buy
+매개변수 : in 제품명, out 개수
+--out 변수에 값을 저장할 때 : into
+
+drop procedure if exists count_buy;
+delimiter //
+create procedure count_buy(
+in in_product_name varchar(100),
+out out_cnt int
+)
+begin
+select count(product_name) into out_cnt
+from buy 
+where product_name = in_product_name;
+end //
+delimiter ;
+
+call count_buy('크롭 티셔츠', @cnt);
+select @cnt as '판매횟수';
+
+--------------------------------------------------------------------------------
+변수
+set @변수명 := 값; => 전역변수
+select @변수명; => 변수 값 확인
+
+트리거나 프로시저 내에서 내용하는 declare를 사용하여
+선언하는 변수는 (지역변수 개념)
+
+트리거나 프로시저 내에서는 (@변수) 전역변수를 사용할 수 없음.
+지역변수는 _지역변수명 전역변수 @전역변수명
+
+
+--------------------------------------------------------------------------------
+특정 제품의 판매수량 합계(amount)를 리턴하는 프로시저 작성
+프로시저명 : sum_amount 
+
+drop procedure if exists sum_amount;
+delimiter //
+create procedure sum_amount(
+in in_product_name varchar(100),
+out out_sum int
+)
+begin 
+select sum(amount) into out_sum
+from buy
+where product_name = in_product_name
+group by product_name;
+end //
+delimiter ;
+
+call sum_amount('크롭 티셔츠', @sum);
+select @sum as '판매수량 합계';
+
+call sum_amount('순면라운드 반팔티', @sum);
+select @sum as '판매수량 합계';
+
+--------------------------------------------------------------------------------
+college 데이터베이스 이용
+
+student 테이블의 st_point(이수학점) 업데이트 하시오
+- 학점을 획득하려면 at_reptition = 'n' ('y'는 미포함)
+- 학점은 attend 테이블에 수강한 과목의 at_co_num를 확인
+- course 테이블에서 co_su_num,
+  subject 테이블에서 su_point 확인
+- 해당과목의 su_point 확인 후
+- attend 테이블의 같은 학번에 대한 
+su_point 합계를 st_point에 업데이트
+
+
+-프로시저 작성
+call update_stpoint(학번); //한 학생의 st_point 업데이트
+call update_stpoint(); //모두 한번에 업데이트
+
+//한 학생의 st_point 업데이트
+drop procedure if exists update_stpoint;
+delimiter $$
+
+create procedure update_stpoint(
+in in_st_num int
+)
+begin
+
+update student set 
+st_point = (
+select sum(s.su_point) from attend a
+join course c on a.at_co_num = c.co_num
+join subject s on c.co_su_num = s.su_num
+where a.at_repetition = 'n'
+and a.at_st_num = in_st_num)
+
+where st_num = in_st_num;
+
+end $$
+
+delimiter ;
+
+call update_stpoint(2020123001);
+
+//모두 한번에 업데이트
+
+drop procedure if exists update_stpointAll;
+delimiter $$
+create procedure update_stpointAll(
+)
+begin
+
+update student set 
+st_point = (
+select sum(s.su_point) from attend a
+join course c on a.at_co_num = c.co_num
+join subject s on c.co_su_num = s.su_num
+where a.at_repetition = 'n'
+and a.at_st_num = st_num
+);
+
+end $$
+
+delimiter ;
+
+call update_stpointAll();
+
+
+-----강사님 풀이---------
+//한 학생의 st_point 업데이트
+drop procedure if exists update_stpoint;
+delimiter $$
+
+create procedure update_stpoint(
+in in_st_num int
+)
+begin
+
+declare _sum int default 0;   //변수
+
+select sum(su.su_point) into _sum
+from subject su
+join course c on a.at_co_num = c.co_num
+join subject su on c.co_su_num = su.su_num
+join student s on s.st_num = a.at_st_num
+where a.at_repetition = 'n'
+and a.at_st_num = in_st_num;
+
+update student set st_point = _sum
+where st_num = in_st_num;
+
+select * from student
+
+end $$
+
+delimiter ;
+
+/* 그룹으로 묶고 싶으면
+select sum(su.su_point) into _sum
+from subject su
+join course c on a.at_co_num = c.co_num
+join subject su on c.co_su_num = su.su_num
+join student s on s.st_num = a.at_st_num
+where a.at_repetition = 'n'
+group by a.at_co_num
+having a.at_st_num = in_st_num;
+*/
+
+
+//모두 한번에 업데이트
+drop procedure if exists update_stpointall;
+delimiter $$
+
+create procedure update_stpoint()
+begin
+
+update student st
+join(
+  select a.at_st_num, sum(s.su_point) as total_point
+  from subject s
+  join course c on c.co_su_num = su.su_num
+  join attend a on a.at_co_num = c.co_num
+  where a.at_repetition = 'n'
+  group by a.at_st_num
+) sp on st.st_num = sp.at_st_num
+set st.st_point = sp.total_point;
+
+select * from student
+
+end $$
+
+delimiter ;
+
+

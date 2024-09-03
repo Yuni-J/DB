@@ -316,11 +316,11 @@ where
 
 //다시 오류뜸
 select concat(su_title, '(', co_term, ')') as '김영철 수강과목' 
-from student 
-join attend on st_num = at_st_num
+from attend a
 join course on at_co_num = co_num
-join (select st_num from student where st_name = '김영철') as student
-on st_num = at_st_num;
+join subject on co_su_num = su_num
+join (select st_num from student where st_name = '김영철') as st
+on st.st_num = a.at_st_num;
 
 ----------------------------------------------------------------------
 Index : 인덱스
@@ -555,46 +555,19 @@ begin
  update product set
  amount = amount - new.amount + old.amount,
  sale_amount = sale_amount + new.amount - old.amount
- where name in ( new.product_name, old.product_name );
+ where name = new.product_name;
 
 end $$
 
 delimiter ;
 
-insert into buy(customer, product_name, price, amount)
-values('홍길동','폴라 티셔츠',15000,5);
-
-update buy set
-amount = 5
-where customer = '홍길동'; 
-
-update buy set 
-amount = 2
-where num in (3,6,13);
-
-update buy set 
-amount = 3
-where num = 2;
-
-update buy set 
-amount = 4
-where num in (7,12);
-
-update buy set
-amount = 5 
-where num =26;
-
-update buy set
-amount = 7
-where num = 11;
-
 update buy set
 amount = 10
-where num = 25;
+where num = 26; 
 
 update buy set
-amount = 1
-where num in (5,10);
+amount = amount + 10
+where num = 26; 
 
 
 
